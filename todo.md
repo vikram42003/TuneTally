@@ -12,15 +12,17 @@ How it works
 
 */
 
-TRY THIS OUT -
-storing the access token as a HTTP-only cookie would be much more secure than saving it to session storage, but we need a backend to attach it as HTTP-only cookie, so maybe try this - create an aws lambda fucntion, our app takes user to spotify authentication page, the user authenticates and comes back to the app with 
-
-FLOW OF APP (for MVP) -
-1) User opens the app
-2) the app initializes tanstack store
-3) The user clicks on get info button to fetch the data
-4) The app creates the validators and code challenge and stores the validator in store instead of sessionStorage
-5) 
+Updated Auth flow -
+1) Check GET /me endpoint to see if we already have a http only authorization cookie
+2) If not then generate codeVerifier, codeChallenge and state (state is just a unique id to identify the current session/user)
+- send state and codeChallenge to spofity for authentication
+- send state and codeVerifier to the Lambda function
+3) Spotify authenticates and redirects us back to the app with the state and the code (code is a speical string spotify gives us, which we need to exchange for access token)
+4) Check if the state returned by spotify and the state that we generated and stored in step 2 is the same (we recheck here to prevent attacks like Cross Site Request Forgery (CSRF), sessing hijacking etc)
+5) Send the code and state to the Lambda function
+6) The Lambda function checks its storage, finds the state and verifier pair for our requested state and then exchanges the code and verfier for an accessToken and deletes all info about state, verifier and code
+7) The Lambda function attaches the accessToken as a HTTP-only cookie and retruns it to the function caller.
+8) The app sees that the request has finised working and then tests the GET /me endpoint again. If the response is 200 then we are good to go! 
 
 steps - 
 1) check if we have the auth data that we need from the query string
