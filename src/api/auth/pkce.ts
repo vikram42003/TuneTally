@@ -43,7 +43,7 @@ export const getAccessToken = async (clientId: string, code: string) => {
     code,
     redirect_uri: redirectUri,
     code_verifier: codeVerifier!,
-  })
+  });
 
   const url = "https://accounts.spotify.com/api/token";
 
@@ -54,7 +54,7 @@ export const getAccessToken = async (clientId: string, code: string) => {
   // const response = await body.json();
 
   if (body?.data?.access_token) {
-    localStorage.setItem("access_token", body.data.access_token);
+    sessionStorage.setItem("access_token", body.data.access_token);
   }
 };
 
