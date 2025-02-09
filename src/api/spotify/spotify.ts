@@ -1,6 +1,6 @@
-import { spotifyAuth } from "../auth/spotifyAuth/spotifyAuth"
+// import { spotifyAuth } from "../auth/spotifyAuth/spotifyAuth"
 
 
-const fetchTopArtists = async () => {
-  const accessToken = await spotifyAuth();
-}
+// const fetchTopArtists = async () => {
+//   const accessToken = await spotifyAuth();
+// }

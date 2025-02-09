@@ -12,11 +12,21 @@ How it works
 
 */
 
+TRY THIS OUT -
+storing the access token as a HTTP-only cookie would be much more secure than saving it to session storage, but we need a backend to attach it as HTTP-only cookie, so maybe try this - create an aws lambda fucntion, our app takes user to spotify authentication page, the user authenticates and comes back to the app with 
+
+FLOW OF APP (for MVP) -
+1) User opens the app
+2) the app initializes tanstack store
+3) The user clicks on get info button to fetch the data
+4) The app creates the validators and code challenge and stores the validator in store instead of sessionStorage
+5) 
+
 steps - 
 1) check if we have the auth data that we need from the query string
 2) - if yes then use the auth data to fetch music data
 2) - if no the go to the auth page and do oauth pkce
-  2.1) - Create a code challenge and request authorization from 'https://accounts.spotify.com/authorize' endpoint
+  2.1)- DONE - Create a code challenge and request authorization from 'https://accounts.spotify.com/authorize' endpoint
   
 
 
