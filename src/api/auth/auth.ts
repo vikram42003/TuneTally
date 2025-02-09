@@ -11,7 +11,9 @@ export const auth = async () => {
     // If the url query params doesnt have a code then redirect user to Spotify authorization page
     redirectAndAuthenticateUser(clientId);
   } else {
-    // If we do have a code then request an access token with the code
-    /* const accessToken = */await getAccessToken(clientId, code);
+    if (!localStorage.getItem("access_token")) {
+      // If we do have a code then request an access token with the code
+      /* const accessToken = */await getAccessToken(clientId, code);
+    }
   }
 };
