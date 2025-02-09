@@ -8,8 +8,8 @@ export const redirectAndAuthenticateUser = async (clientId: string) => {
   const hashed = await sha256(codeVerifier);
   const codeChallenge = base64UrlEncode(hashed);
 
-  // Add the code verifier to local storage so that we can access it later
-  window.localStorage.setItem("code_verifier", codeVerifier);
+  // Add the code verifier to session storage so that we can access it later
+  sessionStorage.setItem("code_verifier", codeVerifier);
 
   // UN-HARDCODE THIS LATER
   // The type of data to fetch
@@ -34,8 +34,7 @@ export const redirectAndAuthenticateUser = async (clientId: string) => {
 };
 
 export const getAccessToken = async (clientId: string, code: string) => {
-  // stored in the previous step
-  const codeVerifier = localStorage.getItem("code_verifier");
+  const codeVerifier = sessionStorage.getItem("code_verifier");
 
   const params = new URLSearchParams({
     client_id: clientId,
@@ -48,13 +47,12 @@ export const getAccessToken = async (clientId: string, code: string) => {
   const url = "https://accounts.spotify.com/api/token";
 
   const body = await axios.post(url, params);
-  // const body = await fetch(url, payload);
 
   console.log(body);
   // const response = await body.json();
 
   if (body?.data?.access_token) {
-    sessionStorage.setItem("access_token", body.data.access_token);
+    return body.data.access_token;
   }
 };
 

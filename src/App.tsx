@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { auth } from "./api/auth/auth";
+import { auth } from "./api/auth/spotifyAuth/spotifyAuth";
 
 const App = () => {
   useEffect(() => {
-    auth()
-  }, [])
+    auth();
+  }, []);
 
   return <>Hello World</>;
 };
