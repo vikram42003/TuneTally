@@ -1,8 +1,8 @@
 # TuneTally
 
-TuneTally is a music listening statistics app
+**TuneTally** is a music listening statistics app
 
-Whats it is -
+**Whats it is** -
 It will fetch data from a music listening website/api and show your music listening statistics like
 
 - your top artists
@@ -10,17 +10,34 @@ It will fetch data from a music listening website/api and show your music listen
 - how much more (or less) listening hours you have compared to other users
 - will fetch the data securely and wont store any user credentials and will just redirect you to the actual spotify (or other) authentication pages
 
-Whats the MVP -
+**Whats the MVP** -
 just fetch your own data from spotify and print it to console or screen
 then build all the other stuff on top of that
 
-Will I use a backend -
+**Will I use a backend** -
 probably not, since i dont want to save any user data for security reasons
 But i might tho to just store the app related statistics like
 
 - how many users have used this app until now
 - how many total hours of music have been fetched and displayed by this app
 - whats the average number of listening hours of this apps users
+
+## Tech stack -
+- **Programming Language** - Typescript all the way
+
+- **Frontend** - React (with Vite)
+
+- **Backend** - (gonna skip on backend for now since theres no need)
+
+## Tech stack details -
+
+- **Fetching and Caching data** - gonna use Tanstack Query (Formerly React Query) because im gonna be making a lot of http requests so its auto caching and query status features are gonna come in handy
+
+- **Data Store** - Tanstack Store, If I use Redux here its gonna make my app wayy larger than it should be and would overcomplicate things so Tanstack Store will do for now
+
+- **Routing** - React router for routing, I can use Tanstack Start or Tanstack Router and fully commit to The TanStack but its in Beta and React Router is more trustable and widely used
+
+- **Authentication** - Not needed since the music apps like Spotify do the authentication, TuneTally just takes the auth token and does the fetching and displaying data part
 
 <br />
 <br />
