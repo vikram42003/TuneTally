@@ -1,20 +1,27 @@
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 // The url to redirect to after auth should be the app's current url (wihtout query string)
 const redirectUri = window.location.href.split("?")[0];
 
-export const redirectAndAuthenticateUser = async (clientId: string) => {
+export const redirectAndGetCodeFromSpotify = async (clientId: string, scope: string) => {
+  // generate codeVerifer, codeChallenge and state
   const codeVerifier = generateCodeVerifier();
   const hashed = await sha256(codeVerifier);
   const codeChallenge = base64UrlEncode(hashed);
+  const state = uuidv4();
 
-  // Add the code verifier to session storage so that we can access it later
-  sessionStorage.setItem("code_verifier", codeVerifier);
+  // set the authentication status to pending so that 
+  // when we come back to this page we know how much progress we've made
+  sessionStorage.setItem("spotifyAuthenticationStatus", "pending");
 
-  // UN-HARDCODE THIS LATER
-  // The type of data to fetch
-  // go to https://developer.spotify.com/documentation/web-api/concepts/scopes for details
-  const scope = "user-top-read";
+  // save uuid to session storage
+  sessionStorage.setItem("state", state);
+
+  // send state and codeVerifier to the Lambda function
+
+  // send state and codeChallenge to Spotify
+  const authUrl = new URL("https://accounts.spotify.com/authorize");
 
   // The parameters to pass in the fetch request
   const params = {
@@ -24,9 +31,9 @@ export const redirectAndAuthenticateUser = async (clientId: string) => {
     code_challenge_method: "S256",
     code_challenge: codeChallenge,
     redirect_uri: redirectUri,
+    state,
   };
 
-  const authUrl = new URL("https://accounts.spotify.com/authorize");
   // Append the parameters that we set in previous step to the url search params
   authUrl.search = new URLSearchParams(params).toString();
   // Redirect the user to the Spotify authorization page directly by setting window.location.href value

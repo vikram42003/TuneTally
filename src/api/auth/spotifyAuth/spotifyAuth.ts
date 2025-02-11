@@ -1,49 +1,42 @@
-import axios, { AxiosError } from "axios";
-import { redirectAndAuthenticateUser, getAccessToken } from "./pkce";
-import { SpotifyError } from "../../../types/spotifyTypes";
+import axios from "axios";
+import { redirectAndGetCodeFromSpotify, getAccessToken } from "./pkce";
+
+const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+// The type of data to fetch
+// go to https://developer.spotify.com/documentation/web-api/concepts/scopes for details
+const scope = "user-top-read";
 
 export const spotifyAuth = async () => {
-  let doWeHaveTheAccessToken;
-  try {
-    doWeHaveTheAccessToken = await axios.get("https://api.spotify.com/v1/users/smedjan");
-  } catch (error) {
-    // handle zod validation and type guarding to AxiosError<
-    if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError<SpotifyError>;
-      console.log(axiosError.response?.data);
-    }
-    console.log(error);
-  }
-
-  return;
-
-
-
-
-  const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-  const params = new URLSearchParams(window.location.search);
-  const code = params.get("code");
-
-  if (!code) {
-    console.log(code);
-    // If the url query params doesnt have a code then redirect user to Spotify authorization page
-    redirectAndAuthenticateUser(clientId);
+  // check the authentication status that we have/will store
+  const spotifyAuthenticationStatus = sessionStorage.getItem("spotifyAuthenticationStatus");
+  
+  if (!spotifyAuthenticationStatus) {
+    // If we dont fint it then that means we're starting fresh
+    await redirectAndGetCodeFromSpotify(clientId, scope);
+  } else if (spotifyAuthenticationStatus === "pending") {
+    // TODO
+    await getAccessToken();
   } else {
-    return await getAccessToken(clientId, code);
-
-    // const accessToken = sessionStorage.getItem("access_token");
-    // if (!accessToken) {
-    //   return await getAccessToken(clientId, code);
-    // }
-
-    // const url = "https://api.spotify.com/v1/me/top/artists";
-
-    // const response = await axios.get(url, {
-    //   headers: {
-    //     Authorization: `Bearer ${accessToken}`,
-    //   },
-    // });
-
-    // console.log(response);
+    await checkAccessToken();
   }
+
+  const response = await testRequest();
+  console.log("Response: ", response);
 };
+
+const checkAccessToken = async (): Promise<boolean> => {
+  try {
+    await axios.get("https://api.spotify.com/v1/users/smedjan");
+  } catch (error) {
+    console.log("Some error occured in checkAccessToken");
+    console.log(error);
+    return false;
+  }
+
+  return true;
+};
+
+const testRequest = async () => {
+  const url = "https://api.spotify.com/v1/me/top/artists";
+  await axios.get(url);
+}
