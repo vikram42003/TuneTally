@@ -17,6 +17,9 @@ Updated Auth flow -
 2) If not then generate codeVerifier, codeChallenge and state (state is just a unique id to identify the current session/user)
 - ✅ send state and codeChallenge to spofity for authentication
 - send state and codeVerifier to the Lambda function
+
+/* UPDATE - CREATE THE AWS LAMBDA FUNCTION USING TERRAFORM */
+
 3) Spotify authenticates and redirects us back to the app with the state and the code (code is a speical string spotify gives us, which we need to exchange for access token)
 4) Check if the state returned by spotify and the state that we generated and stored in step 2 is the same (we recheck here to prevent attacks like Cross Site Request Forgery (CSRF), sessing hijacking etc)
 5) Send the code and state to the Lambda function
