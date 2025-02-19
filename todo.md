@@ -30,6 +30,7 @@ Updated Auth flow -
 
 NOTE - in step 1 I need to make a request to fetch some data to check if we have the HTTP-only cookie set or not. Here i can send a request to GET /me endpoint but to do that im gonna have to ask user for some extra permissions that will oly be used for checking if we're auth'd or not. An alternative to this is to make a request to fetch a certain users profile, now this could be any user, and here i'd like to avoid using my own spotify profile for privacy reasons, but I need to fetch someones profile data, So here im gonna fetch data for a user whose user ID is "smedjan". This was the user whose profile data is fetched in Spotify documentation example but there is a chance that this could be a real random user, so maybe Email spotify team to confirm with them that this is not some random user and I am good to fetch their data with no worries.
 
+### ANOTHER UPDATE - HOST THE APP ON AWS CLOUDFRONT AND SET UP CLOUDFRONT WITH TERRAFORM 
 
 steps - 
 1) check if we have the auth data that we need from the query string
