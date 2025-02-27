@@ -1,10 +1,16 @@
-import boto3
+# import boto3
 
-s3 = boto3.resource('s3')
-for bucket in s3.buckets.all():
-    print(bucket.name)
+# s3 = boto3.resource('s3')
+# for bucket in s3.buckets.all():
+#     print(bucket.name)
 
 def lambda_handler(event, context):
+  # REMOVE THIS AFTER YOU'RE DONE WITH TERRAFORM
+  return {
+    "statusCode": 200,
+    "message": "The lambda function is live"
+  }
+  
   # if we receive state and code verifier from http requests
   # store verifier into a storage service (like dynamoDB) with
   #   - primary key as state
@@ -20,19 +26,22 @@ def lambda_handler(event, context):
   
   # if we recieve anything else from the request then send 400
   
-  state = event["state"]
-  codeVerifier = event["codeVerifier"]
-  code = event["code"]
+#   state = event["state"]
+#   codeVerifier = event["codeVerifier"]
+#   code = event["code"]
   
-  response
-  if state and codeVerifier and not code:
-    response = saveStateAndCodeVerifierPair(state, codeVerifier)
-  elif state and code and not codeVerifier:
-    response = getAndAttachAccessToken(state, code)
-  else:
-    response = {
-      "statusCode": 400,
-      "message": "Invalid input"
-    }
+#   response
+#   if state and codeVerifier and not code:
+#     response = saveStateAndCodeVerifierPair(state, codeVerifier)
+#   elif state and code and not codeVerifier:
+#     response = getAndAttachAccessToken(state, code)
+#   else:
+#     response = {
+#       "statusCode": 400,
+#       "message": "Invalid input"
+#     }
   
-  return response
+#   return response
+
+# def saveStateAndCodeVerifierPair(state, codeVerifier):
+  
