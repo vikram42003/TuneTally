@@ -1,21 +1,21 @@
 terraform {
   required_providers {
     aws = {
-      source = "hashicorp/aws"
+      source  = "hashicorp/aws"
       version = "~> 5.0"
     }
   }
 }
 
 provider "aws" {
-  region = "ap-south-1"
+  region                   = "ap-south-1"
   shared_credentials_files = ["~/.aws/credentials"]
 }
 
 resource "aws_dynamodb_table" "state_verifier_pair" {
-  name = "state_verifier_pair"
-  billing_mode = "PROVISIONED"
-  read_capacity = 5
+  name           = "state_verifier_pair"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 5
   write_capacity = 5
 
   hash_key = "State"
@@ -27,7 +27,7 @@ resource "aws_dynamodb_table" "state_verifier_pair" {
 
   ttl {
     attribute_name = "Ttl"
-    enabled = true
+    enabled        = true
   }
 
   lifecycle {
@@ -35,7 +35,7 @@ resource "aws_dynamodb_table" "state_verifier_pair" {
   }
 
   tags = {
-    Project = "TuneTally_Terraform"
+    Project     = "TuneTally_Terraform"
     Environment = "Production"
   }
 }
