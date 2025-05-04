@@ -12,6 +12,8 @@ provider "aws" {
   shared_credentials_files = ["~/.aws/credentials"]
 }
 
+# DYNAMO DB
+
 resource "aws_dynamodb_table" "state_verifier_pair" {
   name           = "state_verifier_pair"
   billing_mode   = "PROVISIONED"
@@ -90,6 +92,8 @@ resource "aws_iam_role_policy_attachment" "attach_dynamodb_policy" {
   policy_arn = aws_iam_policy.lambda_dynamodb_access.arn
 }
 
+# LAMBDA FUNCTION
+
 resource "aws_iam_role_policy_attachment" "lambda_logging" {
   role       = aws_iam_role.iam_for_lambda.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
@@ -116,4 +120,21 @@ resource "aws_lambda_function" "TuneTally_Lambda_Func" {
     Project     = "TuneTally_Terraform"
     Environment = "Production"
   }
+}
+
+# API GATEWAY
+
+resource "aws_api_gateway_rest_api" "lambda_func_api_gateway" {
+  name = "lambda_func_api_gateway"
+  description = "API gateway for TuneTally project's lambda function"
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
+}
+
+resource "aws_api_gateway_resource" "root" {
+  rest_api_id = aws_api_gateway_rest_api.my_api.id
+  parent_id = aws_api_gateway_rest_api.my_api.root_resource_id
+  path_part = "tunetally"
 }

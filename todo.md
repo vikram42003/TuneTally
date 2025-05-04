@@ -1,5 +1,9 @@
 To Do -
 
+Create an API gateway for the lambda function with terraform
+
+
+
 /* abstract of what i need to do copied from https://developer.spotify.com/documentation/web-api/howtos/web-app-profile
 
 How it works
