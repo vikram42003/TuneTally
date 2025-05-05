@@ -17,9 +17,9 @@ How it works
 */
 
 Updated Auth flow -
-1) ✅ Check GET /users/smedjan endpoint to see if we already have a http only authorization cookie
+1) Check GET /users/smedjan endpoint to see if we already have a http only authorization cookie
 2) If not then generate codeVerifier, codeChallenge and state (state is just a unique id to identify the current session/user)
-- ✅ send state and codeChallenge to spofity for authentication
+- send state and codeChallenge to spofity for authentication
 - send state and codeVerifier to the Lambda function
 
 /* UPDATE - CREATE THE AWS LAMBDA FUNCTION USING TERRAFORM */
@@ -48,4 +48,3 @@ steps -
   Also implementing pkce myself will be really hard and complicated and will be a separate project in itself and might lead to security vulnerabilities so i'll just use the spotify endpoint as recommended by spotify)
 
 On auth the auth server (from spotify) will send an auth token/access token which we can use to make the api calls
-
