@@ -124,17 +124,56 @@ resource "aws_lambda_function" "TuneTally_Lambda_Func" {
 
 # API GATEWAY
 
-resource "aws_api_gateway_rest_api" "lambda_func_api_gateway" {
-  name = "lambda_func_api_gateway"
-  description = "API gateway for TuneTally project's lambda function"
+resource "aws_lambda_permission" "Allow_TuneTally_Lambda_Func" {
+  statement_id  = "AllowTuneTally_API_GatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.TuneTally_Lambda_Func.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.TuneTally_API_Gateway.execution_arn}/*/POST/authenticate"
+}
+
+resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
+  name = "TuneTally_API_Gateway"
+
+  body = jsonencode({
+    openapi = "3.0.1"
+    info = {
+      title   = "TuneTally_API_Gateway"
+      version = "1.0"
+    }
+    paths = {
+      "/authenticate" = {
+        post = {
+          x-amazon-apigateway-integration = {
+            httpMethod           = "POST"
+            payloadFormatVersion = "1.0"
+            type                 = "AWS_PROXY"
+            uri                  = aws_lambda_function.TuneTally_Lambda_Func.invoke_arn
+          }
+        }
+      }
+    }
+  })
 
   endpoint_configuration {
     types = ["REGIONAL"]
   }
 }
 
-resource "aws_api_gateway_resource" "root" {
-  rest_api_id = aws_api_gateway_rest_api.my_api.id
-  parent_id = aws_api_gateway_rest_api.my_api.root_resource_id
-  path_part = "tunetally"
+resource "aws_api_gateway_deployment" "TuneTally_API_Gateway_Deployment" {
+  rest_api_id = aws_api_gateway_rest_api.TuneTally_API_Gateway.id
+
+  triggers = {
+    redeployment = sha1(jsonencode(aws_api_gateway_rest_api.TuneTally_API_Gateway.body))
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_api_gateway_stage" "example" {
+  deployment_id = aws_api_gateway_deployment.TuneTally_API_Gateway_Deployment.id
+  rest_api_id   = aws_api_gateway_rest_api.TuneTally_API_Gateway.id
+  stage_name    = "v1"
 }
