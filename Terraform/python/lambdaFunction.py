@@ -4,11 +4,17 @@
 # for bucket in s3.buckets.all():
 #     print(bucket.name)
 
+import json
+
+
 def lambda_handler(event, context):
   # REMOVE THIS AFTER YOU'RE DONE WITH TERRAFORM
   return {
     "statusCode": 200,
-    "message": "The lambda function is live"
+    "body": json.dumps({"message": "The lambda function is live"}),
+    "headers": {
+      "Content-Type": "application/json"
+    }
   }
   
   # if we receive state and code verifier from http requests
