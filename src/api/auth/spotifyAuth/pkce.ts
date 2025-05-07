@@ -11,12 +11,15 @@ export const redirectAndGetCodeFromSpotify = async (clientId: string, scope: str
   const codeChallenge = base64UrlEncode(hashed);
   const state = uuidv4();
 
-  // set the authentication status to pending so that 
+  // set the authentication status to pending so that
   // when we come back to this page we know how much progress we've made
   sessionStorage.setItem("spotifyAuthenticationStatus", "pending");
 
   // save uuid to session storage
   sessionStorage.setItem("state", state);
+
+  // TEMP - save code verifier to session storage
+  sessionStorage.setItem("code_verifier", codeVerifier);
 
   // send state and codeVerifier to the Lambda function
 
