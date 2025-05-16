@@ -158,6 +158,11 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
   endpoint_configuration {
     types = ["REGIONAL"]
   }
+
+  tags = {
+    Project     = "TuneTally_Terraform"
+    Environment = "Production"
+  }
 }
 
 resource "aws_api_gateway_deployment" "TuneTally_API_Gateway_Deployment" {
