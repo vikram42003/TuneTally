@@ -28,13 +28,13 @@ Updated Auth flow -
 4) Check if the state returned by spotify and the state that we generated and stored in step 2 is the same (we recheck here to prevent attacks like Cross Site Request Forgery (CSRF), sessing hijacking etc)
 5) Send the code and state to the Lambda function
 6) The Lambda function checks its storage, finds the state and verifier pair for our requested state and then exchanges the code and verfier for an accessToken and deletes all info about state, verifier and code
-7) The Lambda function attaches the accessToken as a HTTP-only cookie and retruns it to the function caller.
+7) The Lambda function attaches the accessToken as a HTTP-only cookie and returns it to the function caller.
 8) The app sees that the request has finised working and then tests the GET /users/smedjan endpoint again. If the response is 200 then we are good to go! 
 
 
 NOTE - in step 1 I need to make a request to fetch some data to check if we have the HTTP-only cookie set or not. Here i can send a request to GET /me endpoint but to do that im gonna have to ask user for some extra permissions that will oly be used for checking if we're auth'd or not. An alternative to this is to make a request to fetch a certain users profile, now this could be any user, and here i'd like to avoid using my own spotify profile for privacy reasons, but I need to fetch someones profile data, So here im gonna fetch data for a user whose user ID is "smedjan". This was the user whose profile data is fetched in Spotify documentation example but there is a chance that this could be a real random user, so maybe Email spotify team to confirm with them that this is not some random user and I am good to fetch their data with no worries.
 
-### ANOTHER UPDATE - HOST THE APP ON AWS CLOUDFRONT AND SET UP CLOUDFRONT WITH TERRAFORM 
+CONSIDER HOSTING THE APP ON AWS CLOUDFRONT AND SET UP CLOUDFRONT WITH TERRAFORM
 
 steps - 
 1) check if we have the auth data that we need from the query string
