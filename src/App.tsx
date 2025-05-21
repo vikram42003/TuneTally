@@ -12,6 +12,7 @@ const App = () => {
   return (
     <>
       <Navbar />
+      <hr />
       <Routes>
         <Route path="/" element={<Homepage />} />
       </Routes>
