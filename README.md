@@ -43,7 +43,7 @@ But i might tho to just store the app related statistics like
 <br />
 <br />
 
-How PKCE works -
+## How PKCE works -
 
 user (you)                           -    first entity  
 TuneTally (or app or client)         -    second entity  
@@ -84,6 +84,21 @@ With PKCE -
 - the app does not receive any user credentials at all, all it receives is a token that allows it to access the data it needs to access for a limited time and with limited permissions
 - since the app does not reveice any user credentials we dont need to trust the app with our credentials
 - we are protected from cyber attacks since protecting your credentials is spotify's responsibility and with PKCE, attacks like man-in-the-middle cannot happen since we're confirming authorization tokens and unique strings in separate turns
+
+## Why I'm using a Lambda function
+Now technically, I could’ve just called the Spotify API directly from the frontend, and that would’ve worked fine too AND THIS PROJECT WOULD'VE TAKEN 70% LESS TIME
+
+But I added a Lambda function in between for a few reasons:
+
+- **Security** - Even though we don’t store any passwords or credentials (thanks PKCE), it still feels cleaner to keep the actual Spotify API calls on the backend. That way, access tokens aren’t floating around in the browser any longer than they need to be.
+
+- **Flexibility** -: This way I can format the data however I want before it reaches the frontend. So if Spotify gives back a bunch of stuff I don’t need, or I want to combine data from different endpoints later — I can just do that in the Lambda without touching the client.
+
+- **Future-proofing** - If Spotify ever changes their API or I decide to switch to a different music platform, the frontend won’t have to care. It just talks to my API, and I can swap out the backend logic whenever I want.
+
+- **Scaling and cost** - Since it’s a Lambda function, it only runs when someone actually uses it. No server to keep running 24/7. It’s free (or nearly free), and scales automatically.
+
+So yeah, the Lambda isn’t just there to be fancy, it actually makes things a bit cleaner, safer, and more scalable, while also showing off some cloud skills for the people who care about that.
 
 DISCLAIMER - I know that this explanation might not be the most accurate but this is supposed to be a gist of how it works and why you can trust TuneTally, intended to be understood by the average person. If you're reading this and feel like this could use some improvement then I implore you to open an issue in issues tab or dm me to improve it or contribute to this project!
 
