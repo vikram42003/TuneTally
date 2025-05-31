@@ -6,6 +6,12 @@
   --color-spotify-white: #f0f0f0;
 }
 
+@layer components {
+  .layout-container {
+    @apply max-w-7xl mx-auto
+  }
+}
+
 body {
   color: var(--color-spotify-white);
 }
