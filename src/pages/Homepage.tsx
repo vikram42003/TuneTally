@@ -1,6 +1,10 @@
+import Hero from "../components/Homepage/Hero"
+
 const Homepage = () => {
   return (
-    <div>Homepage</div>
+    <section className="">
+      <Hero />
+    </section>
   )
 }
 
