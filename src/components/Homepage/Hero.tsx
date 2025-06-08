@@ -2,7 +2,7 @@ const Hero = () => {
   return (
     <div className="flex gap-[6rem] items-center">
       <div className="basis-[45%] bg-blue-600 opacity-80">
-        <h2>Get your stats</h2>
+        <h2 className="">Get your stats</h2>
 
         <div>
           Get answers to your most burning questions like (rotate between these)[your top artist, your top song, your
