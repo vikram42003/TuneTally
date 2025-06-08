@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 const Navbar = () => {
   return (
-    <section className="bg-spotify-dark py-4">
+    <section className="bg-spotify-dark py-4 px-6">
       <nav className="layout-container flex justify-between">
         <div>
           <Link to="/">Logo</Link>

@@ -1,9 +1,9 @@
 const Hero = () => {
   return (
-    <div className="min-h-[70vh] flex gap-[6rem] items-center">
+    <div className="flex gap-[6rem] items-center">
       <div className="basis-[45%] bg-blue-600 opacity-80">
         <h2>Get your stats</h2>
-        
+
         <div>
           Get answers to your most burning questions like (rotate between these)[your top artist, your top song, your
           top genre etc]
@@ -18,8 +18,6 @@ const Hero = () => {
           </button>
         </div>
       </div>
-
-      <div className="basis-[55%] bg-red-600 opacity-80">image</div>
     </div>
   );
 };
