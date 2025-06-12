@@ -4,6 +4,7 @@
   --color-spotify-dark: #121212;
   --color-spotify-gray: #1f1f1f;
   --color-spotify-white: #f0f0f0;
+  --color-spotify-green: #1ed760;
 }
 
 @layer components {

@@ -1,3 +1,8 @@
+Another TODO i guess - 
+- SORT OUT THIS MESS OF A FILE
+- take other people's feedback and see if the Hero components background image looks better with bg-center or with the current bg-top
+
+
 To Do -
 
 Create an API gateway for the lambda function with terraform
