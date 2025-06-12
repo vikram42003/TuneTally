@@ -1,3 +1,30 @@
+import { useEffect, useState } from "react";
+
+const rotatingText = [
+  "your top artist",
+  "your top song",
+  "your top genre",
+  "your listening trends",
+  "how many hours you listened",
+];
+
+const RotatingText = () => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setIndex((prev) => (prev + 1) % rotatingText.length);
+    }, 2000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  return (
+    <div className="font-semibold text-purple-500 transition-all duration-500">
+      {rotatingText[index]}
+    </div>
+  ) 
+};
+
 const Hero = () => {
   return (
     <div className="max-w-xl">
@@ -6,8 +33,7 @@ const Hero = () => {
       </h2>
 
       <p className="text-lg py-2">
-        Get answers to your most burning questions like (rotate between these)[your top artist, your top song, your top
-        genre etc]
+        Get answers to your most burning questions like <RotatingText />
       </p>
 
       <div>
