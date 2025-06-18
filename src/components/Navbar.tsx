@@ -5,10 +5,10 @@ const Navbar = () => {
     <section className="bg-spotify-dark py-4 px-6">
       <nav className="layout-container flex justify-between">
         <div>
-          <Link to="/">Logo</Link>
+          <Link to="/">TuneTally</Link>
         </div>
         <div>
-          <Link to="/features">Features</Link>
+          <Link to="#features">Features</Link>
         </div>
         <div>
           <Link to="/privacy">Privacy</Link>
