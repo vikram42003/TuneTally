@@ -5,11 +5,15 @@ import Hero from "../components/Homepage/Hero";
 
 const Homepage = () => {
   return (
-    <section className="bg-[url(/images/hero_bg.jpg)] bg-cover min-h-[80vh] py-4 flex items-center">
-      <div className="layout-container mx-32 px-8">
-        <Hero />
-      </div>
-    </section>
+    <>
+      <section className="bg-[url(/images/hero_bg.jpg)] bg-cover min-h-[80vh] py-4 flex items-center">
+        <div className="layout-container mx-32 px-8">
+          <Hero />
+        </div>
+      </section>
+
+      <section></section>
+    </>
   );
 };
 
