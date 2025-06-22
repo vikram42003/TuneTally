@@ -1,21 +1,25 @@
 const Hero = () => {
   return (
     <div className="max-w-xl">
-      <h2 className="text-5xl font-bold">
+      <h2 className="text-6xl font-bold">
         Get your <span className="text-spotify-green">stats</span>
       </h2>
 
-      <p className="text-lg font-semibold py-2">
-        Uncover your top songs, genres, and artists.
+      <p className="py-2 text-lg font-semibold">
+        Uncover your top <span className="text-spotify-green">songs</span>,{" "}
+        <span className="text-spotify-green">genres</span>, and <span className="text-spotify-green">artists</span>.
       </p>
 
       <div>
         <button
           type="button"
-          className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+          className="bg-spotify-green m-2 rounded-4xl px-6 py-2 font-bold text-black shadow-[0_0_20px_rgba(29,185,84,0.6)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(29,185,84,0.9)]"
         >
-          Get Stats
+          Login with Spotify
         </button>
+        {/* Arrow icon link - Put this in credits in about page */}
+        {/* <a target="_blank" href="https://icons8.com/icon/Ek7khsXSeZ71/arrow">Arrow</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> */}
+        <img className="ml-4 inline -scale-125" src="/icons/arrow-icon.png" alt="icon of an arrow" />
       </div>
     </div>
   );
