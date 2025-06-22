@@ -12,20 +12,29 @@ const Homepage = () => {
         </div>
       </section>
 
+      {/* PS. Features should be about telling the user why they should click the "get stats" button, dont 
+      add unnecessary stuff here, even images should only be added if they grab attention and feel in-place */}
       <section className="bg-spotify-gray">
         <div className="layout-container grid grid-cols-1 md:grid-cols-2 text-center p-16 gap-8">
           <div>
-            <img src="https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/2024-spotify-brand-assets-media-kit.jpg" alt="placeholder image of spotify written on top of green background" />
+            <img
+              src="https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/2024-spotify-brand-assets-media-kit.jpg"
+              alt="placeholder image of spotify written on top of green background"
+            />
           </div>
           <div>2</div>
+          <div>3</div>
           <div>
-            3
+            <img
+              src="https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/2024-spotify-brand-assets-media-kit.jpg"
+              alt="placeholder image of spotify written on top of green background"
+            />
           </div>
           <div>
-            <img src="https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/2024-spotify-brand-assets-media-kit.jpg" alt="placeholder image of spotify written on top of green background" />
-          </div>
-          <div>
-            <img src="https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/2024-spotify-brand-assets-media-kit.jpg" alt="placeholder image of spotify written on top of green background" />
+            <img
+              src="https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/2024-spotify-brand-assets-media-kit.jpg"
+              alt="placeholder image of spotify written on top of green background"
+            />
           </div>
           <div>6</div>
         </div>
