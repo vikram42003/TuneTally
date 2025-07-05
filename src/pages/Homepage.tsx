@@ -6,8 +6,8 @@ import Hero from "../components/Homepage/Hero";
 const Homepage = () => {
   return (
     <>
-      <section className="bg-[url(/images/hero_bg.jpg)] bg-cover min-h-[80vh] py-4 flex items-center">
-        <div className="layout-container mx-32 px-8">
+      <section className="flex min-h-[80vh] items-center bg-[url(/images/hero_bg.jpg)] bg-cover py-4">
+        <div className="layout-container w-full">
           <Hero />
         </div>
       </section>
@@ -15,7 +15,7 @@ const Homepage = () => {
       {/* PS. Features should be about telling the user why they should click the "get stats" button, dont 
       add unnecessary stuff here, even images should only be added if they grab attention and feel in-place */}
       <section className="bg-spotify-gray">
-        <div className="layout-container grid grid-cols-1 md:grid-cols-2 text-center p-16 gap-8">
+        <div className="layout-container grid grid-cols-1 gap-8 py-16 text-center md:grid-cols-2">
           <div>
             <img
               src="https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/2024-spotify-brand-assets-media-kit.jpg"

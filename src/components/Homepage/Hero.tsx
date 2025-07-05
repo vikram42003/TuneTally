@@ -4,7 +4,7 @@ const Hero = () => {
   };
 
   return (
-    <div className="max-w-xl">
+    <div>
       <h2 className="text-6xl font-bold">
         Get your <span className="text-spotify-green">stats</span>
       </h2>
