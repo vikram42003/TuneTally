@@ -19,5 +19,9 @@ body {
 }
 
 .debug {
-  height: 100% !important;
+  text-shadow:1px 1px 10px #fff, 1px 1px 10px #ccc;
+}
+
+.navbar-text-shadow:hover {
+  text-shadow:1px 1px 10px var(--color-spotify-green);
 }
