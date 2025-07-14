@@ -3,9 +3,9 @@ import { redirectAndGetCodeFromSpotify, getAccessToken } from "./pkce";
 
 const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 
-// The type of data to fetch
+// The different permission we ask from user for reading their data
 // go to https://developer.spotify.com/documentation/web-api/concepts/scopes for details
-const scope = "user-top-read";
+const scope = "user-read-private user-read-email user-top-read";
 
 export const spotifyAuth = async () => {
   // check the authentication status that we have/will store

@@ -1,3 +1,18 @@
+Objective for July 14 - 
+✅1) Check if we're already logged in
+1.1) Currently it logs the red "request failed" error to the console. deal with that
+- Make frontend send a request to backend
+
+
+
+
+
+
+
+
+
+
+
 Another TODO i guess - 
 - SORT OUT THIS MESS OF A FILE
 - take other people's feedback and see if the Hero components background image looks better with bg-center or with the current bg-top
