@@ -4,14 +4,9 @@ import Homepage from "./pages/Homepage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
-// import { spotifyAuth as spotifyAuthTest } from "./api/auth/spotifyAuth/spotifyAuth";
 import { useEffect } from "react";
 
 const App = () => {
-  // const handleSpotifyAuth = async () => {
-  //   await spotifyAuthTest();
-  // };
-
   useEffect(() => {
     // Make the app flow based on auth status
     const status: string | null = sessionStorage.getItem("spotifyAuthenticationStatus");
@@ -27,6 +22,9 @@ const App = () => {
     } else if (status === "authenticated") {
       // This means we have the access token but we need to verify it
       // redirect the user to the stats page, it will verify it and show an error if something is wrong
+    } else {
+      // https://knowyourmeme.com/memes/ref-do-something
+      console.log("DO SOMETHING REF spotifyAuthenticationStatus BE WILDING\n", "status - ",  status)
     }
   }, []);
 
