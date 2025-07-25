@@ -12,7 +12,7 @@ const checkForAuth = async (): Promise<boolean> => {
     await axios.get("https://api.spotify.com/v1/me");
     return true;
   } catch (e) {
-    console.log("checkForAuth = false", e);
+    console.log("https://api.spotify.com/v1/me request failed that means we are not logged in!", e);
     return false;
   }
 };

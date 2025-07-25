@@ -1,9 +1,16 @@
 Objective for July 14 - 
 ✅1) Check if we're already logged in
-1.1) Currently it logs the red "request failed" error to the console. deal with that
-- Make frontend send a request to backend
-
-
+✅1.1) Currently it logs the red "request failed" error to the console. deal with that
+2) After the requests for
+  - send state and codeChallenge to spofity for authentication
+  - send state and codeVerifier to the Lambda function
+  We have the following possibilies, handle those
+  2.1) The user successfully authenticates 
+    - proceed with authentication
+  2.2) The user fills in incorrect credentials
+    - show them error for access denied and tell them to auth again
+  2.3) Any other error (just make it and ship it for now, we can always improve later)
+    - show them something went wrong error and tell them to auth again and also log the error to comsole
 
 
 
@@ -44,7 +51,7 @@ Updated Auth flow -
 
 /* UPDATE - CREATE THE AWS LAMBDA FUNCTION USING TERRAFORM */
 
-3) Spotify authenticates and redirects us back to the app with the state and the code (code is a speical string spotify gives us, which we need to exchange for access token)
+3) Spotify authenticates and redirects us back to the app with the state and the code (code is a special string spotify gives us, which we need to exchange for access token)
 4) Check if the state returned by spotify and the state that we generated and stored in step 2 is the same (we recheck here to prevent attacks like Cross Site Request Forgery (CSRF), sessing hijacking etc)
 5) Send the code and state to the Lambda function
 6) The Lambda function checks its storage, finds the state and verifier pair for our requested state and then exchanges the code and verfier for an accessToken and deletes all info about state, verifier and code

@@ -6,7 +6,7 @@ const Footer = () => {
         <br />
         Made with ❤️ by{" "}
         <a href="https://github.com/vikram42003" target="_blank" className="text-blue-400 visited:text-purple-400">
-          ME!
+          me!
         </a>
       </div>
     </section>

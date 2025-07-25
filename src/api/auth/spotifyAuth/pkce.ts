@@ -6,10 +6,10 @@ const redirectUri = window.location.href.split("?")[0];
 
 export const redirectAndGetCodeFromSpotify = async (clientId: string, scope: string) => {
   // generate codeVerifer, codeChallenge and state
-  const codeVerifier = generateCodeVerifier();
-  const hashed = await sha256(codeVerifier);
-  const codeChallenge = base64UrlEncode(hashed);
-  const state = uuidv4();
+  const codeVerifier: string = generateCodeVerifier();
+  const hashed: ArrayBuffer = await sha256(codeVerifier);
+  const codeChallenge: string = base64UrlEncode(hashed);
+  const state: string = uuidv4();
 
   // set the authentication status to pending so that
   // when we come back to this page we know how much progress we've made
@@ -67,7 +67,7 @@ export const getAccessToken = async (clientId: string, code: string) => {
 };
 
 // Create a code verifier and code challenge according to the PKCE standard
-const generateCodeVerifier = () => {
+const generateCodeVerifier = (): string => {
   const array = new Uint8Array(64);
   window.crypto.getRandomValues(array);
   return btoa(String.fromCharCode(...array))
@@ -76,13 +76,13 @@ const generateCodeVerifier = () => {
     .replace(/\//g, "_");
 };
 
-const sha256 = async (plain: string) => {
+const sha256 = async (plain: string): Promise<ArrayBuffer> => {
   const encoder = new TextEncoder();
   const data = encoder.encode(plain);
   return window.crypto.subtle.digest("SHA-256", data);
 };
 
-const base64UrlEncode = (input: ArrayBuffer) => {
+const base64UrlEncode = (input: ArrayBuffer): string => {
   return btoa(String.fromCharCode(...new Uint8Array(input)))
     .replace(/=/g, "")
     .replace(/\+/g, "-")
