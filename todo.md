@@ -1,4 +1,4 @@
-Objective for July 14 - 
+TODO FR FR - 
 ✅1) Check if we're already logged in
 ✅1.1) Currently it logs the red "request failed" error to the console. deal with that
 2) After the requests for
