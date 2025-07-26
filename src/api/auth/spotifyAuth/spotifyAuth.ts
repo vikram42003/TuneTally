@@ -2,6 +2,7 @@ import axios from "axios";
 import { redirectAndGetCodeFromSpotify, getAccessToken } from "./pkce";
 
 const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+const lambdaApiUrl = import.meta.env.VITE_LAMBDA_API_URL;
 
 // The different permission we ask from user for reading their data
 // go to https://developer.spotify.com/documentation/web-api/concepts/scopes for details
@@ -28,10 +29,10 @@ export const checkSpotifyAuthStatus = (): void => {
 };
 
 export const startSpotifyAuth = (): void => {
-  sessionStorage.setItem("spotifyAuthenticationStatus", "pending")
+  sessionStorage.setItem("spotifyAuthenticationStatus", "pending");
   // No need to await here since the page will redirect
-  redirectAndGetCodeFromSpotify(clientId, scope);
-}
+  redirectAndGetCodeFromSpotify(clientId, scope, lambdaApiUrl);
+};
 
 export const spotifyAuth = async () => {
   // check the authentication status that we have/will store
@@ -40,7 +41,7 @@ export const spotifyAuth = async () => {
   if (!spotifyAuthenticationStatus) {
     console.log("TRIGGERING CONDITION 1");
     // If we dont find it then that means we're starting fresh
-    await redirectAndGetCodeFromSpotify(clientId, scope);
+    // await redirectAndGetCodeFromSpotify(clientId, scope);
   } else if (spotifyAuthenticationStatus === "pending") {
     // TODO
     console.log("TRIGGERING CONDITION 2");

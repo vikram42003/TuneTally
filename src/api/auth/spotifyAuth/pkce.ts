@@ -4,7 +4,11 @@ import { v4 as uuidv4 } from "uuid";
 // The url to redirect to after auth should be the app's current url (wihtout query string)
 const redirectUri = window.location.href.split("?")[0];
 
-export const redirectAndGetCodeFromSpotify = async (clientId: string, scope: string): Promise<void> => {
+export const redirectAndGetCodeFromSpotify = async (
+  clientId: string,
+  scope: string,
+  lambdaApiUrl: string,
+): Promise<void> => {
   // generate codeVerifer, codeChallenge and state
   const codeVerifier: string = generateCodeVerifier();
   const hashed: ArrayBuffer = await sha256(codeVerifier);
@@ -22,6 +26,10 @@ export const redirectAndGetCodeFromSpotify = async (clientId: string, scope: str
   sessionStorage.setItem("code_verifier", codeVerifier);
 
   // send state and codeVerifier to the Lambda function
+  const res = await axios.post(lambdaApiUrl, { state, codeVerifier });
+  console.log(res);
+  // FOR TESTING --- FOR TESTING --- FOR TESTING
+  sessionStorage.removeItem("spotifyAuthenticationStatus");
 
   // send state and codeChallenge to Spotify
   const authUrl = new URL("https://accounts.spotify.com/authorize");
@@ -40,7 +48,7 @@ export const redirectAndGetCodeFromSpotify = async (clientId: string, scope: str
   // Append the parameters that we set in previous step to the url search params
   authUrl.search = new URLSearchParams(params).toString();
   // Redirect the user to the Spotify authorization page directly by setting window.location.href value
-  window.location.href = authUrl.toString();
+  // window.location.href = authUrl.toString();
 };
 
 export const getAccessToken = async (clientId: string, code: string) => {
