@@ -27,6 +27,12 @@ export const checkSpotifyAuthStatus = (): void => {
   }
 };
 
+export const startSpotifyAuth = (): void => {
+  sessionStorage.setItem("spotifyAuthenticationStatus", "pending")
+  // No need to await here since the page will redirect
+  redirectAndGetCodeFromSpotify(clientId, scope);
+}
+
 export const spotifyAuth = async () => {
   // check the authentication status that we have/will store
   const spotifyAuthenticationStatus = sessionStorage.getItem("spotifyAuthenticationStatus");

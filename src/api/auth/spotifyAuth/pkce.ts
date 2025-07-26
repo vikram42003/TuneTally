@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 // The url to redirect to after auth should be the app's current url (wihtout query string)
 const redirectUri = window.location.href.split("?")[0];
 
-export const redirectAndGetCodeFromSpotify = async (clientId: string, scope: string) => {
+export const redirectAndGetCodeFromSpotify = async (clientId: string, scope: string): Promise<void> => {
   // generate codeVerifer, codeChallenge and state
   const codeVerifier: string = generateCodeVerifier();
   const hashed: ArrayBuffer = await sha256(codeVerifier);

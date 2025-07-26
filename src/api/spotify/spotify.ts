@@ -6,6 +6,7 @@ import axios from "axios";
 //   const accessToken = await spotifyAuth();
 // }
 
+// REMOVE THIS FUNC BELOW FROM THE FILE - REDUNDANT AND INCORRECTLY PLACED
 // Make a request to the /me endpoint to check if we're already logged in
 const checkForAuth = async (): Promise<boolean> => {
   try {
