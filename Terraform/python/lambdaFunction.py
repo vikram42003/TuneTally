@@ -10,12 +10,14 @@ import json
 def lambda_handler(event, context):
   # REMOVE THIS AFTER YOU'RE DONE WITH TERRAFORM
   return {
-    "statusCode": 200,
-    "body": json.dumps({"message": "The lambda function is live"}),
-    "headers": {
-      "Content-Type": "application/json"
+        'statusCode': 200,
+        'headers': {
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Origin': 'http://localhost:5173',
+            'Access-Control-Allow-Methods': 'OPTIONS,POST'
+        },
+        'body': json.dumps('The lambda function is live!')
     }
-  }
   
   # if we receive state and code verifier from http requests
   # store verifier into a storage service (like dynamoDB) with
