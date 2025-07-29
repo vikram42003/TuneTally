@@ -151,6 +151,50 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
             uri                  = aws_lambda_function.TuneTally_Lambda_Func.invoke_arn
           }
         }
+        # https://docs.aws.amazon.com/apigateway/latest/developerguide/enable-cors-for-resource-using-swagger-importer-tool.html
+        options = {
+          responses = {
+            "200" = {
+              description = "Default response for CORS method"
+              headers = {
+                Access-Control-Allow-Headers = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+                Access-Control-Allow-Origin = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+                Access-Control-Allow-Methods = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+              }
+            }
+          }
+          x-amazon-apigateway-integration = {
+            type                 = "mock"
+            requestTemplates = {
+              "application/json" = "{\"statusCode\": 200}"
+            }
+            responses = {
+              default = {
+                statusCode = "200"
+                responseParameters = {
+                  "method.response.header.Access-Control-Allow-Headers" = "'Content-Type'"
+                  "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS'"
+                  "method.response.header.Access-Control-Allow-Origin"  = "'http://localhost:5173'"
+                }
+                responseTemplates = {
+                  "application/json" = ""
+                }
+              }
+            }
+          }
+        }
       }
     }
   })
