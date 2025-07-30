@@ -1,16 +1,14 @@
 import boto3
-
-# s3 = boto3.resource('s3')
-# for bucket in s3.buckets.all():
-#     print(bucket.name)
-
 import json
 
 
 def lambda_handler(event, context):
-  dynamodb = boto3.resource('dynamodb')
-  res = dynamodb.Table('state_verifier_pair')
-  # REMOVE THIS AFTER YOU'RE DONE WITH TERRAFORM
+  check_and_handle_invalid_requests(event)
+
+  # dynamodb = boto3.resource('dynamodb')
+  # table = dynamodb.Table('state_verifier_pair')
+  res = event
+
   return {
         'statusCode': 200,
         'headers': {
@@ -18,8 +16,26 @@ def lambda_handler(event, context):
             'Access-Control-Allow-Origin': 'http://localhost:5173',
             'Access-Control-Allow-Methods': 'OPTIONS,POST'
         },
-        'body': json.dumps('The lambda function is live!')
+        'body': {
+          'message': 'The lambda function is live!',
+          'data': res
+        }
     }
+
+def check_and_handle_invalid_requests(event):
+  # If all required keys are missing
+  no_pairs = 'state' not in event and 'codeVerifier' not in event and 'code' not in event
+
+  # state and codeVerifier pair exists (auth request), and code is not present
+  is_auth_request = 'state' in event and 'codeVerifier' in event and 'code' not in event
+
+  # state and code pair exists (token request), and codeVerifier is not present
+  is_token_request = 'state' in event and 'code' in event and 'codeVerifier' not in event
+
+  if no_pairs:
+      return unknown_request_handler()
+  elif not is_auth_request and not is_token_request:
+      return bad_request_handler()
 
 def bad_request_handler():
   return {
@@ -35,7 +51,7 @@ def bad_request_handler():
         }
     }
 
-def unknown_request_handler(event, context):
+def unknown_request_handler():
   return {
         'statusCode': 404,
         'headers': {
