@@ -1,26 +1,27 @@
 import boto3
 import json
+import time
 
 
 def lambda_handler(event, context):
-  check_and_handle_invalid_requests(event)
+  # Check and handle unknown and invalid requests
+  err = check_and_handle_invalid_requests(event)
+  if err:
+    return err
 
-  # dynamodb = boto3.resource('dynamodb')
-  # table = dynamodb.Table('state_verifier_pair')
-  res = event
+  dynamodb = boto3.resource('dynamodb')
+  table = dynamodb.Table('state_verifier_pair')
 
-  return {
-        'statusCode': 200,
-        'headers': {
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Allow-Origin': 'http://localhost:5173',
-            'Access-Control-Allow-Methods': 'OPTIONS,POST'
-        },
-        'body': {
-          'message': 'The lambda function is live!',
-          'data': res
-        }
-    }
+  if 'state' in event and 'codeVerifier' in event:
+    # Add state and codeVerifier to dynamoDB with an expirationTime of 5 minutes
+    return saveStateAndCodeVerifierPair(event['state'], event['codeVerifier'], table)
+  elif 'state' in event and 'code' in event:
+    # Exchange code for access token from Spotify and attach it as a httpOnly cookie
+    return handleTokenRequest(event['state'], event['code'], table)
+
+
+
+
 
 def check_and_handle_invalid_requests(event):
   # If all required keys are missing
@@ -64,6 +65,31 @@ def unknown_request_handler():
           'error_description': 'The request is not supported by the server'
         }
     }
+
+# Add state and codeVerifier to dynamoDB with an expirationTime of 5 minutes
+def saveStateAndCodeVerifierPair(state, codeVerifier, table):
+  try:
+    table.put_item(
+      Item = {
+        'state': state,
+        'codeVerifier': codeVerifier,
+        'expiresAt': int(time.time()) + 300
+      }
+    )
+
+    return {
+      'statusCode': 200,
+      'headers': {
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Origin': 'http://localhost:5173',
+          'Access-Control-Allow-Methods': 'OPTIONS,POST'
+      },
+      'body': {
+        'message': 'State and code verifier saved successfully'
+      }
+    }
+  except Exception as e:
+    return error_handler(e)
   
   # if we receive state and code verifier from http requests
   # store verifier into a storage service (like dynamoDB) with
@@ -97,5 +123,4 @@ def unknown_request_handler():
   
 #   return response
 
-# def saveStateAndCodeVerifierPair(state, codeVerifier):
   

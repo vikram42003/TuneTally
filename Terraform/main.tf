@@ -28,7 +28,7 @@ resource "aws_dynamodb_table" "state_verifier_pair" {
   }
 
   ttl {
-    attribute_name = "Ttl"
+    attribute_name = "expiresAt"
     enabled        = true
   }
 
