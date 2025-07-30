@@ -90,7 +90,22 @@ def saveStateAndCodeVerifierPair(state, codeVerifier, table):
     }
   except Exception as e:
     return error_handler(e)
-  
+
+
+
+def error_handler(e):
+  return {
+    'statsCode': 500,
+    'headers': {
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Origin': 'http://localhost:5173',
+          'Access-Control-Allow-Methods': 'OPTIONS,POST'
+      },
+    'body': {
+      'error': json.dumps(e)
+    }
+  }
+
   # if we receive state and code verifier from http requests
   # store verifier into a storage service (like dynamoDB) with
   #   - primary key as state
