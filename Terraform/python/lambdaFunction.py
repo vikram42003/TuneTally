@@ -1,4 +1,4 @@
-# import boto3
+import boto3
 
 # s3 = boto3.resource('s3')
 # for bucket in s3.buckets.all():
@@ -8,6 +8,8 @@ import json
 
 
 def lambda_handler(event, context):
+  dynamodb = boto3.resource('dynamodb')
+  res = dynamodb.Table('state_verifier_pair')
   # REMOVE THIS AFTER YOU'RE DONE WITH TERRAFORM
   return {
         'statusCode': 200,
@@ -17,6 +19,34 @@ def lambda_handler(event, context):
             'Access-Control-Allow-Methods': 'OPTIONS,POST'
         },
         'body': json.dumps('The lambda function is live!')
+    }
+
+def bad_request_handler():
+  return {
+        'statusCode': 400,
+        'headers': {
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Origin': 'http://localhost:5173',
+            'Access-Control-Allow-Methods': 'OPTIONS,POST'
+        },
+        'body': {
+          'error': 'Bad formatted request',
+          'error_description': 'The payload should be state and codeVerifier or state and code pair'
+        }
+    }
+
+def unknown_request_handler(event, context):
+  return {
+        'statusCode': 404,
+        'headers': {
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Origin': 'http://localhost:5173',
+            'Access-Control-Allow-Methods': 'OPTIONS,POST'
+        },
+        'body': {
+          'error': 'Unknown request',
+          'error_description': 'The request is not supported by the server'
+        }
     }
   
   # if we receive state and code verifier from http requests
