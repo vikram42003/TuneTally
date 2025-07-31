@@ -20,10 +20,10 @@ resource "aws_dynamodb_table" "state_verifier_pair" {
   read_capacity  = 5
   write_capacity = 5
 
-  hash_key = "State"
+  hash_key = "state"
 
   attribute {
-    name = "State"
+    name = "state"
     type = "S"
   }
 
