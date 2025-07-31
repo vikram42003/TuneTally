@@ -91,7 +91,23 @@ def saveStateAndCodeVerifierPair(state, codeVerifier, table):
   except Exception as e:
     return error_handler(e)
 
+def handleTokenRequest(state, code, table):
+  try:
+    # todo
 
+    return {
+      'statusCode': 200,
+      'headers': {
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Origin': 'http://localhost:5173',
+          'Access-Control-Allow-Methods': 'OPTIONS,POST'
+      },
+      'body': {
+        'message': 'Token request handled successfully'
+      }
+    }
+  except Exception as e:
+    return error_handler(e)
 
 def error_handler(e):
   return {
@@ -102,7 +118,7 @@ def error_handler(e):
           'Access-Control-Allow-Methods': 'OPTIONS,POST'
       },
     'body': {
-      'error': json.dumps(e)
+      'error': json.dumps(str(e))
     }
   }
 
