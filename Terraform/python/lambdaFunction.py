@@ -4,39 +4,51 @@ import time
 
 
 def lambda_handler(event, context):
+  print(event)
   # Check and handle unknown and invalid requests
-  err = check_and_handle_invalid_requests(event)
+  # Return body if everything goes well
+  err, body = check_and_handle_invalid_requests(event)
   if err:
     return err
 
   dynamodb = boto3.resource('dynamodb')
   table = dynamodb.Table('state_verifier_pair')
 
-  if 'state' in event and 'codeVerifier' in event:
+  if 'state' in body and 'codeVerifier' in body:
     # Add state and codeVerifier to dynamoDB with an expirationTime of 5 minutes
-    return saveStateAndCodeVerifierPair(event['state'], event['codeVerifier'], table)
-  elif 'state' in event and 'code' in event:
+    return saveStateAndCodeVerifierPair(body['state'], body['codeVerifier'], table)
+  elif 'state' in body and 'code' in body:
     # Exchange code for access token from Spotify and attach it as a httpOnly cookie
-    return handleTokenRequest(event['state'], event['code'], table)
+    return handleTokenRequest(body['state'], body['code'], table)
 
 
 
 
 
 def check_and_handle_invalid_requests(event):
+  if 'body' not in event:
+    return unknown_request_handler(), None
+  
+  try:
+    body = json.loads(event['body'])
+  except:
+    return bad_request_handler(), None
+
   # If all required keys are missing
-  no_pairs = 'state' not in event and 'codeVerifier' not in event and 'code' not in event
+  no_pairs = 'state' not in body and 'codeVerifier' not in body and 'code' not in body
 
   # state and codeVerifier pair exists (auth request), and code is not present
-  is_auth_request = 'state' in event and 'codeVerifier' in event and 'code' not in event
+  is_auth_request = 'state' in body and 'codeVerifier' in body and 'code' not in body
 
   # state and code pair exists (token request), and codeVerifier is not present
-  is_token_request = 'state' in event and 'code' in event and 'codeVerifier' not in event
+  is_token_request = 'state' in body and 'code' in body and 'codeVerifier' not in body
 
   if no_pairs:
-      return unknown_request_handler()
+    return unknown_request_handler(), None
   elif not is_auth_request and not is_token_request:
-      return bad_request_handler()
+    return bad_request_handler(), None
+  else:
+    return None, body
 
 def bad_request_handler():
   return {
