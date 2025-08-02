@@ -46,10 +46,10 @@ def bad_request_handler():
             'Access-Control-Allow-Origin': 'http://localhost:5173',
             'Access-Control-Allow-Methods': 'OPTIONS,POST'
         },
-        'body': {
+        'body': json.dumps({
           'error': 'Bad formatted request',
           'error_description': 'The payload should be state and codeVerifier or state and code pair'
-        }
+        })
     }
 
 def unknown_request_handler():
@@ -60,10 +60,10 @@ def unknown_request_handler():
             'Access-Control-Allow-Origin': 'http://localhost:5173',
             'Access-Control-Allow-Methods': 'OPTIONS,POST'
         },
-        'body': {
+        'body': json.dumps({
           'error': 'Unknown request',
           'error_description': 'The request is not supported by the server'
-        }
+        })
     }
 
 # Add state and codeVerifier to dynamoDB with an expirationTime of 5 minutes
@@ -84,9 +84,9 @@ def saveStateAndCodeVerifierPair(state, codeVerifier, table):
           'Access-Control-Allow-Origin': 'http://localhost:5173',
           'Access-Control-Allow-Methods': 'OPTIONS,POST'
       },
-      'body': {
+      'body': json.dumps({
         'message': 'State and code verifier saved successfully'
-      }
+      })
     }
   except Exception as e:
     return error_handler(e)
@@ -102,24 +102,24 @@ def handleTokenRequest(state, code, table):
           'Access-Control-Allow-Origin': 'http://localhost:5173',
           'Access-Control-Allow-Methods': 'OPTIONS,POST'
       },
-      'body': {
+      'body': json.dumps({
         'message': 'Token request handled successfully'
-      }
+      })
     }
   except Exception as e:
     return error_handler(e)
 
 def error_handler(e):
   return {
-    'statsCode': 500,
+    'statusCode': 500,
     'headers': {
           'Access-Control-Allow-Headers': 'Content-Type',
           'Access-Control-Allow-Origin': 'http://localhost:5173',
           'Access-Control-Allow-Methods': 'OPTIONS,POST'
       },
-    'body': {
-      'error': json.dumps(str(e))
-    }
+    'body': json.dumps({
+      'error': str(e)
+    })
   }
 
   # if we receive state and code verifier from http requests

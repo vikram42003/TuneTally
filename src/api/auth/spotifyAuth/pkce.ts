@@ -22,13 +22,11 @@ export const redirectAndGetCodeFromSpotify = async (
   // save uuid to session storage
   sessionStorage.setItem("state", state);
 
-  // TEMP - save code verifier to session storage
-  sessionStorage.setItem("code_verifier", codeVerifier);
-
   // send state and codeVerifier to the Lambda function
   const res = await axios.post(lambdaApiUrl, { state, codeVerifier });
-  console.log(res);
+
   // FOR TESTING --- FOR TESTING --- FOR TESTING
+  console.log(res);
   sessionStorage.removeItem("spotifyAuthenticationStatus");
 
   // send state and codeChallenge to Spotify
