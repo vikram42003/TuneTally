@@ -4,7 +4,6 @@ import time
 
 
 def lambda_handler(event, context):
-  print(event)
   # Check and handle unknown and invalid requests
   # Return body if everything goes well
   err, body = check_and_handle_invalid_requests(event)

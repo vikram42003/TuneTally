@@ -46,7 +46,7 @@ export const redirectAndGetCodeFromSpotify = async (
   // Append the parameters that we set in previous step to the url search params
   authUrl.search = new URLSearchParams(params).toString();
   // Redirect the user to the Spotify authorization page directly by setting window.location.href value
-  // window.location.href = authUrl.toString();
+  window.location.href = authUrl.toString();
 };
 
 export const getAccessToken = async (clientId: string, code: string) => {
