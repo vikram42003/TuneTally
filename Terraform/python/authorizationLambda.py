@@ -4,6 +4,17 @@ import time
 
 
 def lambda_handler(event, context):
+  return {
+        'statusCode': 200,
+        'headers': {
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Origin': 'http://localhost:5173',
+            'Access-Control-Allow-Methods': 'OPTIONS,POST'
+        },
+        'body': json.dumps({
+          'message': 'lambda is working again'
+        })
+    }
   # Check and handle unknown and invalid requests
   # Return body if everything goes well
   err, body = check_and_handle_invalid_requests(event)
