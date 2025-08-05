@@ -2,11 +2,42 @@ import axios from "axios";
 import { redirectAndGetCodeFromSpotify, getAccessToken } from "./pkce";
 
 const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-const lambdaApiUrl = import.meta.env.VITE_LAMBDA_API_URL;
+const lambdaAuthenticateUrl = import.meta.env.VITE_LAMBDA_API_URL;
 
 // The different permission we ask from user for reading their data
 // go to https://developer.spotify.com/documentation/web-api/concepts/scopes for details
 const scope = "user-read-private user-read-email user-top-read";
+
+
+
+
+
+
+
+export const spotifyAuth = async (): Promise<void> => {
+  await axios()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export const checkSpotifyAuthStatus = async (): Promise<void> => {
   // Make the app flow based on auth status
@@ -62,7 +93,7 @@ export const startSpotifyAuth = (): void => {
   redirectAndGetCodeFromSpotify(clientId, scope, lambdaApiUrl);
 };
 
-export const spotifyAuth = async () => {
+export const spotifyAuth1 = async () => {
   // check the authentication status that we have/will store
   const spotifyAuthenticationStatus = sessionStorage.getItem("spotifyAuthenticationStatus");
 

@@ -14,16 +14,16 @@ provider "aws" {
 
 # DYNAMO DB
 
-resource "aws_dynamodb_table" "state_verifier_pair" {
-  name           = "state_verifier_pair"
+resource "aws_dynamodb_table" "sessionID_token_pair" {
+  name           = "sessionID_token_pair"
   billing_mode   = "PROVISIONED"
   read_capacity  = 5
   write_capacity = 5
 
-  hash_key = "state"
+  hash_key = "sessionID"
 
   attribute {
-    name = "state"
+    name = "sessionID"
     type = "S"
   }
 
@@ -81,7 +81,7 @@ resource "aws_iam_policy" "lambda_dynamodb_access" {
           "dynamodb:Query",
           "dynamodb:Scan"
         ],
-        Resource = aws_dynamodb_table.state_verifier_pair.arn
+        Resource = aws_dynamodb_table.sessionID_token_pair.arn
       }
     ]
   })
