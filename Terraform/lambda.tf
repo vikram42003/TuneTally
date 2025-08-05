@@ -4,7 +4,7 @@ data "archive_file" "lambda" {
   output_path = "authorization_lambda_function_payload.zip"
 }
 
-resource "aws_lambda_function" "TuneTally_Authrization_Lambda" {
+resource "aws_lambda_function" "TuneTally_Authorization_Lambda" {
   filename         = data.archive_file.lambda.output_path
   function_name    = "TuneTally_Authrization_Lambda"
   role             = aws_iam_role.iam_for_lambda.arn
