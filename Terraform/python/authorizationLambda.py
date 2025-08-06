@@ -139,6 +139,7 @@ def exchangeCodeForTokenAndRedirect(code, state):
         response = table.get_item(Key={"sessionID": state})
 
         # Check if the returned state matches our saved state (as a security measure)
+        # state is the sessionID and it should be stored in dynamoDB
         if "Item" not in response:
             raise Exception("Invalid state parameter")
         # The value for token should be TEMP at this step, if its not then state we might already have a token
@@ -195,16 +196,20 @@ def exchangeCodeForTokenAndRedirect(code, state):
         table.put_item(Item=item)
 
         app_base_url = os.environ.get("TUNETALLY_BASE_URL")
-
+        httpOnly_cookie = (
+            f"sessionID={state}; Max-Age=3600; HttpOnly; Secure; SameSite=Lax"
+        )
         return {
             "statusCode": 302,
             "headers": {
-                "Location": app_base_url,
+                **CORS_HEADERS,
+                "Set-Cookie": httpOnly_cookie,
+                "Location": app_base_url + "?spotifyAuthStatus=success",
             },
         }
 
     except Exception as e:
-        return error_handler(e)
+        return error_handler_redirect(e)
 
 
 def handleSpotifyLoginCallbackRequest(event):
