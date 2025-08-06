@@ -4,6 +4,50 @@ import time
 
 
 def lambda_handler(event, context):
+  path = event["requestContext"]["path"]
+  # Strip away the v1 part since path will be something like /v1/spotifyLogin
+  path = path.split('/')[2]
+
+  if path == 'spotifyLogin':
+    # Handle spotify login request
+    return handleSpotifyLoginRequest(event)
+  elif path == 'spotifyLoginCallback':
+    # Handle spotify login callback request
+    return handleSpotifyLoginCallbackRequest(event)
+  else:
+    return unknown_request_handler()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  # Check and handle unknown and invalid requests
+  # Return body if everything goes well
+  # err, body = check_and_handle_invalid_requests(event)
+  # if err:
+  #   return err
+
+  dynamodb = boto3.resource('dynamodb')
+  table = dynamodb.Table('sessionID_token_pair')
+
+  # Check which endpoint called the lambda
+  # ref - https://stackoverflow.com/questions/57940412/how-can-an-aws-lambda-know-what-endpoint-called-it-from-api-gateway
+  try:
+    res = event["requestContext"]["path"]
+    print(res)
+  except Exception as e:
+    res = e
+
   return {
         'statusCode': 200,
         'headers': {
@@ -12,26 +56,22 @@ def lambda_handler(event, context):
             'Access-Control-Allow-Methods': 'OPTIONS,POST'
         },
         'body': json.dumps({
-          'message': 'lambda is working again'
+          'message': 'lambda is working again',
+          'response': str(res)
         })
     }
-  # Check and handle unknown and invalid requests
-  # Return body if everything goes well
-  err, body = check_and_handle_invalid_requests(event)
-  if err:
-    return err
-
-  dynamodb = boto3.resource('dynamodb')
-  table = dynamodb.Table('state_verifier_pair')
-
+    
   if 'state' in body and 'codeVerifier' in body:
     # Add state and codeVerifier to dynamoDB with an expirationTime of 5 minutes
     return saveStateAndCodeVerifierPair(body['state'], body['codeVerifier'], table)
   elif 'state' in body and 'code' in body:
     # Exchange code for access token from Spotify and attach it as a httpOnly cookie
+
+    # !!! CHECK WHETHER CORS WOULD WORK WHEN SPOTIFY REDIRECTS TO CALLBACK !!!
     return handleTokenRequest(body['state'], body['code'], table)
 
-
+def handleSpotifyLoginRequest():
+  
 
 
 
@@ -143,37 +183,3 @@ def error_handler(e):
       'error': str(e)
     })
   }
-
-  # if we receive state and code verifier from http requests
-  # store verifier into a storage service (like dynamoDB) with
-  #   - primary key as state
-  #   - codeVerifier as code verifier
-  #   - expirationTime as 5 minutes from now
-  
-  # if we receive state and code from http request
-  # check the storage if we have a code verifier for the state we received
-  # if there is a match then
-  #   - take the code and code verifier and make an auth request to spotify's api/token endpint
-  #   - delete the state and verifier from storage
-  #   - receive the access token, attach it as a http only cookie and send it to the function caller
-  
-  # if we recieve anything else from the request then send 400
-  
-#   state = event["state"]
-#   codeVerifier = event["codeVerifier"]
-#   code = event["code"]
-  
-#   response
-#   if state and codeVerifier and not code:
-#     response = saveStateAndCodeVerifierPair(state, codeVerifier)
-#   elif state and code and not codeVerifier:
-#     response = getAndAttachAccessToken(state, code)
-#   else:
-#     response = {
-#       "statusCode": 400,
-#       "message": "Invalid input"
-#     }
-  
-#   return response
-
-  

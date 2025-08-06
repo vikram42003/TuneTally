@@ -14,6 +14,13 @@ resource "aws_lambda_function" "TuneTally_Authorization_Lambda" {
 
   runtime = "python3.12"
 
+  environment {
+    variables = {
+      SPOTIFY_CLIENT_ID = var.SPOTIFY_CLIENT_ID
+      SPOTIFY_CLIENT_SECRET = var.SPOTIFY_CLIENT_SECRET
+    }
+  }
+
   tags = {
     Project     = "TuneTally_Terraform"
     Environment = "Production"
