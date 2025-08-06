@@ -1,6 +1,9 @@
+import os
 import boto3
 import json
 import time
+import uuid
+from urllib import urlencode
 
 
 SCOPE = "user-read-private user-read-email user-top-read"
@@ -54,4 +57,43 @@ def error_handler(e):
 
 
 def handleSpotifyLoginRequest():
-    pass
+    client_id = os.enviorn.get("SPOTIFY_CLIENT_ID")
+    if not client_id:
+        return error_handler(
+            "Spotify client ID not found. Check if enviornment variables are set properly"
+        )
+
+    redirect_uri = os.enviorn.get("SPOTIFY_REDIRECT_URI")
+    if not redirect_uri:
+        return error_handler(
+            "Spotify redirect URI not found. Check if enviornment variables are set properly"
+        )
+
+    state = uuid.uuid4()
+
+    try:
+        dynamodb = boto3.resource("dynamodb")
+        table = dynamodb.Table("sessionID_token_pair")
+        table.put_item(
+            Item={
+                "sessionID": state,
+                "token": "TEMP",
+                "expiresAt": int(time.time()) + 300,
+            }
+        )
+    except Exception as e:
+        return error_handler(e)
+
+    params_dict = {
+        "response_type": "code",
+        "client_id": client_id,
+        "scope": SCOPE,
+        "redirect_uri": redirect_uri,
+        "state": state,
+    }
+
+    spotify_auth_base_url = "https://accounts.spotify.com/authorize"
+    query_string = urlencode(params_dict)
+    url = spotify_auth_base_url + "?" + query_string
+
+    return {"statusCode": 302, "headers": {"Location": url}}
