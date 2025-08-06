@@ -53,6 +53,11 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
                     type = "string"
                   }
                 }
+                Access-Control-Allow-Credentials = {
+                  schema = {
+                    type = "string"
+                  }
+                }
               }
             }
           }
@@ -103,6 +108,11 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
                   }
                 }
                 Access-Control-Allow-Methods = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+                Access-Control-Allow-Credentials = {
                   schema = {
                     type = "string"
                   }
