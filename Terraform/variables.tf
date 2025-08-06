@@ -13,3 +13,9 @@ variable "SPOTIFY_CLIENT_SECRET" {
   sensitive   = true
   default = ""
 }
+
+variable "SPOTIFY_REDIRECT_URI" {
+  description = "The url of the Lambda callback function that handles token exchange"
+  type = string
+  default = ""
+}
