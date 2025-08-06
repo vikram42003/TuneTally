@@ -3,19 +3,34 @@ import json
 import time
 
 
+SCOPE = "user-read-private user-read-email user-top-read"
+CORS_HEADERS = {
+  'Access-Control-Allow-Origin': 'http://localhost:5173',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'OPTIONS,GET'
+}
+
 def lambda_handler(event, context):
   path = event["requestContext"]["path"]
   # Strip away the v1 part since path will be something like /v1/spotifyLogin
   path = path.split('/')[2]
 
   if path == 'spotifyLogin':
-    # Handle spotify login request
-    return handleSpotifyLoginRequest(event)
+    # Prepare the request and redirect to spotify auth page
+    return handleSpotifyLoginRequest()
   elif path == 'spotifyLoginCallback':
-    # Handle spotify login callback request
+    # Exchange code for token (or send back error) and redirect to app page
     return handleSpotifyLoginCallbackRequest(event)
   else:
     return unknown_request_handler()
+
+  return {
+        'statusCode': 200,
+        'headers': CORS_HEADERS,
+        'body': json.dumps({
+          'message': 'lambda is working again'
+        })
+    }
 
 def handleSpotifyLoginRequest():
   pass
