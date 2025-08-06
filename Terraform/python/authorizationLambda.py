@@ -57,11 +57,35 @@ def unknown_request_handler():
     }
 
 
+def unknown_request_handler_redirect():
+    app_base_url = os.environ.get("TUNETALLY_BASE_URL")
+    return {
+        "statusCode": 302,
+        "headers": {
+            **CORS_HEADERS,
+            "Location": app_base_url
+            + "/error?error="
+            + "Unknown request - The request is not supported by the server",
+        },
+    }
+
+
 def error_handler(e):
     return {
         "statusCode": 500,
         "headers": CORS_HEADERS,
         "body": json.dumps({"error": str(e)}),
+    }
+
+
+def error_handler_redirect(e):
+    app_base_url = os.environ.get("TUNETALLY_BASE_URL")
+    return {
+        "statusCode": 302,
+        "headers": {
+            **CORS_HEADERS,
+            "Location": app_base_url + "/error?error=" + str(e),
+        },
     }
 
 
