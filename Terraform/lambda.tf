@@ -18,6 +18,8 @@ resource "aws_lambda_function" "TuneTally_Authorization_Lambda" {
     variables = {
       SPOTIFY_CLIENT_ID = var.SPOTIFY_CLIENT_ID
       SPOTIFY_CLIENT_SECRET = var.SPOTIFY_CLIENT_SECRET
+      SPOTIFY_REDIRECT_URI = var.SPOTIFY_REDIRECT_URI
+      TUNETALLY_BASE_URL = var.TUNETALLY_BASE_URL
     }
   }
 

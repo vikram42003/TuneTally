@@ -8,13 +8,20 @@ from urllib import urlencode
 
 SCOPE = "user-read-private user-read-email user-top-read"
 CORS_HEADERS = {
-    "Access-Control-Allow-Origin": "http://localhost:5173",
+    "Access-Control-Allow-Origin": os.environ.get("TUNETALLY_BASE_URL"),
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Methods": "OPTIONS,GET",
 }
 
 
 def lambda_handler(event, context):
+    # Check if we have the app url before doing anything
+    app_base_url = os.environ.get("TUNETALLY_BASE_URL")
+    if not app_base_url:
+        return error_handler(
+            "No app url found. Check if environment variables are set up correctly"
+        )
+
     path = event["requestContext"]["path"]
     # Strip away the v1 part since path will be something like /v1/spotifyLogin
     path = path.split("/")[2]
@@ -100,7 +107,19 @@ def handleSpotifyLoginRequest():
 
 
 def exchangeCodeForTokenAndRedirect(code, state):
-    pass
+    try:
+        dynamodb = boto3.resource("dynamodb")
+        table = dynamodb.Table("sessionID_token_pair")
+        response = table.get_item(Key={"sessionID": state})
+
+        # Check if the returned state matches our saved state (as a security measure)
+        if "Item" not in response:
+            raise Exception("Invalid state parameter")
+        # The value for token should be TEMP at this step, if its not then state we might already have a token
+        elif response["Item"]["token"] != "TEMP":
+            raise Exception("Invalid value for token")
+    except Exception as e:
+        return error_handler(e)
 
 
 def handleSpotifyLoginCallbackRequest(event):

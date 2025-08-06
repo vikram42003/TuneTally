@@ -19,3 +19,8 @@ variable "SPOTIFY_REDIRECT_URI" {
   type = string
   default = ""
 }
+
+variable "TUNETALLY_BASE_URL" {
+  description = "The base url of the app. Needed as a terraform variable to setup cors in gateway and redirects in lambda"
+  type = string
+}

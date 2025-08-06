@@ -67,7 +67,7 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
                 responseParameters = {
                   "method.response.header.Access-Control-Allow-Headers" = "'Content-Type'"
                   "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS'"
-                  "method.response.header.Access-Control-Allow-Origin"  = "'http://localhost:5173'"
+                  "method.response.header.Access-Control-Allow-Origin"  = "'${var.TUNETALLY_BASE_URL}'"
                 }
                 responseTemplates = {
                   "application/json" = ""
@@ -120,7 +120,7 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
                 responseParameters = {
                   "method.response.header.Access-Control-Allow-Headers" = "'Content-Type'"
                   "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS'"
-                  "method.response.header.Access-Control-Allow-Origin"  = "'http://localhost:5173'"
+                  "method.response.header.Access-Control-Allow-Origin"  = "'${var.TUNETALLY_BASE_URL}'"
                 }
                 responseTemplates = {
                   "application/json" = ""
