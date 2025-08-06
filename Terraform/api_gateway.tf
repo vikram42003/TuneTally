@@ -68,6 +68,7 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
                   "method.response.header.Access-Control-Allow-Headers" = "'Content-Type'"
                   "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS'"
                   "method.response.header.Access-Control-Allow-Origin"  = "'${var.TUNETALLY_BASE_URL}'"
+                  "method.response.header.Access-Control-Allow-Credentials"  = "'true'"
                 }
                 responseTemplates = {
                   "application/json" = ""
@@ -121,6 +122,7 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
                   "method.response.header.Access-Control-Allow-Headers" = "'Content-Type'"
                   "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS'"
                   "method.response.header.Access-Control-Allow-Origin"  = "'${var.TUNETALLY_BASE_URL}'"
+                  "method.response.header.Access-Control-Allow-Credentials"  = "'true'"
                 }
                 responseTemplates = {
                   "application/json" = ""
