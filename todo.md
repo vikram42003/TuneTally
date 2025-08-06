@@ -1,3 +1,24 @@
+Auth Flow -
+We follow the OAuth2 Authorization flow and use Backend-For-Frontend Architecture design with lambda acting as server and proxy
+1) The user clicks on Get Stats button which initiates the login process
+2) We make a request to lambda/spotifyLogin
+3) lambda/spotifyLogin prepares the request to send to spotify, creates a sessionID (which will be the state value) and saves it, and sends a redirect request back to frontend
+4) The frontend is now at spotify authentication page, they either login or fail, either way spotify redirects them to lambda function again, it reads query string params and checks whether the request failed or suceeded
+5) 
+  5.1) If it failed redirect back to homepage with error/error message as query string to tell the user to try logging in again
+  5.2) If it suceeded then exchange it for auth token and save it to dynamo db, attach the sessionID as a httpOnly cookie so the user can be identified, and send them back to homepage with success in query string
+6) Now any and all requests for data are sent through lambda proxy, which can combine reuqests, cache them, make it tidy, clean up structure and more
+
+
+
+
+
+
+
+
+
+
+
 TODO FR FR - 
 ✅1) Check if we're already logged in
 ✅1.1) Currently it logs the red "request failed" error to the console. deal with that

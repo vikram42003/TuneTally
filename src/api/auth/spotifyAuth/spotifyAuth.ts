@@ -2,7 +2,7 @@ import axios from "axios";
 import { redirectAndGetCodeFromSpotify, getAccessToken } from "./pkce";
 
 const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-const lambdaAuthenticateUrl = import.meta.env.VITE_LAMBDA_API_URL;
+const loginUrl = import.meta.env.VITE_LAMBDA_LOGIN_URL;
 
 // The different permission we ask from user for reading their data
 // go to https://developer.spotify.com/documentation/web-api/concepts/scopes for details
@@ -14,8 +14,9 @@ const scope = "user-read-private user-read-email user-top-read";
 
 
 
-export const spotifyAuth = async (): Promise<void> => {
-  await axios()
+export const loginWithSpotify = async (): Promise<void> => {
+  const res = await axios.get(loginUrl)
+  console.log(res);
 }
 
 

@@ -8,10 +8,10 @@ import { useEffect } from "react";
 import { checkSpotifyAuthStatus } from "./api/auth/spotifyAuth/spotifyAuth";
 
 const App = () => {
-  useEffect(() => {
-    // checkSpotifyAuthStatus checks and controls the authentication flow for Spotify
-    checkSpotifyAuthStatus();
-  }, []);
+  // useEffect(() => {
+  //   // checkSpotifyAuthStatus checks and controls the authentication flow for Spotify
+  //   checkSpotifyAuthStatus();
+  // }, []);
 
   return (
     <>
