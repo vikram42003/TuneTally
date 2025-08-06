@@ -97,3 +97,18 @@ def handleSpotifyLoginRequest():
     url = spotify_auth_base_url + "?" + query_string
 
     return {"statusCode": 302, "headers": {"Location": url}}
+
+
+def exchangeCodeForTokenAndRedirect(code, state):
+    pass
+
+
+def handleSpotifyLoginCallbackRequest(event):
+    params = event["queryStringParameters"]
+
+    if "code" in params and "state" in params:
+        return exchangeCodeForTokenAndRedirect(params["code"], params["state"])
+    elif "error" in params and "state" in params:
+        return error_handler(params["error"])
+    else:
+        return unknown_request_handler()
