@@ -110,7 +110,27 @@ def exchangeCodeForTokenAndRedirect(code, state):
     try:
         dynamodb = boto3.resource("dynamodb")
         table = dynamodb.Table("sessionID_token_pair")
-        response = table.get_item(Key={"sessionID": state})
+        # response = table.get_item(Key={"sessionID": state})
+        
+        # doc ref - https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/table/update_item.html
+        table.update_item(
+            Key={
+                "sessionID": state
+            },
+            updateExpression="SET #token = :t, #expiresAt = :ea",
+            conditionExpression="#sessionID = :state AND #expiresAt > :timenow"
+            expressionAttributeNames={
+                "#sessionID": "sessionID",
+                "#token": "token",
+                "#expiresAt": "expiresAt"
+            },
+            expressionAttributeValues={
+                ":state": state,
+                ":t": auth_token,
+                ":ea": int(time.time()) + 3600
+                ":timenow": int(time.time())
+            }
+        )
 
         # Check if the returned state matches our saved state (as a security measure)
         if "Item" not in response:
