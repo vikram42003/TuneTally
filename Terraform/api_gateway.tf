@@ -14,12 +14,12 @@ resource "aws_lambda_permission" "Allow_TuneTally_Callback_Lambda" {
   source_arn    = "${aws_api_gateway_rest_api.TuneTally_API_Gateway.execution_arn}/*/GET/spotifyLoginCallback"
 }
 
-resource "aws_lambda_permission" "Allow_TuneTally_Request_Proy_Lambda" {
-  statement_id  = "Allow_TuneTally_Request_Proy_Lambda"
+resource "aws_lambda_permission" "Allow_TuneTally_Request_Proxy_Lambda" {
+  statement_id  = "Allow_TuneTally_Request_Proxy_Lambda"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.TuneTally_Authorization_Lambda.function_name
+  function_name = aws_lambda_function.TuneTally_Request_Proxy_Lambda.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_api_gateway_rest_api.TuneTally_API_Gateway.execution_arn}/*/GET/spotifyLoginCallback"
+  source_arn    = "${aws_api_gateway_rest_api.TuneTally_API_Gateway.execution_arn}/*"
 }
 
 resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
@@ -35,7 +35,7 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
       "/spotifyLogin" = {
         get = {
           x-amazon-apigateway-integration = {
-            httpMethod           = "POST"
+            httpMethod           = "GET"
             payloadFormatVersion = "1.0"
             type                 = "AWS_PROXY"
             uri                  = aws_lambda_function.TuneTally_Authorization_Lambda.invoke_arn
@@ -78,7 +78,7 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
               default = {
                 statusCode = "200"
                 responseParameters = {
-                  "method.response.header.Access-Control-Allow-Headers" = "'Content-Type'"
+                  "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,Authorization'"
                   "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS'"
                   "method.response.header.Access-Control-Allow-Origin"  = "'${var.TUNETALLY_BASE_URL}'"
                   "method.response.header.Access-Control-Allow-Credentials"  = "'true'"
@@ -94,7 +94,7 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
       "/spotifyLoginCallback" = {
         get = {
           x-amazon-apigateway-integration = {
-            httpMethod           = "POST"
+            httpMethod           = "GET"
             payloadFormatVersion = "1.0"
             type                 = "AWS_PROXY"
             uri                  = aws_lambda_function.TuneTally_Authorization_Lambda.invoke_arn
@@ -137,7 +137,66 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
               default = {
                 statusCode = "200"
                 responseParameters = {
-                  "method.response.header.Access-Control-Allow-Headers" = "'Content-Type'"
+                  "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,Authorization'"
+                  "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS'"
+                  "method.response.header.Access-Control-Allow-Origin"  = "'${var.TUNETALLY_BASE_URL}'"
+                  "method.response.header.Access-Control-Allow-Credentials"  = "'true'"
+                }
+                responseTemplates = {
+                  "application/json" = ""
+                }
+              }
+            }
+          }
+        }
+      }
+      "/spotify" = {
+        get = {
+          x-amazon-apigateway-integration = {
+            httpMethod           = "GET"
+            payloadFormatVersion = "1.0"
+            type                 = "AWS_PROXY"
+            uri                  = aws_lambda_function.TuneTally_Request_Proxy_Lambda.invoke_arn
+          }
+        }
+        options = {
+          responses = {
+            "200" = {
+              description = "Default response for CORS method"
+              headers = {
+                Access-Control-Allow-Headers = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+                Access-Control-Allow-Origin = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+                Access-Control-Allow-Methods = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+                Access-Control-Allow-Credentials = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+              }
+            }
+          }
+          x-amazon-apigateway-integration = {
+            type             = "mock"
+            requestTemplates = {
+              "application/json" = "{\"statusCode\": 200}"
+            }
+            responses = {
+              default = {
+                statusCode = "200"
+                responseParameters = {
+                  "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,Authorization'"
                   "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS'"
                   "method.response.header.Access-Control-Allow-Origin"  = "'${var.TUNETALLY_BASE_URL}'"
                   "method.response.header.Access-Control-Allow-Credentials"  = "'true'"
