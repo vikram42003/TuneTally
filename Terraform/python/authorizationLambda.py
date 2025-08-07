@@ -8,6 +8,8 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 
+# The different permission we ask from user for reading their data
+# go to https://developer.spotify.com/documentation/web-api/concepts/scopes for details
 SCOPE = "user-read-private user-read-email user-top-read"
 CORS_HEADERS = {
     "Access-Control-Allow-Origin": os.environ.get("TUNETALLY_BASE_URL"),
