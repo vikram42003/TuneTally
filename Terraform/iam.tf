@@ -25,7 +25,7 @@ resource "aws_iam_role" "auth_lambda_role" {
 
 # For the auth function, it needs (almost) full access to the dynamoDB table
 resource "aws_iam_policy" "auth_lambda_dynamodb_access" {
-  name = "lambda_dynamodb_access"
+  name = "auth_lambda_dynamodb_access"
 
   policy = jsonencode({
     Version = "2012-10-17",
