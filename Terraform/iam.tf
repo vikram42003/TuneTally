@@ -23,6 +23,7 @@ resource "aws_iam_role" "iam_for_lambda" {
   }
 }
 
+# For the auth function, it needs (almost) full access to the dynamoDB table
 resource "aws_iam_policy" "lambda_dynamodb_access" {
   name = "lambda_dynamodb_access"
 
@@ -48,6 +49,29 @@ resource "aws_iam_policy" "lambda_dynamodb_access" {
 resource "aws_iam_role_policy_attachment" "attach_dynamodb_policy" {
   role       = aws_iam_role.iam_for_lambda.name
   policy_arn = aws_iam_policy.lambda_dynamodb_access.arn
+}
+
+# For the request proxy lambda, it only needs to check whether the session is valid or not
+resource "aws_iam_policy" "lambda_dynamodb_only_getItem_access" {
+  name = "lambda_dynamodb_only_getItem_access"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "dynamodb:GetItem"
+        ],
+        Resource = aws_dynamodb_table.sessionID_token_pair.arn
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_dynamodb_policy_only_getItem" {
+  role       = aws_iam_role.iam_for_lambda.name
+  policy_arn = aws_iam_policy.lambda_dynamodb_only_getItem_access.arn
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_logging" {

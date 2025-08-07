@@ -1,3 +1,4 @@
+# Authorization Lambda
 data "archive_file" "lambda" {
   type        = "zip"
   source_file = "${path.module}/python/authorizationLambda.py"
@@ -19,6 +20,35 @@ resource "aws_lambda_function" "TuneTally_Authorization_Lambda" {
       SPOTIFY_CLIENT_ID = var.SPOTIFY_CLIENT_ID
       SPOTIFY_CLIENT_SECRET = var.SPOTIFY_CLIENT_SECRET
       SPOTIFY_REDIRECT_URI = var.SPOTIFY_REDIRECT_URI
+      TUNETALLY_BASE_URL = var.TUNETALLY_BASE_URL
+    }
+  }
+
+  tags = {
+    Project     = "TuneTally_Terraform"
+    Environment = "Production"
+  }
+}
+
+# Request Proxy Lambda
+data "archive_file" "request_proxy_lambda" {
+  type        = "zip"
+  source_file = "${path.module}/python/requestProxyLambda.py"
+  output_path = "requestProxy_lambda_function_payload.zip"
+}
+
+resource "aws_lambda_function" "TuneTally_Request_Proxy_Lambda" {
+  filename         = data.archive_file.lambda.output_path
+  function_name    = "TuneTally_Request_Proxy_Lambda"
+  role             = aws_iam_role.iam_for_lambda.arn
+  handler          = "requestProxyLambda.lambda_handler"
+
+  source_code_hash = data.archive_file.request_proxy_lambda.output_base64sha256
+
+  runtime = "python3.12"
+
+  environment {
+    variables = {
       TUNETALLY_BASE_URL = var.TUNETALLY_BASE_URL
     }
   }
