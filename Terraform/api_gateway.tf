@@ -1,5 +1,5 @@
 resource "aws_lambda_permission" "Allow_TuneTally_Authorizarion_Lambda" {
-  statement_id  = "AllowTuneTally_API_GatewayInvoke"
+  statement_id  = "Allow_TuneTally_API_Gateway_Invoke"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.TuneTally_Authorization_Lambda.function_name
   principal     = "apigateway.amazonaws.com"
@@ -7,7 +7,15 @@ resource "aws_lambda_permission" "Allow_TuneTally_Authorizarion_Lambda" {
 }
 
 resource "aws_lambda_permission" "Allow_TuneTally_Callback_Lambda" {
-  statement_id  = "AllowTuneTally_API_GatewayInvokeCallback"
+  statement_id  = "Allow_TuneTally_API_Gateway_Invoke_Callback"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.TuneTally_Authorization_Lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.TuneTally_API_Gateway.execution_arn}/*/GET/spotifyLoginCallback"
+}
+
+resource "aws_lambda_permission" "Allow_TuneTally_Request_Proy_Lambda" {
+  statement_id  = "Allow_TuneTally_Request_Proy_Lambda"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.TuneTally_Authorization_Lambda.function_name
   principal     = "apigateway.amazonaws.com"
