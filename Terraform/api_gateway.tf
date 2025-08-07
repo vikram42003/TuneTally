@@ -19,7 +19,7 @@ resource "aws_lambda_permission" "Allow_TuneTally_Request_Proxy_Lambda" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.TuneTally_Request_Proxy_Lambda.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_api_gateway_rest_api.TuneTally_API_Gateway.execution_arn}/*"
+  source_arn    = "${aws_api_gateway_rest_api.TuneTally_API_Gateway.execution_arn}/*/GET/spotify"
 }
 
 resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
@@ -35,7 +35,7 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
       "/spotifyLogin" = {
         get = {
           x-amazon-apigateway-integration = {
-            httpMethod           = "GET"
+            httpMethod           = "POST"
             payloadFormatVersion = "1.0"
             type                 = "AWS_PROXY"
             uri                  = aws_lambda_function.TuneTally_Authorization_Lambda.invoke_arn
@@ -94,7 +94,7 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
       "/spotifyLoginCallback" = {
         get = {
           x-amazon-apigateway-integration = {
-            httpMethod           = "GET"
+            httpMethod           = "POST"
             payloadFormatVersion = "1.0"
             type                 = "AWS_PROXY"
             uri                  = aws_lambda_function.TuneTally_Authorization_Lambda.invoke_arn
@@ -153,7 +153,7 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
       "/spotify" = {
         get = {
           x-amazon-apigateway-integration = {
-            httpMethod           = "GET"
+            httpMethod           = "POST"
             payloadFormatVersion = "1.0"
             type                 = "AWS_PROXY"
             uri                  = aws_lambda_function.TuneTally_Request_Proxy_Lambda.invoke_arn

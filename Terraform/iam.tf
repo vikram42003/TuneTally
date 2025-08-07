@@ -56,8 +56,6 @@ resource "aws_iam_role_policy_attachment" "attach_lambda_logging_to_auth_lambda"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-
-
 # Proxy Lambda function
 resource "aws_iam_role" "proxy_lambda_role" {
   name               = "proxy_lambda_role"
