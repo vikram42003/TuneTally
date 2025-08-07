@@ -3,42 +3,16 @@ import { redirectAndGetCodeFromSpotify, getAccessToken } from "./pkce";
 
 const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 const loginUrl = import.meta.env.VITE_LAMBDA_LOGIN_URL;
+const spotifyRequestProxyUrl = import.meta.env.VITE_LAMBDA_PROXY_FOR_SPOTIFY_URL;
 
 // The different permission we ask from user for reading their data
 // go to https://developer.spotify.com/documentation/web-api/concepts/scopes for details
 const scope = "user-read-private user-read-email user-top-read";
 
-
-
-
-
-
-
-export const loginWithSpotify = async (): Promise<void> => {
-  const res = await axios.get(loginUrl)
-  console.log(res);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// The login process follows OAuth2 so just change the url to initiate the process
+export const loginWithSpotify = () => {
+  window.location.href = loginUrl;
+};
 
 export const checkSpotifyAuthStatus = async (): Promise<void> => {
   // Make the app flow based on auth status
@@ -51,34 +25,32 @@ export const checkSpotifyAuthStatus = async (): Promise<void> => {
     // This means we have made a request to get code from spotify/authorization endpoint and now we need to send it to lambda
     // to exchange it for the access token
     // Handle the 3 possibilities here (todo.md -> TODO FR FR 2.1, 2.2, 2.3)
-    const params = new URLSearchParams(window.location.search)
-    const code: string | null = params.get("code")
-    const state: string | null = params.get("state")
+    const params = new URLSearchParams(window.location.search);
+    const code: string | null = params.get("code");
+    const state: string | null = params.get("state");
 
     // Check if code and state are there
     if (!code || !state) {
       console.log("Code or State are missing");
       // FOR TESTING --- FOR TESTING --- FOR TESTING
       console.log(`Code - ${code}\nState - ${state}`);
-      return
+      return;
     }
-    
+
     // Check if state matches the state we saved. This should match unless XSS happens or we mess up in a really rare way
     if (state !== sessionStorage.getItem("state")) {
-      console.log("Saved state and returned state do not match")
-      return
+      console.log("Saved state and returned state do not match");
+      return;
     }
 
     // Start the authentication flow to exchange code for access token
     // Also show a "Loading" popup at this step
     try {
-      await getAccessToken(clientId, code)
-      await testRequestNew()
+      await getAccessToken(clientId, code);
+      await testRequestNew();
     } catch (e: unknown) {
       console.log(e);
     }
-
-
   } else if (status === "authenticated") {
     // This means we have the access token but we need to verify it
     // redirect the user to the stats page, it will verify it and show an error if something is wrong
@@ -153,11 +125,8 @@ const testRequest = async (accessToken: string) => {
   });
 };
 
-const testRequestNew = async () => {
-  const url = "https://api.spotify.com/v1/me/top/artists";
-  return await axios.get(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+export const testRequestNew = async () => {
+  // return await axios.get(spotifyRequestProxyUrl, { withCredentials: true });
+  const res = await axios.get(spotifyRequestProxyUrl);
+  console.log(res);
 };

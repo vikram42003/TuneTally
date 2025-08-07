@@ -169,4 +169,4 @@ override.tf.json
 terraform.rc
 
 # Ignore lambda function zip file
-lambda_function_payload.zip
+*_payload.zip
