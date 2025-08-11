@@ -10,8 +10,21 @@ CORS_HEADERS = {
 
 
 def lambda_handler(event, context):
+    cookie_info = "Cookies were not found"
+
+    cookies = event.get("cookies", [])
+    for cookie in cookies:
+        if cookie.starts("sessionID"):
+            cookie_info = cookie
+            break
+
     return {
         "statusCode": 200,
         "headers": CORS_HEADERS,
-        "body": json.dumps({"message": "Request Proxy Lambda works !!!"}),
+        "body": json.dumps(
+            {
+                "message": "Request Proxy Lambda works !!!",
+                "cookies": cookie_info
+            }
+        ),
     }

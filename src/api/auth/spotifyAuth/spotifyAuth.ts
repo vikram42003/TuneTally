@@ -14,6 +14,22 @@ export const loginWithSpotify = () => {
   window.location.href = loginUrl;
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const checkSpotifyAuthStatus = async (): Promise<void> => {
   // Make the app flow based on auth status
   const status: string | null = sessionStorage.getItem("spotifyAuthenticationStatus");
