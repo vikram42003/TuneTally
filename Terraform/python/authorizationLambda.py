@@ -8,8 +8,6 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 
-# The different permission we ask from user for reading their data
-# go to https://developer.spotify.com/documentation/web-api/concepts/scopes for details
 SCOPE = "user-read-private user-read-email user-top-read"
 CORS_HEADERS = {
     "Access-Control-Allow-Origin": os.environ.get("TUNETALLY_BASE_URL"),
@@ -73,6 +71,7 @@ def unknown_request_handler_redirect():
 
 
 def error_handler(e):
+    print(e)
     return {
         "statusCode": 500,
         "headers": CORS_HEADERS,
@@ -81,6 +80,7 @@ def error_handler(e):
 
 
 def error_handler_redirect(e):
+    print(e)
     app_base_url = os.environ.get("TUNETALLY_BASE_URL")
     return {
         "statusCode": 302,
@@ -92,19 +92,19 @@ def error_handler_redirect(e):
 
 
 def handleSpotifyLoginRequest():
-    client_id = os.enviorn.get("SPOTIFY_CLIENT_ID")
+    client_id = os.environ.get("SPOTIFY_CLIENT_ID")
     if not client_id:
         return error_handler(
             "Spotify client ID not found. Check if enviornment variables are set properly"
         )
 
-    redirect_uri = os.enviorn.get("SPOTIFY_REDIRECT_URI")
+    redirect_uri = os.environ.get("SPOTIFY_REDIRECT_URI")
     if not redirect_uri:
         return error_handler(
             "Spotify redirect URI not found. Check if enviornment variables are set properly"
         )
 
-    state = uuid.uuid4()
+    state = str(uuid.uuid4())
 
     try:
         dynamodb = boto3.resource("dynamodb")
@@ -149,17 +149,17 @@ def exchangeCodeForTokenAndRedirect(code, state):
             raise Exception("Invalid value for token")
 
         # Check for redirect uri, client id, and client secret
-        redirect_uri = os.enviorn.get("SPOTIFY_REDIRECT_URI")
+        redirect_uri = os.environ.get("SPOTIFY_REDIRECT_URI")
         if not redirect_uri:
             return error_handler(
                 "Spotify redirect URI not found. Check if enviornment variables are set properly"
             )
-        client_id = os.enviorn.get("SPOTIFY_CLIENT_ID")
+        client_id = os.environ.get("SPOTIFY_CLIENT_ID")
         if not client_id:
             return error_handler(
                 "Spotify client ID not found. Check if enviornment variables are set properly"
             )
-        client_secret = os.enviorn.get("SPOTIFY_CLIENT_SECRET")
+        client_secret = os.environ.get("SPOTIFY_CLIENT_SECRET")
         if not client_secret:
             return error_handler(
                 "Spotify client secret not found. Check if enviornment variables are set properly"
@@ -215,6 +215,8 @@ def exchangeCodeForTokenAndRedirect(code, state):
 
 
 def handleSpotifyLoginCallbackRequest(event):
+    return {"statusCode": 302, "headers": {"Location": "http://localhost:5173"}}
+
     params = event["queryStringParameters"]
 
     if "code" in params and "state" in params:
