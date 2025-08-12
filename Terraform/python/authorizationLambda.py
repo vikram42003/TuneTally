@@ -172,7 +172,7 @@ def exchangeCodeForTokenAndRedirect(code, state):
             "code": code,
             "redirect_uri": redirect_uri,
         }
-        encoded_data = json.dumps(data).encode("utf-8")
+        encoded_data = urlencode(data).encode("utf-8")
 
         token_request_url = "https://accounts.spotify.com/api/token"
         # doc ref - https://docs.python.org/3/library/urllib.request.html and https://stackoverflow.com/a/79435030
@@ -193,14 +193,12 @@ def exchangeCodeForTokenAndRedirect(code, state):
             expires_in = body["expires_in"]
 
         item["token"] = auth_token
-        item["expiresAt"] = expires_in
+        item["expiresAt"] = int(time.time()) + expires_in
 
         table.put_item(Item=item)
 
         app_base_url = os.environ.get("TUNETALLY_BASE_URL")
-        httpOnly_cookie = (
-            f"sessionID={state}; Max-Age=3600; HttpOnly; Secure; SameSite=Lax"
-        )
+        httpOnly_cookie = f"sessionID={state}; Max-Age=3600; HttpOnly; SameSite=Lax"
         return {
             "statusCode": 302,
             "headers": {
@@ -215,13 +213,11 @@ def exchangeCodeForTokenAndRedirect(code, state):
 
 
 def handleSpotifyLoginCallbackRequest(event):
-    return {"statusCode": 302, "headers": {"Location": "http://localhost:5173"}}
+    params = event.get("queryStringParameters", {})
 
-    params = event["queryStringParameters"]
-
-    if "code" in params and "state" in params:
+    if not params:
+        return unknown_request_handler_redirect()
+    elif "code" in params and "state" in params:
         return exchangeCodeForTokenAndRedirect(params["code"], params["state"])
     elif "error" in params and "state" in params:
-        return error_handler(params["error"])
-    else:
-        return unknown_request_handler()
+        return error_handler_redirect(params["error"])
