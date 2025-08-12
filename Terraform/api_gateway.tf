@@ -93,6 +93,23 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
       }
       "/spotifyLoginCallback" = {
         get = {
+          responses = {
+            "302" = {
+              description = "Callback response that sets the cookie and redirects."
+              headers = {
+                "Set-Cookie" = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+                "Location" = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+              }
+            }
+          }
           x-amazon-apigateway-integration = {
             httpMethod           = "POST"
             payloadFormatVersion = "1.0"

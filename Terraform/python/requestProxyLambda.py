@@ -6,6 +6,7 @@ CORS_HEADERS = {
     "Access-Control-Allow-Origin": os.environ.get("TUNETALLY_BASE_URL"),
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Methods": "OPTIONS,GET",
+    "Access-Control-Allow-Credentials": "true",
 }
 
 
