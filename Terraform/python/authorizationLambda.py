@@ -198,8 +198,8 @@ def exchangeCodeForTokenAndRedirect(code, state):
 
         table.put_item(Item=item)
 
+        httpOnly_cookie = f"sessionID={state}; Max-Age={expires_in}; HttpOnly; SameSite=None; Secure; Path=/"
         app_base_url = os.environ.get("TUNETALLY_BASE_URL")
-        httpOnly_cookie = f"sessionID={state}; Max-Age=3600; HttpOnly; SameSite=Lax"
         return {
             "statusCode": 302,
             "headers": {
