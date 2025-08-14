@@ -1,5 +1,6 @@
 import json
 import os
+import http.cookies
 
 
 CORS_HEADERS = {
@@ -11,16 +12,27 @@ CORS_HEADERS = {
 
 
 def lambda_handler(event, context):
+    cookie_header = event.get("headers", {}).get("cookie")
     sessionID = None
 
-    cookies = event.get("cookies", [])
-    for cookie in cookies:
-        if cookie.starts("sessionID"):
-            sessionID = cookie.split("=")[1]
-            break
+    if cookie_header:
+        cookie = http.cookies.SimpleCookie()
+        cookie.load(cookie_header)
+
+        if "sessionID" in cookie:
+            sessionID = cookie["sessionID"].value
 
     if sessionID:
-        return makeProxyRequests(sessionID)
+        return {
+            "statusCode": 200,
+            "headers": CORS_HEADERS,
+            "body": json.dumps(
+                {
+                    "message": f"We have the cookie and its {sessionID}",
+                }
+            ),
+        }
+        # return makeProxyRequests(sessionID)
     else:
         return handleMissingCookie()
 
