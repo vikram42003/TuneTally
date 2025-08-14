@@ -1,6 +1,5 @@
 import json
 import os
-import http.cookies
 
 
 CORS_HEADERS = {
@@ -12,15 +11,7 @@ CORS_HEADERS = {
 
 
 def lambda_handler(event, context):
-    cookie_header = event.get("headers", {}).get("cookie")
-    sessionID = None
-
-    if cookie_header:
-        cookie = http.cookies.SimpleCookie()
-        cookie.load(cookie_header)
-
-        if "sessionID" in cookie:
-            sessionID = cookie["sessionID"].value
+    sessionID = getSessionIdFromEvent(event)
 
     if sessionID:
         return {
@@ -35,6 +26,24 @@ def lambda_handler(event, context):
         # return makeProxyRequests(sessionID)
     else:
         return handleMissingCookie()
+
+
+def getSessionIdFromEvent(event):
+    # The location of cookie may be different depending on the version of aws api gatway so check both places
+    # I know it will hit the v1 case but it doesnt hurt to be cautious
+    # REST API (v1) stores it in ["headers"]["cookie"] and the value will be a string of cookeis separated by "; "
+    header_cookie = event.get("headers", {}).get("cookie", "")
+    if header_cookie:
+        for part in header_cookie.split(";"):
+            if part.strip().startswith("sessionID="):
+                return part.split("=", 1)[1]
+    # HTTP API (v2) stores it directly in the event and the value will be a list/array of cookies
+    cookies = event.get("cookies", [])
+    if cookies:
+        for c in cookies:
+            if c.startswith("sessionID="):
+                return c.split("=", 1)[1]
+    return None
 
 
 def handleMissingCookie():
