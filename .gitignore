@@ -75,6 +75,7 @@ web_modules/
 
 # dotenv environment variable files
 .env
+.env*
 .env.development.local
 .env.test.local
 .env.production.local
@@ -169,4 +170,4 @@ override.tf.json
 terraform.rc
 
 # Ignore lambda function zip file
-lambda_function_payload.zip
+*_payload.zip
