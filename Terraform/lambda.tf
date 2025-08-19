@@ -29,6 +29,8 @@ resource "aws_lambda_function" "TuneTally_Authorization_Lambda" {
 
   runtime = "python3.10"
 
+  layers = [aws_lambda_layer_version.requests_layer.arn]
+
   environment {
     variables = {
       SPOTIFY_CLIENT_ID = var.SPOTIFY_CLIENT_ID
