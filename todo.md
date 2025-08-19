@@ -1,3 +1,14 @@
+- On May 15th 2025, Spotify made the decision to restrict their Extended Quota Mode. Now only organizations that fulfil this criteria -
+  - Be from a registered business entity
+  - Already be publicly live 
+  - Have ≥250,000 monthly active users
+  - Operate within key Spotify markets
+  - Show commercial viability
+  Are allowed to apply for Extended Quota Mode, effectively Killing the indie projects. So the development on this project has been paused
+  until changes to the api are made or a workaround is found.
+  (Extended Qouta Mode is the public mode for the spotify api, which can be be called by any user, as opposed to the Developer
+  Mode, which requires you to manually add spotify registered emails of upto 25 emails of people who can call the api)
+
 Stuff i Should fetch -
 Albums, Artists, Categories, Genres, Playlists, Tracks, User
 
