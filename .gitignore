@@ -171,3 +171,7 @@ terraform.rc
 
 # Ignore lambda function zip file
 *_payload.zip
+Terraform/dist
+
+# Ignore lambda function layer files
+lambda_layer_source/
