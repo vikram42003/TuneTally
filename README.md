@@ -31,7 +31,9 @@ But i might tho to just store the app related statistics like
 
 ## Tech stack details -
 
-- **Fetching and Caching data** - gonna use Tanstack Query (Formerly React Query) because im gonna be making a lot of http requests so its auto caching and query status features are gonna come in handy
+- **Fetching data** - gonna use Tanstack Query (Formerly React Query) because im gonna be making a lot of http requests so its auto caching and query status features are gonna come in handy
+
+- **Caching** - We cache data in DynamoDB and it expires at the same time as the token (1 hour). Im implementing Spotify OAuth Authorization Code flow with access tokens. For my use case (short-lived stats app), refresh tokens were intentionally not used and sessions expire after 1 hour. I took this decision cause a user woudnt want some random app to have access (albeit limited) to their Spotify forever right. But we still use cache to avoid redundant API calls.
 
 - **Data Store** - Tanstack Store, If I use Redux here its gonna make my app wayy larger than it should be and would overcomplicate things so Tanstack Store will do for now
 

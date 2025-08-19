@@ -1,3 +1,7 @@
+Stuff i Should fetch -
+Albums, Artists, Categories, Genres, Playlists, Tracks, User
+
+
 Auth Flow -
 We follow the OAuth2 Authorization flow and use Backend-For-Frontend Architecture design with lambda acting as server and proxy
 1) The user clicks on Get Stats button which initiates the login process
