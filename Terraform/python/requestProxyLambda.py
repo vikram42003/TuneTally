@@ -35,7 +35,6 @@ def lambda_handler(event, context):
         return missingCookieHandler()
 
 
-
 def getSessionIdFromEvent(event):
     # The location of cookie may be different depending on the version of aws api gatway so check both places
     # I know it will hit the v1 case but it doesnt hurt to be cautious
@@ -102,9 +101,7 @@ def makeProxyRequests(sessionID, path, params):
 
         headers = {"Authorization": f"Bearer {token}"}
 
-        response = requests.get(
-            spotify_base_url + path, headers=headers, params=params
-        )
+        response = requests.get(spotify_base_url + path, headers=headers, params=params)
         response.raise_for_status()
 
         return {
