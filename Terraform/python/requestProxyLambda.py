@@ -1,5 +1,6 @@
 import json
 import os
+import requests
 
 
 CORS_HEADERS = {
@@ -9,27 +10,37 @@ CORS_HEADERS = {
     "Access-Control-Allow-Credentials": "true",
 }
 
-
 class InvalidPathException(Exception):
     pass
-
 
 def lambda_handler(event, context):
     sessionID = getSessionIdFromEvent(event)
 
     if sessionID:
-        return {
-            "statusCode": 200,
-            "headers": CORS_HEADERS,
-            "body": json.dumps(
-                {
-                    "message": f"We have the cookie and its {sessionID}",
-                }
-            ),
-        }
-        # return makeProxyRequests(sessionID)
+        # path will be something like /v1/spotify/<resource>
+        path = event["requestContext"]["path"]
+        if "/spotify/" not in path:
+            return invalidPathHandler(path)
+
+        path = path.split("/spotify/")[1]
+        params = event.get("queryStringParameters", {})
+
+        try:
+            if path == "me/top/artists" or path == "me/top/tracks":
+                checkRequest(path, params)
+                return makeProxyRequests(sessionID, path, params)
+        except Exception as e:
+            if isinstance(e, InvalidPathException):
+                return errorHandler(e, 400)
+            else:
+                return errorHandler(e)
+
+
+
+
     else:
         return missingCookieHandler()
+
 
 
 def getSessionIdFromEvent(event):
@@ -62,7 +73,6 @@ def missingCookieHandler():
         ),
     }
 
-
 def invalidPathHandler(path):
     return {
         "statusCode": 400,
@@ -74,7 +84,6 @@ def invalidPathHandler(path):
             }
         ),
     }
-
 
 def errorHandler(e, statusCode=None):
     if statusCode == None:
@@ -88,10 +97,18 @@ def errorHandler(e, statusCode=None):
         "body": json.dumps({"error": str(e)}),
     }
 
+def checkRequest(path, params):
+    if path == "me/top/artists" or path == "me/top/tracks":
 
-def makeProxyRequests(sessionID):
+    else:
+        raise InvalidPathException(f"Invalid path: {path}")
+
+def makeProxyRequests(sessionID, req_type, params):
     # TODO: Implement the actual proxy logic here
-    # For now, we'll just return a success message with the sessionID
+
+    spotify_base_url = "https://api.spotify.com/v1/"
+
+
     return {
         "statusCode": 200,
         "headers": CORS_HEADERS,
