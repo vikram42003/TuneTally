@@ -28,7 +28,6 @@ def lambda_handler(event, context):
         return handleMissingCookie()
 
 
-
 def getSessionIdFromEvent(event):
     # The location of cookie may be different depending on the version of aws api gatway so check both places
     # I know it will hit the v1 case but it doesnt hurt to be cautious

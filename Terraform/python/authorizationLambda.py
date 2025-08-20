@@ -16,12 +16,12 @@ CORS_HEADERS = {
     "Access-Control-Allow-Credentials": "true",
 }
 
-
+# TODO: Refactor this lambda func to use requests package instead of urllib, since we have created a layer for that package
 def lambda_handler(event, context):
     # Check if we have the app url before doing anything
     app_base_url = os.environ.get("TUNETALLY_BASE_URL")
     if not app_base_url:
-        return error_handler(
+        return errorHandler(
             "No app url found. Check if environment variables are set up correctly"
         )
 
@@ -36,7 +36,7 @@ def lambda_handler(event, context):
         # Exchange code for token (or send back error) and redirect to app page
         return handleSpotifyLoginCallbackRequest(event)
     else:
-        return unknown_request_handler()
+        return unknownRequestHandler()
 
     return {
         "statusCode": 200,
@@ -45,7 +45,7 @@ def lambda_handler(event, context):
     }
 
 
-def unknown_request_handler():
+def unknownRequestHandler():
     return {
         "statusCode": 404,
         "headers": CORS_HEADERS,
@@ -58,7 +58,7 @@ def unknown_request_handler():
     }
 
 
-def unknown_request_handler_redirect():
+def unknownRequestHandlerRedirect():
     app_base_url = os.environ.get("TUNETALLY_BASE_URL")
     return {
         "statusCode": 302,
@@ -71,7 +71,7 @@ def unknown_request_handler_redirect():
     }
 
 
-def error_handler(e):
+def errorHandler(e):
     print(e)
     return {
         "statusCode": 500,
@@ -80,7 +80,7 @@ def error_handler(e):
     }
 
 
-def error_handler_redirect(e):
+def errorHandlerRedirect(e):
     print(e)
     app_base_url = os.environ.get("TUNETALLY_BASE_URL")
     return {
@@ -95,13 +95,13 @@ def error_handler_redirect(e):
 def handleSpotifyLoginRequest():
     client_id = os.environ.get("SPOTIFY_CLIENT_ID")
     if not client_id:
-        return error_handler(
+        return errorHandler(
             "Spotify client ID not found. Check if enviornment variables are set properly"
         )
 
     redirect_uri = os.environ.get("SPOTIFY_REDIRECT_URI")
     if not redirect_uri:
-        return error_handler(
+        return errorHandler(
             "Spotify redirect URI not found. Check if enviornment variables are set properly"
         )
 
@@ -118,7 +118,7 @@ def handleSpotifyLoginRequest():
             }
         )
     except Exception as e:
-        return error_handler(e)
+        return errorHandler(e)
 
     params_dict = {
         "response_type": "code",
@@ -152,17 +152,17 @@ def exchangeCodeForTokenAndRedirect(code, state):
         # Check for redirect uri, client id, and client secret
         redirect_uri = os.environ.get("SPOTIFY_REDIRECT_URI")
         if not redirect_uri:
-            return error_handler(
+            return errorHandler(
                 "Spotify redirect URI not found. Check if enviornment variables are set properly"
             )
         client_id = os.environ.get("SPOTIFY_CLIENT_ID")
         if not client_id:
-            return error_handler(
+            return errorHandler(
                 "Spotify client ID not found. Check if enviornment variables are set properly"
             )
         client_secret = os.environ.get("SPOTIFY_CLIENT_SECRET")
         if not client_secret:
-            return error_handler(
+            return errorHandler(
                 "Spotify client secret not found. Check if enviornment variables are set properly"
             )
 
@@ -210,15 +210,15 @@ def exchangeCodeForTokenAndRedirect(code, state):
         }
 
     except Exception as e:
-        return error_handler_redirect(e)
+        return errorHandlerRedirect(e)
 
 
 def handleSpotifyLoginCallbackRequest(event):
     params = event.get("queryStringParameters", {})
 
     if not params:
-        return unknown_request_handler_redirect()
+        return unknownRequestHandlerRedirect()
     elif "code" in params and "state" in params:
         return exchangeCodeForTokenAndRedirect(params["code"], params["state"])
     elif "error" in params and "state" in params:
-        return error_handler_redirect(params["error"])
+        return errorHandlerRedirect(params["error"])

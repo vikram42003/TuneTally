@@ -17,6 +17,8 @@ Albums, Artists, Categories, Genres, Playlists, Tracks, User
 - Show a genre pie chart using the top songs/artist data
 - Show recently played songs
 
+permissions - "user-top-read 
+
 Extra features to add in the future -
 - Create a playlist from top songs list
 - Follow all artists from top artists list
