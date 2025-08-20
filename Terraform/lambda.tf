@@ -58,6 +58,7 @@ resource "aws_lambda_function" "TuneTally_Request_Proxy_Lambda" {
   function_name    = "TuneTally_Request_Proxy_Lambda"
   role             = aws_iam_role.proxy_lambda_role.arn
   handler          = "requestProxyLambda.lambda_handler"
+  timeout = 10
 
   source_code_hash = data.archive_file.proxy_lambda.output_base64sha256
 

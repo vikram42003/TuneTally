@@ -15,7 +15,10 @@ export const loginWithSpotify = () => {
 };
 
 export const testRequestNew = async () => {
+  const start = Date.now();
   const res = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists", { withCredentials: true });
+  const end = Date.now();
+  console.log(`Request took ${end - start} ms`);
   console.log(res);
 };
 

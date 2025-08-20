@@ -22,12 +22,12 @@ def lambda_handler(event, context):
             return invalidPathHandler(path)
 
         path = path.split("/spotify/")[1]
-        params = event.get("queryStringParameters", {})
+        params = event.get("queryStringParameters") or {}
 
         if path == "me/top/artists" or path == "me/top/tracks":
-            params.setDefault("time_range", "medium_term")
-            params.setDefault("limit", 10)
-            params.setDefault("offset", 0)
+            params.setdefault("time_range", "medium_term")
+            params.setdefault("limit", 10)
+            params.setdefault("offset", 0)
             return makeProxyRequests(sessionID, path, params)
         else:
             return invalidPathHandler(path)
