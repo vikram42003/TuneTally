@@ -10,6 +10,10 @@ CORS_HEADERS = {
 }
 
 
+class InvalidPathException(Exception):
+    pass
+
+
 def lambda_handler(event, context):
     sessionID = getSessionIdFromEvent(event)
 
@@ -25,7 +29,7 @@ def lambda_handler(event, context):
         }
         # return makeProxyRequests(sessionID)
     else:
-        return handleMissingCookie()
+        return missingCookieHandler()
 
 
 def getSessionIdFromEvent(event):
@@ -46,7 +50,7 @@ def getSessionIdFromEvent(event):
     return None
 
 
-def handleMissingCookie():
+def missingCookieHandler():
     return {
         "statusCode": 401,
         "headers": CORS_HEADERS,
@@ -56,6 +60,32 @@ def handleMissingCookie():
                 "error_description": "Required authentication cookie is missing.",
             }
         ),
+    }
+
+
+def invalidPathHandler(path):
+    return {
+        "statusCode": 400,
+        "headers": CORS_HEADERS,
+        "body": json.dumps(
+            {
+                "error": "Invalid Path",
+                "error_description": f"Path {path} is not a valid path to a resource.",
+            }
+        ),
+    }
+
+
+def errorHandler(e, statusCode=None):
+    if statusCode == None:
+        print(e)
+    else:
+        print(f"STATUS CODE: {statusCode}\n{e}")
+
+    return {
+        "statusCode": 500 if statusCode == None else statusCode,
+        "headers": CORS_HEADERS,
+        "body": json.dumps({"error": str(e)}),
     }
 
 
