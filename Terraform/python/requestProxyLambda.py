@@ -1,6 +1,7 @@
 import json
 import os
 import requests
+import boto3
 
 
 CORS_HEADERS = {
@@ -10,8 +11,6 @@ CORS_HEADERS = {
     "Access-Control-Allow-Credentials": "true",
 }
 
-class InvalidPathException(Exception):
-    pass
 
 def lambda_handler(event, context):
     sessionID = getSessionIdFromEvent(event)
@@ -25,19 +24,13 @@ def lambda_handler(event, context):
         path = path.split("/spotify/")[1]
         params = event.get("queryStringParameters", {})
 
-        try:
-            if path == "me/top/artists" or path == "me/top/tracks":
-                checkRequest(path, params)
-                return makeProxyRequests(sessionID, path, params)
-        except Exception as e:
-            if isinstance(e, InvalidPathException):
-                return errorHandler(e, 400)
-            else:
-                return errorHandler(e)
-
-
-
-
+        if path == "me/top/artists" or path == "me/top/tracks":
+            params.setDefault("time_range", "medium_term")
+            params.setDefault("limit", 10)
+            params.setDefault("offset", 0)
+            return makeProxyRequests(sessionID, path, params)
+        else:
+            return invalidPathHandler(path)
     else:
         return missingCookieHandler()
 
@@ -73,6 +66,7 @@ def missingCookieHandler():
         ),
     }
 
+
 def invalidPathHandler(path):
     return {
         "statusCode": 400,
@@ -85,34 +79,41 @@ def invalidPathHandler(path):
         ),
     }
 
-def errorHandler(e, statusCode=None):
-    if statusCode == None:
-        print(e)
-    else:
-        print(f"STATUS CODE: {statusCode}\n{e}")
 
+def errorHandler(e):
+    status_code = e.get("statusCode", 500)
+    print(e)
     return {
-        "statusCode": 500 if statusCode == None else statusCode,
+        "statusCode": status_code,
         "headers": CORS_HEADERS,
         "body": json.dumps({"error": str(e)}),
     }
 
-def checkRequest(path, params):
-    if path == "me/top/artists" or path == "me/top/tracks":
 
-    else:
-        raise InvalidPathException(f"Invalid path: {path}")
-
-def makeProxyRequests(sessionID, req_type, params):
-    # TODO: Implement the actual proxy logic here
-
+def makeProxyRequests(sessionID, path, params):
     spotify_base_url = "https://api.spotify.com/v1/"
 
+    try:
+        # get token from dynamoDB and create a header from it
+        dynamodb = boto3.resource("dynamodb")
+        table = dynamodb.Table("sessionID_token_pair")
+        response = table.get_item(Key={"sessionID": sessionID})
+        token = response["Item"]["token"]
 
-    return {
-        "statusCode": 200,
-        "headers": CORS_HEADERS,
-        "body": json.dumps(
-            {"message": "Request Proxy Lambda works !!!", "cookies": sessionID}
-        ),
-    }
+        headers = {"Authorization": f"Bearer {token}"}
+
+        response = requests.get(
+            spotify_base_url + path, headers=headers, params=params
+        )
+        response.raise_for_status()
+
+        return {
+            "statusCode": 200,
+            "headers": CORS_HEADERS,
+            "body": json.dumps(response.json()),
+        }
+    except requests.exceptions.RequestException as e:
+        e["statusCode"] = e.response.status_code
+        return errorHandler(e)
+    except Exception as e:
+        return errorHandler(e)
