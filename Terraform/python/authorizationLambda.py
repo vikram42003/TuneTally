@@ -16,7 +16,7 @@ CORS_HEADERS = {
     "Access-Control-Allow-Credentials": "true",
 }
 
-# TODO: Refactor this lambda func to use requests package instead of urllib, since we have created a layer for that package
+
 def lambda_handler(event, context):
     # Check if we have the app url before doing anything
     app_base_url = os.environ.get("TUNETALLY_BASE_URL")

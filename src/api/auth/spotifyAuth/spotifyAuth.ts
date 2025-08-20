@@ -15,7 +15,7 @@ export const loginWithSpotify = () => {
 };
 
 export const testRequestNew = async () => {
-  const res = await axios.get(apiSpotifyBaseUrl + "/spotify", { withCredentials: true });
+  const res = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists", { withCredentials: true });
   console.log(res);
 };
 
