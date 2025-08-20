@@ -11,7 +11,6 @@ CORS_HEADERS = {
     "Access-Control-Allow-Credentials": "true",
 }
 
-
 def lambda_handler(event, context):
     sessionID = getSessionIdFromEvent(event)
 
