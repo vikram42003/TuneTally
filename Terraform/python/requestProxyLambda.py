@@ -1,5 +1,6 @@
 import json
 import os
+import time
 import requests
 import boto3
 
@@ -10,6 +11,11 @@ CORS_HEADERS = {
     "Access-Control-Allow-Methods": "OPTIONS,GET",
     "Access-Control-Allow-Credentials": "true",
 }
+
+
+class UnauthorizedError(Exception):
+    pass
+
 
 def lambda_handler(event, context):
     sessionID = getSessionIdFromEvent(event)
@@ -36,7 +42,7 @@ def lambda_handler(event, context):
         else:
             return invalidPathHandler(path)
     else:
-        return missingCookieHandler()
+        return unauthorizedErrorHandler("Required authentication cookie is missing")
 
 
 def getSessionIdFromEvent(event):
@@ -57,14 +63,14 @@ def getSessionIdFromEvent(event):
     return None
 
 
-def missingCookieHandler():
+def unauthorizedErrorHandler(message):
     return {
         "statusCode": 401,
         "headers": CORS_HEADERS,
         "body": json.dumps(
             {
-                "error": "Missing Cookie",
-                "error_description": "Required authentication cookie is missing.",
+                "error": "Unauthorized",
+                "error_description": message,
             }
         ),
     }
@@ -83,14 +89,85 @@ def invalidPathHandler(path):
     }
 
 
-def errorHandler(e):
-    status_code = e.get("statusCode", 500)
+def errorHandler(e, status_code=500):
     print(e)
     return {
         "statusCode": status_code,
         "headers": CORS_HEADERS,
         "body": json.dumps({"error": str(e)}),
     }
+
+
+def formatResponseData(path, response):
+    # Check https://developer.spotify.com/documentation/web-api/reference/ if you need to add more resources
+    if path == "me":
+        new_response = {
+            "display_name": item["display_name"],
+            "id": item["id"],
+            "images": item["images"],
+            "country": item["country"],
+            "external_urls": item["external_urls"]["spotify"],
+            "followers": item["followers"]["total"],
+        }
+        return new_response
+
+    items = []
+    for item in response["items"]:
+        new_item = {}
+
+        if path == "me/top/artists":
+            new_item["external_urls"] = item["external_urls"]["spotify"]
+            new_item["followers"] = item["followers"]["total"]
+            new_item["genres"] = item["genres"]
+            new_item["id"] = item["id"]
+            new_item["images"] = item["images"]
+            new_item["name"] = item["name"]
+        elif path == "me/top/tracks":
+            new_item["album"] = {
+                "name": item["album"]["name"],
+                "total_tracks": item["album"]["total_tracks"],
+                "external_urls": item["album"]["external_urls"]["spotify"],
+                "id": item["album"]["id"],
+                "images": item["album"]["images"],
+            }
+            new_item["artists"] = [
+                {
+                    "external_urls": artist["external_urls"]["spotify"],
+                    "id": artist["id"],
+                    "name": artist["name"],
+                }
+                for artist in item["artists"]
+            ]
+            new_item["duration_ms"] = item["duration_ms"]
+            new_item["external_urls"] = item["external_urls"]["spotify"]
+            new_item["id"] = item["id"]
+            new_item["name"] = item["name"]
+        elif path == "me/player/recently-played":
+            new_item["played_at"] = item["played_at"]
+            new_item["album"] = {
+                "name": item["track"]["album"]["name"],
+                "total_tracks": item["track"]["album"]["total_tracks"],
+                "external_urls": item["track"]["album"]["external_urls"]["spotify"],
+                "id": item["track"]["album"]["id"],
+                "images": item["track"]["album"]["images"],
+            }
+            new_item["artists"] = [
+                {
+                    "external_urls": artist["external_urls"]["spotify"],
+                    "id": artist["id"],
+                    "name": artist["name"],
+                }
+                for artist in item["track"]["artists"]
+            ]
+            new_item["duration_ms"] = item["track"]["duration_ms"]
+            new_item["external_urls"] = item["track"]["external_urls"]["spotify"]
+            new_item["id"] = item["track"]["id"]
+            new_item["name"] = item["track"]["name"]
+
+        items.append(new_item)
+
+    response["items"] = items
+    return response
 
 
 def makeProxyRequests(sessionID, path, params):
@@ -100,21 +177,50 @@ def makeProxyRequests(sessionID, path, params):
         # get token from dynamoDB and create a header from it
         dynamodb = boto3.resource("dynamodb")
         table = dynamodb.Table("sessionID_token_pair")
-        response = table.get_item(Key={"sessionID": sessionID})
-        token = response["Item"]["token"]
+        db_response = table.get_item(Key={"sessionID": sessionID})
 
-        headers = {"Authorization": f"Bearer {token}"}
+        if "Item" not in db_response or "expiresAt" not in db_response:
+            raise UnauthorizedError("SessionID is not valid")
 
-        response = requests.get(spotify_base_url + path, headers=headers, params=params)
-        response.raise_for_status()
+        item = db_response["Item"]
+
+        if int(item["expiresAt"]) < time.time():
+            raise UnauthorizedError("Your session has expired")
+
+        response = db_response.get(path, {})
+
+        if not response or path == "me/player/recently-played":
+            token = item["token"]
+
+            headers = {"Authorization": f"Bearer {token}"}
+
+            response = requests.get(
+                spotify_base_url + path, headers=headers, params=params
+            )
+            response.raise_for_status()
+
+            # Sort out caching for top/artists short, medium. long term
+            response = formatResponseData(path, response.json())
+
+            update_expression = "SET #path = :formatted_response"
+            expression_attribute_names = {"#path": path}
+            expression_attribute_values = {":formatted_response": response}
+
+            table.update_item(
+                Key={"sessionID": sessionID},
+                UpdateExpression=update_expression,
+                ExpressionAttributeNames=expression_attribute_names,
+                ExpressionAttributeValues=expression_attribute_values,
+            )
 
         return {
             "statusCode": 200,
             "headers": CORS_HEADERS,
             "body": json.dumps(response.json()),
         }
+    except UnauthorizedError as e:
+        return unauthorizedErrorHandler(e)
     except requests.exceptions.RequestException as e:
-        e["statusCode"] = e.response.status_code
-        return errorHandler(e)
+        return errorHandler(e, e.response.status_code)
     except Exception as e:
         return errorHandler(e)

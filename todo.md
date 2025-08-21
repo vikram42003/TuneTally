@@ -14,7 +14,7 @@ Albums, Artists, Categories, Genres, Playlists, Tracks, User
 (add an option to select the time period for top songs/artists. Default will be short term and we'll fetch all 50 in lambda but only return 10 to frontend)
 - /me for user profile data 
 - /me/top/artists {short_term, medium_term, long_term}
-- /me/top/songs {short_term, medium_term, long_term}
+- /me/top/tracks {short_term, medium_term, long_term}
 - Show a genre pie chart using the top songs/artist data
 - Show recently played songs
 

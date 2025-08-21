@@ -77,7 +77,8 @@ resource "aws_iam_policy" "proxy_lambda_dynamodb_access" {
       {
         Effect = "Allow",
         Action = [
-          "dynamodb:GetItem"
+          "dynamodb:GetItem",
+          "dynamodb:UpdateItem"
         ],
         Resource = aws_dynamodb_table.sessionID_token_pair.arn
       }
