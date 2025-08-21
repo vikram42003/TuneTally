@@ -12,17 +12,18 @@
 Stuff i Should fetch -
 Albums, Artists, Categories, Genres, Playlists, Tracks, User
 (add an option to select the time period for top songs/artists. Default will be short term and we'll fetch all 50 in lambda but only return 10 to frontend)
-- me/top/artists {short_term, medium_term, long_term}
-- me/top/songs {short_term, medium_term, long_term}
+- /me for user profile data 
+- /me/top/artists {short_term, medium_term, long_term}
+- /me/top/songs {short_term, medium_term, long_term}
 - Show a genre pie chart using the top songs/artist data
 - Show recently played songs
 
-permissions - "user-top-read 
+permissions - "user-read-private user-read-email user-top-read user-read-recently-played" 
 
 Extra features to add in the future -
 - Create a playlist from top songs list
 - Follow all artists from top artists list
-- Get recommendations (look into it, this might be kidnda hard)
+- Get recommendations (look into it, this might be kidnda hard) (ENDPOINT DEPRECATED (WHEN I LAST LOOKED AT IT))
 
 Auth Flow -
 We follow the OAuth2 Authorization flow and use Backend-For-Frontend Architecture design with lambda acting as server and proxy

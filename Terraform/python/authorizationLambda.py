@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 
-SCOPE = "user-read-private user-read-email user-top-read"
+SCOPE = "user-read-private user-read-email user-top-read user-read-recently-played"
 CORS_HEADERS = {
     "Access-Control-Allow-Origin": os.environ.get("TUNETALLY_BASE_URL"),
     "Access-Control-Allow-Headers": "Content-Type",
@@ -37,12 +37,6 @@ def lambda_handler(event, context):
         return handleSpotifyLoginCallbackRequest(event)
     else:
         return unknownRequestHandler()
-
-    return {
-        "statusCode": 200,
-        "headers": CORS_HEADERS,
-        "body": json.dumps({"message": "lambda is working again"}),
-    }
 
 
 def unknownRequestHandler():
