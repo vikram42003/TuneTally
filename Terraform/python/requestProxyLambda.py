@@ -30,6 +30,9 @@ def lambda_handler(event, context):
             params.setdefault("limit", 10)
             params.setdefault("offset", 0)
             return makeProxyRequests(sessionID, path, params)
+        elif path == "me/player/recently-played":
+            params.setdefault("limit", 10)
+            return makeProxyRequests(sessionID, path, params)
         else:
             return invalidPathHandler(path)
     else:
