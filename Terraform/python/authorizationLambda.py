@@ -22,7 +22,9 @@ def lambda_handler(event, context):
     app_base_url = os.environ.get("TUNETALLY_BASE_URL")
     if not app_base_url:
         return errorHandler(
-            "No app url found. Check if environment variables are set up correctly"
+            500,
+            "Sever side error",
+            "No app url found. Check if environment variables are set up correctly",
         )
 
     path = event["requestContext"]["path"]
@@ -36,52 +38,29 @@ def lambda_handler(event, context):
         # Exchange code for token (or send back error) and redirect to app page
         return handleSpotifyLoginCallbackRequest(event)
     else:
-        return unknownRequestHandler()
+        return errorHandler(
+            404, "Unknown request", "The request is not supported by the server"
+        )
 
 
-def unknownRequestHandler():
+def errorHandler(statusCode, errorTitle, errorMessage):
+    print(f"Status Code: {statusCode}   Error Title: {errorTitle}\n{errorMessage}")
     return {
-        "statusCode": 404,
+        "statusCode": statusCode,
         "headers": CORS_HEADERS,
-        "body": json.dumps(
-            {
-                "error": "Unknown request",
-                "error_description": "The request is not supported by the server",
-            }
-        ),
+        "body": json.dumps({"error": errorTitle, "error_message": str(errorMessage)}),
     }
 
 
-def unknownRequestHandlerRedirect():
+def errorHandlerRedirect(errorTitle, errorMessage):
+    print(f"Status Code: 302   Error Title: {errorTitle}\n{errorMessage}")
     app_base_url = os.environ.get("TUNETALLY_BASE_URL")
     return {
         "statusCode": 302,
         "headers": {
             **CORS_HEADERS,
             "Location": app_base_url
-            + "/error?error="
-            + "Unknown request - The request is not supported by the server",
-        },
-    }
-
-
-def errorHandler(e):
-    print(e)
-    return {
-        "statusCode": 500,
-        "headers": CORS_HEADERS,
-        "body": json.dumps({"error": str(e)}),
-    }
-
-
-def errorHandlerRedirect(e):
-    print(e)
-    app_base_url = os.environ.get("TUNETALLY_BASE_URL")
-    return {
-        "statusCode": 302,
-        "headers": {
-            **CORS_HEADERS,
-            "Location": app_base_url + "/error?error=" + str(e),
+            + f"/?error={errorTitle}&error_message={str(errorMessage)}",
         },
     }
 
@@ -90,13 +69,17 @@ def handleSpotifyLoginRequest():
     client_id = os.environ.get("SPOTIFY_CLIENT_ID")
     if not client_id:
         return errorHandler(
-            "Spotify client ID not found. Check if enviornment variables are set properly"
+            500,
+            "Server side error",
+            "Spotify client ID not found. Check if enviornment variables are set properly",
         )
 
     redirect_uri = os.environ.get("SPOTIFY_REDIRECT_URI")
     if not redirect_uri:
         return errorHandler(
-            "Spotify redirect URI not found. Check if enviornment variables are set properly"
+            500,
+            "Server side error",
+            "Spotify redirect URI not found. Check if enviornment variables are set properly",
         )
 
     state = str(uuid.uuid4())
@@ -112,7 +95,7 @@ def handleSpotifyLoginRequest():
             }
         )
     except Exception as e:
-        return errorHandler(e)
+        return errorHandler(500, "Server side error", e)
 
     params_dict = {
         "response_type": "code",
@@ -146,17 +129,17 @@ def exchangeCodeForTokenAndRedirect(code, state):
         # Check for redirect uri, client id, and client secret
         redirect_uri = os.environ.get("SPOTIFY_REDIRECT_URI")
         if not redirect_uri:
-            return errorHandler(
+            raise Exception(
                 "Spotify redirect URI not found. Check if enviornment variables are set properly"
             )
         client_id = os.environ.get("SPOTIFY_CLIENT_ID")
         if not client_id:
-            return errorHandler(
+            raise Exception(
                 "Spotify client ID not found. Check if enviornment variables are set properly"
             )
         client_secret = os.environ.get("SPOTIFY_CLIENT_SECRET")
         if not client_secret:
-            return errorHandler(
+            raise Exception(
                 "Spotify client secret not found. Check if enviornment variables are set properly"
             )
 
@@ -204,15 +187,23 @@ def exchangeCodeForTokenAndRedirect(code, state):
         }
 
     except Exception as e:
-        return errorHandlerRedirect(e)
+        return errorHandlerRedirect("Server side error", e)
 
 
 def handleSpotifyLoginCallbackRequest(event):
     params = event.get("queryStringParameters", {})
 
     if not params:
-        return unknownRequestHandlerRedirect()
+        return errorHandlerRedirect(
+            "Unknown request", "The request is not supported by the server"
+        )
     elif "code" in params and "state" in params:
         return exchangeCodeForTokenAndRedirect(params["code"], params["state"])
     elif "error" in params and "state" in params:
-        return errorHandlerRedirect(params["error"])
+        return errorHandlerRedirect(
+            "Server side error - Login callback", params["error"]
+        )
+    else:
+        return errorHandlerRedirect(
+            "Server side error", "Something unexpected happened"
+        )

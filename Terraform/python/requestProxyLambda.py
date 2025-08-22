@@ -69,7 +69,7 @@ def errorHandler(statusCode, errorTitle, errorMessage):
     return {
         "statusCode": statusCode,
         "headers": CORS_HEADERS,
-        "body": json.dumps({"error": errorTitle, "error_message": errorMessage}),
+        "body": json.dumps({"error": errorTitle, "error_message": str(errorMessage)}),
     }
 
 
@@ -185,6 +185,7 @@ def makeProxyRequests(sessionID, path, params):
         response = item.get(cache_path, {})
 
         if not response or path == "me/player/recently-played":
+            # Remove these print statements when app is ready for prod
             print("Making new request")
             token = item["token"]
 
@@ -223,4 +224,4 @@ def makeProxyRequests(sessionID, path, params):
     except requests.exceptions.RequestException as e:
         return errorHandler(e.response.status_code, "Error", e)
     except Exception as e:
-        return errorHandler(500, "Server Side Error", e)
+        return errorHandler(500, "Server side error", e)
