@@ -25,7 +25,7 @@ def lambda_handler(event, context):
         # path will be something like /v1/spotify/<resource>
         path = event["requestContext"]["path"]
         if "/spotify/" not in path:
-            return invalidPathHandler(path)
+            return errorHandler(400, "Invalid Path", f"Path {path} is not a valid path to a resource.")
 
         path = path.split("/spotify/")[1]
         params = event.get("queryStringParameters") or {}
@@ -41,9 +41,9 @@ def lambda_handler(event, context):
             params.setdefault("limit", 10)
             return makeProxyRequests(sessionID, path, params)
         else:
-            return invalidPathHandler(path)
+            return errorHandler(400, "Invalid Path", f"Path {path} is not a valid path to a resource.")
     else:
-        return unauthorizedErrorHandler("Required authentication cookie is missing")
+        return errorHandler(401, "Unauthorized", "Required authentication cookie is missing")
 
 
 def getSessionIdFromEvent(event):
@@ -63,40 +63,13 @@ def getSessionIdFromEvent(event):
                 return c.split("=", 1)[1]
     return None
 
-# TODO: consolidate these extra error handlers to a single error handler that takes httpCode, errorTitle, errorDescription as args
-def unauthorizedErrorHandler(message):
-    print(message)
+
+def errorHandler(statusCode, errorTitle, errorMessage):
+    print(f"Status Code: {statusCode}   Error Title: {errorTitle}\n{errorMessage}")
     return {
-        "statusCode": 401,
+        "statusCode": statusCode,
         "headers": CORS_HEADERS,
-        "body": json.dumps(
-            {
-                "error": "Unauthorized",
-                "error_description": message,
-            }
-        ),
-    }
-
-
-def invalidPathHandler(path):
-    return {
-        "statusCode": 400,
-        "headers": CORS_HEADERS,
-        "body": json.dumps(
-            {
-                "error": "Invalid Path",
-                "error_description": f"Path {path} is not a valid path to a resource.",
-            }
-        ),
-    }
-
-
-def errorHandler(e, status_code=500):
-    print(e)
-    return {
-        "statusCode": status_code,
-        "headers": CORS_HEADERS,
-        "body": json.dumps({"error": str(e)}),
+        "body": json.dumps({"error": errorTitle, "error_message": errorMessage}),
     }
 
 
@@ -246,8 +219,8 @@ def makeProxyRequests(sessionID, path, params):
             "body": json.dumps(response),
         }
     except UnauthorizedError as e:
-        return unauthorizedErrorHandler(e)
+        return errorHandler(401, "Unauthorized", e)
     except requests.exceptions.RequestException as e:
-        return errorHandler(e, e.response.status_code)
+        return errorHandler(e.response.status_code, "Error", e)
     except Exception as e:
-        return errorHandler(e)
+        return errorHandler(500, "Server Side Error", e)
