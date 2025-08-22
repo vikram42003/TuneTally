@@ -63,7 +63,7 @@ def getSessionIdFromEvent(event):
                 return c.split("=", 1)[1]
     return None
 
-
+# TODO: consolidate these extra error handlers to a single error handler that takes httpCode, errorTitle, errorDescription as args
 def unauthorizedErrorHandler(message):
     print(message)
     return {
