@@ -64,6 +64,7 @@ def getSessionIdFromEvent(event):
 
 
 def unauthorizedErrorHandler(message):
+    print(message)
     return {
         "statusCode": 401,
         "headers": CORS_HEADERS,
@@ -102,12 +103,12 @@ def formatResponseData(path, response):
     # Check https://developer.spotify.com/documentation/web-api/reference/ if you need to add more resources
     if path == "me":
         new_response = {
-            "display_name": item["display_name"],
-            "id": item["id"],
-            "images": item["images"],
-            "country": item["country"],
-            "external_urls": item["external_urls"]["spotify"],
-            "followers": item["followers"]["total"],
+            "display_name": response["display_name"],
+            "id": response["id"],
+            "images": response["images"],
+            "country": response["country"],
+            "external_urls": response["external_urls"]["spotify"],
+            "followers": response["followers"]["total"],
         }
         return new_response
 
@@ -179,17 +180,18 @@ def makeProxyRequests(sessionID, path, params):
         table = dynamodb.Table("sessionID_token_pair")
         db_response = table.get_item(Key={"sessionID": sessionID})
 
-        if "Item" not in db_response or "expiresAt" not in db_response:
+        if "Item" not in db_response or "expiresAt" not in db_response["Item"]:
             raise UnauthorizedError("SessionID is not valid")
 
         item = db_response["Item"]
 
-        if int(item["expiresAt"]) < time.time():
+        if int(item["expiresAt"]) < int(time.time()):
             raise UnauthorizedError("Your session has expired")
 
-        response = db_response.get(path, {})
+        response = item.get(path, {})
 
         if not response or path == "me/player/recently-played":
+            print("Making new request")
             token = item["token"]
 
             headers = {"Authorization": f"Bearer {token}"}
@@ -199,24 +201,27 @@ def makeProxyRequests(sessionID, path, params):
             )
             response.raise_for_status()
 
-            # Sort out caching for top/artists short, medium. long term
             response = formatResponseData(path, response.json())
 
-            update_expression = "SET #path = :formatted_response"
-            expression_attribute_names = {"#path": path}
-            expression_attribute_values = {":formatted_response": response}
+            if path != "me/player/recently-played":
+                update_expression = "SET #path = :formatted_response"
+                expression_attribute_names = {"#path": path}
+                expression_attribute_values = {":formatted_response": response}
 
-            table.update_item(
-                Key={"sessionID": sessionID},
-                UpdateExpression=update_expression,
-                ExpressionAttributeNames=expression_attribute_names,
-                ExpressionAttributeValues=expression_attribute_values,
-            )
+                table.update_item(
+                    Key={"sessionID": sessionID},
+                    UpdateExpression=update_expression,
+                    ExpressionAttributeNames=expression_attribute_names,
+                    ExpressionAttributeValues=expression_attribute_values,
+                )
+        else:
+            print("Using cached response")
+            response = convert_decimals(response)
 
         return {
             "statusCode": 200,
             "headers": CORS_HEADERS,
-            "body": json.dumps(response.json()),
+            "body": json.dumps(response),
         }
     except UnauthorizedError as e:
         return unauthorizedErrorHandler(e)
