@@ -4,8 +4,8 @@ import json
 import time
 import uuid
 import base64
+import requests
 from urllib.parse import urlencode
-from urllib.request import Request, urlopen
 
 
 SCOPE = "user-read-private user-read-email user-top-read user-read-recently-played"
@@ -150,26 +150,23 @@ def exchangeCodeForTokenAndRedirect(code, state):
             "code": code,
             "redirect_uri": redirect_uri,
         }
-        encoded_data = urlencode(data).encode("utf-8")
 
         token_request_url = "https://accounts.spotify.com/api/token"
-        # doc ref - https://docs.python.org/3/library/urllib.request.html and https://stackoverflow.com/a/79435030
-        req = Request(token_request_url, data=encoded_data, method="POST")
-
-        b64_string = base64.b64encode(
-            (client_id + ":" + client_secret).encode("utf-8")
-        ).decode()
-        req.add_header("Authorization", "Basic " + b64_string)
-        req.add_header("Content-Type", "application/x-www-form-urlencoded")
-
-        # This is how you make a request with urllib.request
-        with urlopen(req) as response:
-            res = response.read().decode("utf-8")
-            body = json.loads(res)
-
-            auth_token = body["access_token"]
-            expires_in = body["expires_in"]
-
+        auth = (client_id, client_secret)
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+        
+        response = requests.post(
+            token_request_url,
+            data=data,  
+            auth=auth,
+            headers=headers
+        )
+        
+        body = response.json()
+        
+        auth_token = body["access_token"]
+        expires_in = body["expires_in"]
+        
         item["token"] = auth_token
         item["expiresAt"] = int(time.time()) + expires_in
 

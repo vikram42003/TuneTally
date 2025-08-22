@@ -50,12 +50,12 @@ export const testRequestNewParallel = async () => {
   
   const requests = [
     axios.get(apiSpotifyBaseUrl + "/spotify/me", { withCredentials: true }),
-    axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=short_term", { withCredentials: true }),
-    axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=medium_term", { withCredentials: true }),
-    axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=long_term", { withCredentials: true }),
-    axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=short_term", { withCredentials: true }),
-    axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=medium_term", { withCredentials: true }),
-    axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=long_term", { withCredentials: true }),
+    // axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=short_term", { withCredentials: true }),
+    // axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=medium_term", { withCredentials: true }),
+    // axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=long_term", { withCredentials: true }),
+    // axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=short_term", { withCredentials: true }),
+    // axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=medium_term", { withCredentials: true }),
+    // axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=long_term", { withCredentials: true }),
     axios.get(apiSpotifyBaseUrl + "/spotify/me/player/recently-played?limit=50", { withCredentials: true })
   ];
   
