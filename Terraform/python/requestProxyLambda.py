@@ -189,6 +189,11 @@ def formatResponseData(path, response):
 
 def makeProxyRequests(sessionID, path, params):
     spotify_base_url = "https://api.spotify.com/v1/"
+    cache_path = path
+    # If the path is me/top/tracks or me/top/artists or any path that gives different response based on time period
+    # Then we need to store/retrieve it under its corresponding time range in DynamoDB
+    if "time_range" in params:
+        cache_path = path + f"?time_range={params['time_range']}"
 
     try:
         # get token from dynamoDB and create a header from it
@@ -204,7 +209,7 @@ def makeProxyRequests(sessionID, path, params):
         if int(item["expiresAt"]) < int(time.time()):
             raise UnauthorizedError("Your session has expired")
 
-        response = item.get(path, {})
+        response = item.get(cache_path, {})
 
         if not response or path == "me/player/recently-played":
             print("Making new request")
@@ -219,9 +224,10 @@ def makeProxyRequests(sessionID, path, params):
 
             response = formatResponseData(path, response.json())
 
+            # cache the response in dynamoDB for any path other than recently-played under its correct cache_path
             if path != "me/player/recently-played":
                 update_expression = "SET #path = :formatted_response"
-                expression_attribute_names = {"#path": path}
+                expression_attribute_names = {"#path": cache_path}
                 expression_attribute_values = {":formatted_response": response}
 
                 table.update_item(

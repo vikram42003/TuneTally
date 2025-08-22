@@ -18,14 +18,14 @@ export const testRequestNew = async () => {
   const start = Date.now();
   // const res1 = await axios.get(apiSpotifyBaseUrl + "/spotify/me", { withCredentials: true });
   // const res2 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50", { withCredentials: true });
-  // const res3 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50", { withCredentials: true });
-  const res4 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/player/recently-played?limit=50", { withCredentials: true });
+  const res3 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50", { withCredentials: true });
+  // const res4 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/player/recently-played?limit=50", { withCredentials: true });
   const end = Date.now();
   console.log(`Request took ${end - start} ms`);
   // console.log(res1);
   // console.log(res2);
-  // console.log(res3);
-  console.log(res4);
+  console.log(res3);
+  // console.log(res4);
 };
 
 
