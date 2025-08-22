@@ -3,6 +3,7 @@ import os
 import time
 import requests
 import boto3
+from decimal import Decimal
 
 
 CORS_HEADERS = {
@@ -97,6 +98,21 @@ def errorHandler(e, status_code=500):
         "headers": CORS_HEADERS,
         "body": json.dumps({"error": str(e)}),
     }
+
+
+# The DynamoDB Decimal type is not JSON serializable, so we need to convert it to an int or float
+# So we need this function to recursively convert any Decimals to int or float
+def convertDecimals(obj):
+    if isinstance(obj, list):
+        return [convertDecimals(i) for i in obj]
+    elif isinstance(obj, dict):
+        return {k: convertDecimals(v) for k, v in obj.items()}
+    elif isinstance(obj, Decimal):
+        if obj % 1 == 0:
+            return int(obj)
+        else:
+            return float(obj)
+    return obj
 
 
 def formatResponseData(path, response):
@@ -216,7 +232,7 @@ def makeProxyRequests(sessionID, path, params):
                 )
         else:
             print("Using cached response")
-            response = convert_decimals(response)
+            response = convertDecimals(response)
 
         return {
             "statusCode": 200,
