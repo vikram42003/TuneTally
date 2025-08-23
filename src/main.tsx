@@ -1,8 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./index.css";
 import App from "./App.tsx";
+
+const queryClient = new QueryClient();
 
 // @ts-expect-error: The error `Cannot find module '@fontsource-variable/inter'
 // or its corresponding type declarations.ts(2307)` is a bug in fontsource library
@@ -12,7 +15,9 @@ import "@fontsource-variable/inter";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
     </BrowserRouter>
-  </StrictMode>
+  </StrictMode>,
 );

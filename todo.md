@@ -1,3 +1,7 @@
+Todo new new new idk version -
+- add a resource fetching library
+
+
 - On May 15th 2025, Spotify made the decision to restrict their Extended Quota Mode. Now only organizations that fulfil this criteria -
   - Be from a registered business entity
   - Already be publicly live 
