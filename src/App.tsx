@@ -1,19 +1,17 @@
-import { Route, Routes } from "react-router";
+import { Route, Routes, useSearchParams } from "react-router";
+import { useQuery } from "@tanstack/react-query";
 
 import Homepage from "./pages/Homepage";
+import StatsPage from "./pages/StatsPage";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import HiatusNotification from "./components/HiatusNotification";
 
-import { useEffect } from "react";
-import { checkSpotifyAuthStatus } from "./api/auth/spotifyAuth/spotifyAuth";
+import { getProfileData } from "./api/spotify/spotify";
 
 const App = () => {
-  const mode = import.meta.env.VITE_ENVIRONMENT
-  // useEffect(() => {
-  //   // checkSpotifyAuthStatus checks and controls the authentication flow for Spotify
-  //   checkSpotifyAuthStatus();
-  // }, []);
+  const mode = import.meta.env.VITE_ENVIRONMENT;
 
   return (
     <>
@@ -21,6 +19,7 @@ const App = () => {
       {mode === "dev" && <HiatusNotification />}
       <Routes>
         <Route path="/" element={<Homepage />} />
+        <Route path="/stats" element={<StatsPage />} />
       </Routes>
       <Footer />
     </>

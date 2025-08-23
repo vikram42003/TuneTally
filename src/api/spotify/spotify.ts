@@ -1,23 +1,9 @@
-import axios from "axios";
+import axios from "axios"
 
-// import { spotifyAuth } from "../auth/spotifyAuth/spotifyAuth"
+const apiSpotifyBaseUrl = import.meta.env.VITE_LAMBDA_SPOTIFY_BASE_URL;
 
-// const fetchTopArtists = async () => {
-//   const accessToken = await spotifyAuth();
-// }
-
-// REMOVE THIS FUNC BELOW FROM THE FILE - REDUNDANT AND INCORRECTLY PLACED
-// Make a request to the /me endpoint to check if we're already logged in
-const checkForAuth = async (): Promise<boolean> => {
-  try {
-    await axios.get("https://api.spotify.com/v1/me");
-    return true;
-  } catch (e) {
-    console.log("https://api.spotify.com/v1/me request failed that means we are not logged in!", e);
-    return false;
-  }
-};
-
-export default {
-  checkForAuth,
-};
+export const getProfileData = async () => {
+  const data = axios.get(apiSpotifyBaseUrl + "/spotify/me", { withCredentials: true});
+  // parse and validate the fetched data with ts and zod 
+  return data;
+}

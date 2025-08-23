@@ -11,25 +11,40 @@ import axios from "axios";
 // The login process follows OAuth2 so just change the url to initiate the process
 const apiSpotifyBaseUrl = import.meta.env.VITE_LAMBDA_SPOTIFY_BASE_URL;
 export const loginWithSpotify = () => {
+  axios.get(apiSpotifyBaseUrl + "/spotify/warm");
   window.location.href = apiSpotifyBaseUrl + "/spotifyLogin";
 };
 
 export const testRequestNew = async () => {
-  testRequestNewParallel()
-  return 
-  
+  testRequestNewParallel();
+  return;
+
   const start = Date.now();
   const res1 = await axios.get(apiSpotifyBaseUrl + "/spotify/me", { withCredentials: true });
 
-  const res2 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=short_term", { withCredentials: true });
-  const res3 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=medium_term", { withCredentials: true });
-  const res4 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=long_term", { withCredentials: true });
+  const res2 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=short_term", {
+    withCredentials: true,
+  });
+  const res3 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=medium_term", {
+    withCredentials: true,
+  });
+  const res4 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=long_term", {
+    withCredentials: true,
+  });
 
-  const res5 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=short_term", { withCredentials: true });
-  const res6 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=medium_term", { withCredentials: true });
-  const res7 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=long_term", { withCredentials: true });
+  const res5 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=short_term", {
+    withCredentials: true,
+  });
+  const res6 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=medium_term", {
+    withCredentials: true,
+  });
+  const res7 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=long_term", {
+    withCredentials: true,
+  });
 
-  const res8 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/player/recently-played?limit=50", { withCredentials: true });
+  const res8 = await axios.get(apiSpotifyBaseUrl + "/spotify/me/player/recently-played?limit=50", {
+    withCredentials: true,
+  });
   const end = Date.now();
   console.log(`Request took ${end - start} ms`);
   console.log(res1);
@@ -47,23 +62,23 @@ export const testRequestNew = async () => {
 
 export const testRequestNewParallel = async () => {
   const start = Date.now();
-  
+
   const requests = [
-    axios.get(apiSpotifyBaseUrl + "/spotify/me", { withCredentials: true }),
+    await axios.get(apiSpotifyBaseUrl + "/spotify/me", { withCredentials: true }),
     // axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=short_term", { withCredentials: true }),
-    // axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=medium_term", { withCredentials: true }),
+    axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=medium_term", { withCredentials: true }),
     // axios.get(apiSpotifyBaseUrl + "/spotify/me/top/artists?limit=50&time_range=long_term", { withCredentials: true }),
     // axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=short_term", { withCredentials: true }),
-    // axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=medium_term", { withCredentials: true }),
+    axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=medium_term", { withCredentials: true }),
     // axios.get(apiSpotifyBaseUrl + "/spotify/me/top/tracks?limit=50&time_range=long_term", { withCredentials: true }),
-    axios.get(apiSpotifyBaseUrl + "/spotify/me/player/recently-played?limit=50", { withCredentials: true })
+    axios.get(apiSpotifyBaseUrl + "/spotify/me/player/recently-played?limit=50", { withCredentials: true }),
   ];
-  
+
   const [res1, res2, res3, res4, res5, res6, res7, res8] = await Promise.all(requests);
-  
+
   const end = Date.now();
   console.log(`Request took ${end - start} ms`);
-  
+
   console.log(res1);
   console.log(res2);
   console.log(res3);
@@ -73,22 +88,6 @@ export const testRequestNewParallel = async () => {
   console.log(res7);
   console.log(res8);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // export const checkSpotifyAuthStatus = async (): Promise<void> => {
 //   // Make the app flow based on auth status
