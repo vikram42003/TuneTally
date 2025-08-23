@@ -19,13 +19,19 @@ class UnauthorizedError(Exception):
 
 
 def lambda_handler(event, context):
+    # Warm up the lambda func to optimized the cold boot
+    if event["requestContext"]["path"].endswith("/warm"):
+        return {"statusCode": 200, "headers": CORS_HEADERS, "body": "Warmed up"}
+
     sessionID = getSessionIdFromEvent(event)
 
     if sessionID:
         # path will be something like /v1/spotify/<resource>
         path = event["requestContext"]["path"]
         if "/spotify/" not in path:
-            return errorHandler(400, "Invalid Path", f"Path {path} is not a valid path to a resource.")
+            return errorHandler(
+                400, "Invalid Path", f"Path {path} is not a valid path to a resource."
+            )
 
         path = path.split("/spotify/")[1]
         params = event.get("queryStringParameters") or {}
@@ -41,9 +47,13 @@ def lambda_handler(event, context):
             params.setdefault("limit", 10)
             return makeProxyRequests(sessionID, path, params)
         else:
-            return errorHandler(400, "Invalid Path", f"Path {path} is not a valid path to a resource.")
+            return errorHandler(
+                400, "Invalid Path", f"Path {path} is not a valid path to a resource."
+            )
     else:
-        return errorHandler(401, "Unauthorized", "Required authentication cookie is missing")
+        return errorHandler(
+            401, "Unauthorized", "Required authentication cookie is missing"
+        )
 
 
 def getSessionIdFromEvent(event):
@@ -191,9 +201,18 @@ def makeProxyRequests(sessionID, path, params):
 
             headers = {"Authorization": f"Bearer {token}"}
 
+            # TEST
+            start_time = time.time()
+
             response = requests.get(
                 spotify_base_url + path, headers=headers, params=params
             )
+
+            # TEST
+            end_time = time.time()
+            api_call_duration = (end_time - start_time) * 1000
+            print(f"API call took: {api_call_duration:.2f}ms")
+
             response.raise_for_status()
 
             response = formatResponseData(path, response.json())

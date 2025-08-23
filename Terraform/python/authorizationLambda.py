@@ -27,6 +27,10 @@ def lambda_handler(event, context):
             "No app url found. Check if environment variables are set up correctly",
         )
 
+    # Warm up the lambda func to optimized the cold boot
+    if event["requestContext"]["path"].endswith("/warm"):
+        return {"statusCode": 200, "headers": CORS_HEADERS, "body": "Warmed up"}
+
     path = event["requestContext"]["path"]
     # Strip away the v1 part since path will be something like /v1/spotifyLogin
     path = path.split("/")[2]
@@ -154,19 +158,16 @@ def exchangeCodeForTokenAndRedirect(code, state):
         token_request_url = "https://accounts.spotify.com/api/token"
         auth = (client_id, client_secret)
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
-        
+
         response = requests.post(
-            token_request_url,
-            data=data,  
-            auth=auth,
-            headers=headers
+            token_request_url, data=data, auth=auth, headers=headers
         )
-        
+
         body = response.json()
-        
+
         auth_token = body["access_token"]
         expires_in = body["expires_in"]
-        
+
         item["token"] = auth_token
         item["expiresAt"] = int(time.time()) + expires_in
 
