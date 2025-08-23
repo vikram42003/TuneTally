@@ -1,12 +1,12 @@
-import { loginWithSpotify, startSpotifyAuth } from "../api/auth/spotifyAuth/spotifyAuth";
+import { loginWithSpotify } from "../api/auth/spotifyAuth/spotifyAuth";
 import Hero from "../components/Homepage/Hero";
 
-// image credits - https://unsplash.com/photos/white-and-black-ipad-H4fYXZ1hyco
+// hero_bg image credits - https://unsplash.com/photos/white-and-black-ipad-H4fYXZ1hyco
 // Photo by <a href="https://unsplash.com/@framesbyfin?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Heidi Fin</a> on <a href="https://unsplash.com/photos/white-and-black-ipad-H4fYXZ1hyco?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
 
 const Homepage = () => {
-  const handleGetStats = async () => {
-    await loginWithSpotify();
+  const handleGetStats = () => {
+    loginWithSpotify();
   };
 
   return (

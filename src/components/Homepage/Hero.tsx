@@ -1,5 +1,3 @@
-import { testRequestNew } from "../../api/auth/spotifyAuth/spotifyAuth";
-
 interface HeroProps {
   handleGetStats: () => void;
 }
@@ -28,10 +26,6 @@ const Hero = ({ handleGetStats }: HeroProps) => {
         {/* Arrow icon link - Put this in credits in about page */}
         {/* <a target="_blank" href="https://icons8.com/icon/Ek7khsXSeZ71/arrow">Arrow</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> */}
         <img className="ml-4 inline -scale-125" src="/icons/arrow-icon.png" alt="icon of an arrow" />
-
-        <button onClick={testRequestNew} className="rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600">
-          TEST
-        </button>
       </div>
     </div>
   );
