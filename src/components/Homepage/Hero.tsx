@@ -1,8 +1,6 @@
-interface HeroProps {
-  handleGetStats: () => void;
-}
+import { loginWithSpotify } from "../../api/auth/spotifyAuth/spotifyAuth";
 
-const Hero = ({ handleGetStats }: HeroProps) => {
+const Hero = () => {
   return (
     <div>
       <h2 className="text-6xl font-bold">
@@ -17,7 +15,7 @@ const Hero = ({ handleGetStats }: HeroProps) => {
       <div>
         <button
           type="button"
-          onClick={handleGetStats}
+          onClick={loginWithSpotify}
           // shadow-[0_0_20px_rgba(29,185,84,0.6)] does the green glow effect
           className="bg-spotify-green cursor-pointer rounded-4xl px-6 py-2 font-bold text-black shadow-[0_0_20px_rgba(29,185,84,0.6)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(29,185,84,0.9)]"
         >
