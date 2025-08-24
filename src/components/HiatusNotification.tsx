@@ -5,9 +5,9 @@ const HiatusNotification = () => {
 
   const collapsedText = (
     <>
-      On May 15th 2025, Spotify made the decision to restrict their Extended Quota Mode in their API. Now only
-      organizations with 250,000 or more monthly users are allowed the full use of Spotify API. So this app is live in
-      demo mode only
+      On May 15th 2025, Spotify made the decision to restrict access to their API. Now only organizations with 250,000
+      or more monthly users are allowed the full use of the Spotify API. Which basically means that independent projects
+      like this one, can run with limited features only. So this app is live in demo mode for now
     </>
   );
 
@@ -22,12 +22,13 @@ const HiatusNotification = () => {
         <li>Operate within key Spotify markets</li>
         <li>Show commercial viability</li>
       </ul>
-      Are allowed to apply for Extended Quota Mode, effectively killing the indie projects. So the development fn this
-      project has been paused until changes to the api are made or a workaround is found.
+      Are allowed to apply for Extended Quota Mode, effectively killing indipendent projects. So this app is live but
+      with limited functionality until changes to the api are made or a workaround is found.
       <br />
       (Extended Qouta Mode is the public mode for the spotify api, which can be be called by any user, as opposed to the
       Developer Mode, which requires you to manually add spotify registered emails of upto 25 emails of people who can
       call the api)
+      <br />
       <br />
       The app now uses a demo account as a permanently logged in spotify account. And on clicking on the "Login with
       Spotify" button, It fetches a new access token with its pre saved refresh token through OAuth2, And then fetches

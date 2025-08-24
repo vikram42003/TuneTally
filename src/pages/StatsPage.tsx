@@ -1,6 +1,14 @@
+import UserDetails from "../components/StatsPage/UserDetails"
+
 const StatsPage = () => {
   return (
-    <div>StatsPage</div>
+    <div>
+      <section className="bg-spotify-gray">
+        <div className="layout-container">
+          <UserDetails />
+        </div>
+      </section>
+    </div>
   )
 }
 

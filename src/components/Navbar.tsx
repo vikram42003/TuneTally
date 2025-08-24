@@ -8,6 +8,9 @@ const Navbar = () => {
           <Link to="/" className="hover:text-spotify-green transition-all duration-500 navbar-text-shadow">TuneTally</Link>
         </div>
         <div>
+          <Link to="/stats" className="hover:text-spotify-green transition-all duration-500 navbar-text-shadow">Stats</Link>
+        </div>
+        <div>
           <Link to="#features" className="hover:text-spotify-green transition-all duration-500 navbar-text-shadow">Features</Link>
         </div>
         <div>
