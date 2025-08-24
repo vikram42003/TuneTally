@@ -180,7 +180,7 @@ def exchangeCodeForTokenAndRedirect(code, state):
             "headers": {
                 **CORS_HEADERS,
                 "Set-Cookie": httpOnly_cookie,
-                "Location": app_base_url + "?spotifyAuthStatus=success",
+                "Location": app_base_url + "/stats?spotifyAuthStatus=success",
             },
         }
 
