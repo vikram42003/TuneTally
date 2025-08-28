@@ -3,6 +3,8 @@ import { useState } from "react";
 
 import { SpotifyTimeRange } from "../../types/spotifyTypes";
 import { getSpotifyTopArtists } from "../../api/spotify/spotify";
+import { getErrorText } from "../../utils/utils";
+import StatsPageErrorComponent from "./StatsPageErrorComponent";
 
 const TopSongs = () => {
   const [timeRange, setTimeRange] = useState<SpotifyTimeRange>("medium_term");
@@ -10,7 +12,6 @@ const TopSongs = () => {
   const { isLoading, error, data } = useQuery({
     queryKey: [`/spotify/me/top/artists?${timeRange}`],
     queryFn: () => getSpotifyTopArtists(timeRange),
-    enabled: false,
   });
 
   if (isLoading) {
@@ -18,7 +19,13 @@ const TopSongs = () => {
   }
 
   if (error) {
-    return <div>Some went wrong, please try logging in again</div>;
+    console.log(error);
+    const errorText = getErrorText(error);
+    return <StatsPageErrorComponent errorText={errorText} />;
+  }
+
+  if (!data) {
+    return <StatsPageErrorComponent errorText="No user data available" />;
   }
 
   return (

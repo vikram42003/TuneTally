@@ -11,8 +11,12 @@ const StatsPage = () => {
         </div>
 
         <div className="layout-container flex items-center">
-          <TopArtists />
-          <TopSongs />
+          <div className="grow shrink basis-1/2">
+            <TopArtists />
+          </div>
+          <div className="grow shrink basis-1/2">
+            <TopSongs />
+          </div>
         </div>
       </section>
     </div>

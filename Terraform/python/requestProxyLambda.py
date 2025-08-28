@@ -97,7 +97,9 @@ def convertDecimals(obj):
             return float(obj)
     return obj
 
-
+# IMPORTANT NOTE - THE TYPES FOR SPOTIFY TOP SONGS, TOP ARTISTS, IMAGES ETC ARE <TIGHTLY COUPLE> WITH 
+# THE FRONTEND TYPESCRIPT TYPES, ANY CHANGES MADE HERE SHOULD BE MATCHED WITH FRONTEND AND THIS FILE SHOULD
+# BE TAKEN AS THE SOURCE OF TRUTH
 def formatResponseData(path, response):
     # Check https://developer.spotify.com/documentation/web-api/reference/ if you need to add more resources
     if path == "me":
