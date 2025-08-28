@@ -28,7 +28,7 @@ const TopSongs = () => {
     return <StatsPageErrorComponent errorText="No user data available" />;
   }
 
-  console.log("/me/top/tracks", data);
+  // console.log("/me/top/tracks", data);
 
   return (
     <div className="">

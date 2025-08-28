@@ -43,7 +43,7 @@ const UserDetails = () => {
       break;
   }
 
-  console.log("/me", data);
+  // console.log("/me", data);
 
   // Test out user image
   data.images = [

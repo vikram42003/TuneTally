@@ -28,10 +28,12 @@ const TopSongs = () => {
     return <StatsPageErrorComponent errorText="No user data available" />;
   }
 
+  // console.log("/me/top/artists", data);
+
   return (
     <div>
       TopArtists
-      <pre>{JSON.stringify(data?.data, null, 2)}</pre>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
 };

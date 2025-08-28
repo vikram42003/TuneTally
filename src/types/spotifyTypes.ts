@@ -16,7 +16,7 @@ export const SpotifyErrorSchema = z.object({
 
 export type SpotifyError = z.infer<typeof SpotifyErrorSchema>;
 
-// IMPORTANT NOTE - THE TYPES FOR SPOTIFY TOP SONGS, TOP ARTISTS, IMAGES ETC ARE <TIGHTLY COUPLE> WITH 
+// IMPORTANT NOTE - THE TYPES FOR SPOTIFY TOP SONGS, TOP ARTISTS, IMAGES ETC ARE <TIGHTLY COUPLE> WITH
 // THE REQUEST PROXY LAMBDA FUNC, ANY CHANGES MADE THERE SHOULD BE MATCHED HERE AND THAT SHOULD
 // BE TAKEN AS THE SOURCE OF TRUTH
 
@@ -47,20 +47,43 @@ export const SpotifyAlbumSchema = z.object({
 
 export const SpotifyArtistSchema = z.object({
   external_urls: z.string(),
+  followers: z.number(),
+  genres: z.array(z.string()),
   id: z.string(),
+  images: z.array(SpotifyImageSchema),
   name: z.string(),
+});
+
+export type SpotifyArtist = z.infer<typeof SpotifyArtistSchema>;
+
+export const SpotifyTopArtistsSchema = z.object({
+  href: z.string(),
+  items: z.array(SpotifyArtistSchema),
+  limit: z.number(),
+  next: z.string().nullish(),
+  offset: z.number(),
+  previous: z.string().nullish(),
+  total: z.number(),
+});
+
+export type SpotifyTopArtists = z.infer<typeof SpotifyTopArtistsSchema>;
+
+export const SpotifyArtistInTopSongsSchema = SpotifyArtistSchema.pick({
+  external_urls: true,
+  id: true,
+  name: true,
 });
 
 export const SpotifySongSchema = z.object({
   album: SpotifyAlbumSchema,
-  artists: z.array(SpotifyArtistSchema),
+  artists: z.array(SpotifyArtistInTopSongsSchema),
   duration_ms: z.number(),
   external_urls: z.string(),
   id: z.string(),
   name: z.string(),
 });
 
-export type SpotifySong = z.infer<typeof SpotifySongSchema>
+export type SpotifySong = z.infer<typeof SpotifySongSchema>;
 
 export const SpotifyTopSongsSchema = z.object({
   href: z.string(),
@@ -72,4 +95,4 @@ export const SpotifyTopSongsSchema = z.object({
   total: z.number(),
 });
 
-export type SpotifyTopSongs = z.infer<typeof SpotifyTopSongsSchema>
+export type SpotifyTopSongs = z.infer<typeof SpotifyTopSongsSchema>;
