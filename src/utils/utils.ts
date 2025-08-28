@@ -8,8 +8,10 @@ export const getErrorText = (error: unknown): string | undefined => {
   }
 
   const data = error.response?.data;
-  if (error.code && +error.code >= 400 && +error.code < 500) {
-    if (isApiError(data)) {
+  if (error.status && error.status >= 400 && error.status < 500) {
+    if (error.status === 401) {
+      return "Your session has expired. Please try logging in again";
+    } else if (isApiError(data)) {
       return data.error_message;
     } else if (isSpotifyError(data)) {
       return data.message;
