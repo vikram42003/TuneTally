@@ -1,5 +1,7 @@
 import axios from "axios";
 import {
+  SpotifyRecentlyPlayedSongs,
+  SpotifyRecentlyPlayedSongsSchema,
   SpotifyTopArtists,
   SpotifyTopArtistsSchema,
   SpotifyTopSongs,
@@ -39,6 +41,18 @@ export const getSpotifyTopSongs = async (time_range: string): Promise<SpotifyTop
   const validation = SpotifyTopSongsSchema.safeParse(response.data);
   if (!validation.success) {
     console.log("Zod validation failed for SpotifyTopSongs, continuing anyway");
+    console.log(validation);
+  }
+  return response.data;
+};
+
+export const getSpotifyRecentlyPlayedSongs = async (): Promise<SpotifyRecentlyPlayedSongs> => {
+  const response = await axios.get(apiSpotifyBaseUrl + `/spotify/me/player/recently-played`, {
+    withCredentials: true,
+  });
+  const validation = SpotifyRecentlyPlayedSongsSchema.safeParse(response.data);
+  if (!validation.success) {
+    console.log("Zod validation failed for SpotifyRecentlyPlayedSongs, continuing anyway");
     console.log(validation);
   }
   return response.data;

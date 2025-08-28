@@ -1,3 +1,4 @@
+import RecentlyPlayedSongs from "../components/StatsPage/RecentlyPlayedSongs"
 import TopArtists from "../components/StatsPage/TopArtists"
 import TopSongs from "../components/StatsPage/TopSongs"
 import UserDetails from "../components/StatsPage/UserDetails"
@@ -9,6 +10,8 @@ const StatsPage = () => {
         <div className="layout-container">
           <UserDetails />
         </div>
+
+        <RecentlyPlayedSongs />
 
         <div className="layout-container flex items-center">
           <div className="grow shrink basis-1/2">
