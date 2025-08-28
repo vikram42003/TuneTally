@@ -37,14 +37,6 @@ export const SpotifyUserDetailsSchema = z.object({
 
 export type SpotifyUserDetails = z.infer<typeof SpotifyUserDetailsSchema>;
 
-export const SpotifyAlbumSchema = z.object({
-  external_urls: z.string(),
-  id: z.string(),
-  images: z.array(SpotifyImageSchema),
-  name: z.string(),
-  total_tracks: z.number(),
-});
-
 export const SpotifyArtistSchema = z.object({
   external_urls: z.string(),
   followers: z.number(),
@@ -74,6 +66,14 @@ export const SpotifyArtistInTopSongsSchema = SpotifyArtistSchema.pick({
   name: true,
 });
 
+export const SpotifyAlbumSchema = z.object({
+  external_urls: z.string(),
+  id: z.string(),
+  images: z.array(SpotifyImageSchema),
+  name: z.string(),
+  total_tracks: z.number(),
+});
+
 export const SpotifySongSchema = z.object({
   album: SpotifyAlbumSchema,
   artists: z.array(SpotifyArtistInTopSongsSchema),
@@ -96,3 +96,23 @@ export const SpotifyTopSongsSchema = z.object({
 });
 
 export type SpotifyTopSongs = z.infer<typeof SpotifyTopSongsSchema>;
+
+export const SpotifySongInRecentlyPlayedSchema = z.object({
+  ...SpotifySongSchema.shape,
+  played_at: z.string().datetime(),
+});
+
+export type SpotifySongInRecentlyPlayed = z.infer<typeof SpotifySongInRecentlyPlayedSchema>;
+
+export const SpotifyRecentlyPlayedSongsSchema = z.object({
+  cursors: z.object({
+    before: z.string(),
+    after: z.string(),
+  }),
+  href: z.string(),
+  items: z.array(SpotifySongInRecentlyPlayedSchema),
+  limit: z.number(),
+  next: z.string(),
+});
+
+export type SpotifyRecentlyPlayedSongs = z.infer<typeof SpotifyRecentlyPlayedSongsSchema>;
