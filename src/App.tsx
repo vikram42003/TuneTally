@@ -13,7 +13,7 @@ const App = () => {
   return (
     <>
       <Navbar />
-      {mode === "dev" && <HiatusNotification />}
+      {/* {mode === "dev" && <HiatusNotification />} */}
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/stats" element={<StatsPage />} />
