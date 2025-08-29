@@ -1,15 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { SpotifyTimeRange } from "../../types/spotifyTypes";
+import { SpotifyTimeRange, SpotifyTopSongs } from "../../types/spotifyTypes";
 import { getSpotifyTopSongs } from "../../api/spotify/spotify";
 import StatsPageErrorComponent from "./StatsPageErrorComponent";
 import { getErrorText } from "../../utils/utils";
+import Song from "./Song";
 
 const TopSongs = () => {
   const [timeRange, setTimeRange] = useState<SpotifyTimeRange>("medium_term");
 
-  const { isLoading, error, data } = useQuery({
+  const { isLoading, error, data } = useQuery<SpotifyTopSongs>({
     queryKey: [`/spotify/me/top/tracks?${timeRange}`],
     queryFn: () => getSpotifyTopSongs(timeRange),
   });
@@ -33,7 +34,17 @@ const TopSongs = () => {
   return (
     <div className="">
       TopSongs
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      <div className="border border-red-500">
+        <div className="flex">
+          <div className="flex-1/12">#</div>
+          <div className="flex-6/12">Title</div>
+          <div className="flex-4/12">Album</div>
+          <div className="flex-1/12">⏱</div>
+        </div>
+
+        {data.items.map((i, idx) => <Song song={i} idx={idx}/>)}
+      </div>
+      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
     </div>
   );
 };

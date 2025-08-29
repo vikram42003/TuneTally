@@ -33,7 +33,15 @@ const TopSongs = () => {
   return (
     <div>
       TopArtists
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      <div className="border border-red-500">
+        <div className="flex">
+          <div className="flex-1/12">#</div>
+          <div className="flex-6/12">Title</div>
+          <div className="flex-4/12">Album</div>
+          <div className="flex-1/12">⏱</div>
+        </div>
+      </div>
+      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
     </div>
   );
 };

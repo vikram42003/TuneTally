@@ -24,6 +24,7 @@ resource "aws_lambda_function" "TuneTally_Authorization_Lambda" {
   function_name    = "TuneTally_Authorization_Lambda"
   role             = aws_iam_role.auth_lambda_role.arn
   handler          = "authorizationLambda.lambda_handler"
+  timeout = 5
 
   source_code_hash = data.archive_file.auth_lambda.output_base64sha256
 

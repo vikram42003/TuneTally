@@ -11,9 +11,9 @@ const StatsPage = () => {
           <UserDetails />
         </div>
 
-        <RecentlyPlayedSongs />
+        {/* <RecentlyPlayedSongs /> */}
 
-        <div className="layout-container flex items-center">
+        <div className="layout-container flex items-center gap-16">
           <div className="grow shrink basis-1/2">
             <TopArtists />
           </div>
