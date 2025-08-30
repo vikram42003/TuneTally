@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import {
   SpotifyRecentlyPlayedSongs,
   SpotifyRecentlyPlayedSongsSchema,
@@ -23,7 +24,7 @@ export const getSpotifyUserDetails = async (): Promise<SpotifyUserDetails> => {
 };
 
 export const getSpotifyTopArtists = async (time_range: string): Promise<SpotifyTopArtists> => {
-  const response = await axios.get(apiSpotifyBaseUrl + `/spotify/me/top/artists?${time_range}`, {
+  const response = await axios.get(apiSpotifyBaseUrl + `/spotify/me/top/artists?${time_range}&limit=50`, {
     withCredentials: true,
   });
   const validation = SpotifyTopArtistsSchema.safeParse(response.data);
@@ -35,7 +36,7 @@ export const getSpotifyTopArtists = async (time_range: string): Promise<SpotifyT
 };
 
 export const getSpotifyTopSongs = async (time_range: string): Promise<SpotifyTopSongs> => {
-  const response = await axios.get(apiSpotifyBaseUrl + `/spotify/me/top/tracks?${time_range}`, {
+  const response = await axios.get(apiSpotifyBaseUrl + `/spotify/me/top/tracks?${time_range}&limit=50`, {
     withCredentials: true,
   });
   const validation = SpotifyTopSongsSchema.safeParse(response.data);
