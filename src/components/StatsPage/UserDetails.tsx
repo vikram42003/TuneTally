@@ -55,7 +55,7 @@ const UserDetails = () => {
   ];
   return (
     <div>
-      <div className="flex items-center justify-between py-8">
+      <div className="flex items-center justify-between">
         <h3 className="text-4xl font-bold">
           {greeting}{" "}
           <Link to={data.external_urls} className="text-spotify-green hover:underline">

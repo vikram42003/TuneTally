@@ -6,11 +6,13 @@ import UserDetails from "../components/StatsPage/UserDetails"
 const StatsPage = () => {
   return (
     <div>
-      <section className="bg-spotify-gray">
+      <section className="bg-spotify-gray py-8">
         <div className="layout-container">
           <UserDetails />
         </div>
+      </section>
 
+      <section className="bg-spotify-dark py-8">
         {/* <RecentlyPlayedSongs /> */}
 
         <div className="layout-container flex items-center gap-16">

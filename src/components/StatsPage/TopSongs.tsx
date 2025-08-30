@@ -29,20 +29,22 @@ const TopSongs = () => {
     return <StatsPageErrorComponent errorText="No user data available" />;
   }
 
-  // console.log("/me/top/tracks", data);
+  console.log("/me/top/tracks", data);
 
   return (
     <div className="">
       TopSongs
-      <div className="border border-red-500">
-        <div className="flex">
-          <div className="flex-1/12">#</div>
-          <div className="flex-6/12">Title</div>
-          <div className="flex-4/12">Album</div>
-          <div className="flex-1/12">⏱</div>
+      <div className="">
+        <div className="flex gap-2">
+          <div className="flex-1/24">#</div>
+          <div className="flex-13/24">Title</div>
+          <div className="flex-8/24">Album</div>
+          <div className="flex-2/24">⏱</div>
         </div>
 
-        {data.items.map((i, idx) => <Song song={i} idx={idx}/>)}
+        {data.items.map((i, idx) => (
+          <Song key={i.id} song={i} idx={idx} />
+        ))}
       </div>
       {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
     </div>
