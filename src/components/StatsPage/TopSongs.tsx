@@ -30,15 +30,13 @@ const TopSongs = () => {
     return <StatsPageErrorComponent errorText="No user data available" />;
   }
 
-  // console.log("/me/top/tracks", data);
-
   return (
     <div className="w-[40vw] overflow-auto">
       {/* We offset the content 16px with pr-4 to account for the scrollbar */}
       <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top {data.items.length} Songs</h4>
 
       <div className="p-4">
-        <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange}/>
+        <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
       </div>
 
       <div>
@@ -55,7 +53,6 @@ const TopSongs = () => {
           ))}
         </div>
       </div>
-      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
     </div>
   );
 };

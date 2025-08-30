@@ -30,8 +30,6 @@ const TopSongs = () => {
     return <StatsPageErrorComponent errorText="No user data available" />;
   }
 
-  console.log("/me/top/artists", data);
-
   return (
     <div className="w-[40vw] overflow-auto">
       {/* We offset the content 16px with pr-4 to account for the scrollbar */}

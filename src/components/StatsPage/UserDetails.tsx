@@ -43,8 +43,6 @@ const UserDetails = () => {
       break;
   }
 
-  // console.log("/me", data);
-
   // Test out user image
   data.images = [
     {
@@ -53,6 +51,7 @@ const UserDetails = () => {
       width: 100,
     },
   ];
+  
   return (
     <div>
       <div className="flex items-center justify-between">
