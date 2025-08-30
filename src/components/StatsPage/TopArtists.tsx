@@ -5,6 +5,8 @@ import { SpotifyTimeRange } from "../../types/spotifyTypes";
 import { getSpotifyTopArtists } from "../../api/spotify/spotify";
 import { getErrorText } from "../../utils/utils";
 import StatsPageErrorComponent from "./StatsPageErrorComponent";
+import TimeRangePicker from "./TimeRangePicker";
+import Artist from "./Artist";
 
 const TopSongs = () => {
   const [timeRange, setTimeRange] = useState<SpotifyTimeRange>("medium_term");
@@ -28,20 +30,22 @@ const TopSongs = () => {
     return <StatsPageErrorComponent errorText="No user data available" />;
   }
 
-  // console.log("/me/top/artists", data);
+  console.log("/me/top/artists", data);
 
   return (
-    <div>
-      TopArtists
-      <div className="border border-red-500">
-        <div className="flex">
-          <div className="flex-1/12">#</div>
-          <div className="flex-6/12">Title</div>
-          <div className="flex-4/12">Album</div>
-          <div className="flex-1/12">⏱</div>
-        </div>
+    <div className="w-[40vw] overflow-auto">
+      {/* We offset the content 16px with pr-4 to account for the scrollbar */}
+      <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top {data.items.length} Artists</h4>
+
+      <div className="py-4 pr-3.5">
+        <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
       </div>
-      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+
+      <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark grid h-[100vh] grid-cols-3 gap-6 overflow-auto overflow-y-scroll pt-4">
+        {data.items.map((i, idx) => (
+          <Artist key={i.id} artist={i} idx={idx} />
+        ))}
+      </div>
     </div>
   );
 };

@@ -33,7 +33,7 @@ const TopSongs = () => {
   // console.log("/me/top/tracks", data);
 
   return (
-    <div>
+    <div className="w-[40vw] overflow-auto">
       {/* We offset the content 16px with pr-4 to account for the scrollbar */}
       <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top {data.items.length} Songs</h4>
 

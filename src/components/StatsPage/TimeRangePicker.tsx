@@ -6,8 +6,8 @@ interface TimeRangePickerProps {
 }
 
 const TimeRangePicker = ({ timeRange, setTimeRange }: TimeRangePickerProps) => {
-  const css = "border-spotify-green flex-1 border text-center cursor-pointer ";
-  const selectedCss = "bg-spotify-green text-black disabled";
+  const css = "border-spotify-green flex-1 border text-center cursor-pointer hover:underline ";
+  const selectedCss = "bg-spotify-green text-black hover:no-underline!";
 
   return (
     <div className="flex">
