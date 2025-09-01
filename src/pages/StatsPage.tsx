@@ -14,14 +14,13 @@ const StatsPage = () => {
       </section>
 
       <section className="bg-spotify-dark py-8">
-        {/* <RecentlyPlayedSongs /> */}
-
         <div className="layout-container flex gap-16">
           <div className="grow shrink basis-1/2">
             <TopArtists />
           </div>
           <div className="grow shrink basis-1/2">
             <TopSongs />
+            <RecentlyPlayedSongs />
           </div>
         </div>
       </section>

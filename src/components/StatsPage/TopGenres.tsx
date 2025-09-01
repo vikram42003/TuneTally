@@ -23,7 +23,7 @@ const TopGenres = ({ genresMap }: TopGenresProps) => {
   const fullbar = genresMap.values().next().value!;
 
   return (
-    <div className="pt-12">
+    <div className="py-8">
       <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top {genresMap.size} Genres</h4>
 
       <div className="py-4">

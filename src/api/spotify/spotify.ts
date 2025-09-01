@@ -49,7 +49,7 @@ export const getSpotifyTopSongs = async (time_range: SpotifyTimeRange): Promise<
 };
 
 export const getSpotifyRecentlyPlayedSongs = async (): Promise<SpotifyRecentlyPlayedSongs> => {
-  const response = await axios.get(apiSpotifyBaseUrl + `/spotify/me/player/recently-played`, {
+  const response = await axios.get(apiSpotifyBaseUrl + `/spotify/me/player/recently-played?limit=50`, {
     withCredentials: true,
   });
   const validation = SpotifyRecentlyPlayedSongsSchema.safeParse(response.data);
