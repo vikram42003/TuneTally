@@ -36,10 +36,6 @@ const TopArtists = () => {
   return (
     <>
       <div className="w-[40vw] overflow-auto">
-        <div>
-          <TopGenres genresMap={genresMap} />
-        </div>
-
         {/* We offset the content 16px with pr-4 to account for the scrollbar */}
         <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top {data.items.length} Artists</h4>
 
@@ -58,9 +54,9 @@ const TopArtists = () => {
         2. Lifting timeRange and useQuery up would make my separating of concerins between Layout components and Logic components inconsistent
         3. May turn useQuery (and maybe timeRange too into a custom hook, but thats not needed for now since the logic here is simple enough
       */}
-      {/* <div>
+      <div>
         <TopGenres genresMap={genresMap} />
-      </div> */}
+      </div>
     </>
   );
 };
