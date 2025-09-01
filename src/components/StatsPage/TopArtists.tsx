@@ -3,12 +3,13 @@ import { useState } from "react";
 
 import { SpotifyTimeRange } from "../../types/spotifyTypes";
 import { getSpotifyTopArtists } from "../../api/spotify/spotify";
-import { getErrorText } from "../../utils/utils";
+import { calculateTopGenres, getErrorText } from "../../utils/utils";
 import StatsPageErrorComponent from "./StatsPageErrorComponent";
 import TimeRangePicker from "./TimeRangePicker";
 import Artist from "./Artist";
+import TopGenres from "./TopGenres";
 
-const TopSongs = () => {
+const TopArtists = () => {
   const [timeRange, setTimeRange] = useState<SpotifyTimeRange>("medium_term");
 
   const { isLoading, error, data } = useQuery({
@@ -30,22 +31,38 @@ const TopSongs = () => {
     return <StatsPageErrorComponent errorText="No user data available" />;
   }
 
+  const genresMap: Map<string, number> = calculateTopGenres(data);
+
   return (
-    <div className="w-[40vw] overflow-auto">
-      {/* We offset the content 16px with pr-4 to account for the scrollbar */}
-      <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top {data.items.length} Artists</h4>
+    <>
+      <div className="w-[40vw] overflow-auto">
+        <div>
+          <TopGenres genresMap={genresMap} />
+        </div>
 
-      <div className="py-4 pr-3.5">
-        <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
-      </div>
+        {/* We offset the content 16px with pr-4 to account for the scrollbar */}
+        <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top {data.items.length} Artists</h4>
 
-      <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark grid h-[100vh] grid-cols-3 gap-6 overflow-auto overflow-y-scroll pt-4">
-        {data.items.map((i, idx) => (
-          <Artist key={i.id} artist={i} idx={idx} />
-        ))}
+        <div className="py-4 pr-3.5">
+          <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
+        </div>
+
+        <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark grid h-[100vh] grid-cols-3 gap-6 overflow-auto overflow-y-scroll pt-4">
+          {data.items.map((i, idx) => (
+            <Artist key={i.id} artist={i} idx={idx} />
+          ))}
+        </div>
       </div>
-    </div>
+      {/* Although TopArtists and TopGenres are their own components. I'm rendering them together because 
+        1. theyre closely related and their timeRange and data should match 
+        2. Lifting timeRange and useQuery up would make my separating of concerins between Layout components and Logic components inconsistent
+        3. May turn useQuery (and maybe timeRange too into a custom hook, but thats not needed for now since the logic here is simple enough
+      */}
+      {/* <div>
+        <TopGenres genresMap={genresMap} />
+      </div> */}
+    </>
   );
 };
 
-export default TopSongs;
+export default TopArtists;
