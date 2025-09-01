@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { isApiError, isSpotifyError } from "../validators/spotifyValidators";
+import { SpotifyTopArtists } from "../types/spotifyTypes";
 
 export const getErrorText = (error: unknown): string | undefined => {
   if (!axios.isAxiosError(error)) {
@@ -17,4 +18,17 @@ export const getErrorText = (error: unknown): string | undefined => {
       return data.message;
     }
   }
+};
+
+export const calculateTopGenres = (data: SpotifyTopArtists): Map<string, number> => {
+  const genresMap = new Map<string, number>();
+
+  for (const d of data.items) {
+    for (const g of d.genres) {
+      genresMap.set(g, (genresMap.get(g) ?? 0) + 1);
+    }
+  }
+
+  // genresMap.entries() will return an Iterator, so we gotta enclose it in square brackets
+  return new Map([...genresMap.entries()].sort(([, a], [, b]) => b - a).slice(0, 10));
 };
