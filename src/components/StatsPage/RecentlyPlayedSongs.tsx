@@ -30,7 +30,7 @@ const RecentlyPlayedSongs = () => {
   return (
     <div className="w-[40vw] overflow-auto py-8">
       {/* We offset the content 16px with pr-4 to account for the scrollbar */}
-      <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Recently Played {data.items.length} Songs</h4>
+      <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Recently Played Songs</h4>
 
       <div>
         <div className="flex gap-2 pt-4 pr-4 text-xl">

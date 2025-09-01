@@ -43,15 +43,15 @@ const UserDetails = () => {
       break;
   }
 
-  // Test out user image
-  data.images = [
-    {
-      url: "https://i.pinimg.com/474x/69/5c/dd/695cdd7b7e833faa1d12cfc4f458ddd8.jpg",
-      height: 100,
-      width: 100,
-    },
-  ];
-  
+  // Use placeholder image if the user doesnt have a profile pic
+  if (!data.images || !data.images.length || !data.images[0].url) {
+    data.images = [
+      {
+        url: "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
+      },
+    ];
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -61,11 +61,11 @@ const UserDetails = () => {
             {data.display_name}
           </Link>
         </h3>
-        {data.images && data.images[0]?.url && (
+        {data.images[0].url && (
           <img
             src={data.images[0]?.url}
-            alt={`Image of ${data.display_name}'s profile picture`}
-            className="h-[100px] w-[100px] rounded-full object-cover"
+            alt={`${!data.images[0].height ? "Placeholder " : ""}Image of ${data.display_name}'s profile picture`}
+            className="h-[80px] w-[80px] rounded-full object-cover"
           />
         )}
       </div>

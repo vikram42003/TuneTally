@@ -24,7 +24,7 @@ const TopGenres = ({ genresMap }: TopGenresProps) => {
 
   return (
     <div className="py-8">
-      <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top {genresMap.size} Genres</h4>
+      <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top Genres</h4>
 
       <div className="py-4">
         {[...genresMap].map(([genre, count], idx) => (
