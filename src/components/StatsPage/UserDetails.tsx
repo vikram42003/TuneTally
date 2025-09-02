@@ -19,11 +19,11 @@ const UserDetails = () => {
   if (error) {
     console.log(error);
     const errorText = getErrorText(error);
-    return <StatsPageErrorComponent errorText={errorText} />;
+    return <StatsPageErrorComponent componentName="User Details" errorText={errorText} />;
   }
 
   if (!data) {
-    return <StatsPageErrorComponent errorText="No user data available" />;
+    return <StatsPageErrorComponent componentName="User Details" errorText="No user data available" />;
   }
 
   let greeting = "";

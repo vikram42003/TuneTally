@@ -14,7 +14,7 @@ const Navbar = () => {
           <div>
             <Link
               to="/stats"
-              className="text-spotify-green navbar-text-shadow text-xl transition-all duration-500 hover:underline"
+              className="hover:text-spotify-green navbar-text-shadow transition-all duration-500 hover:underline"
             >
               Stats
             </Link>

@@ -46,4 +46,18 @@ const TopGenres = ({ genresMap }: TopGenresProps) => {
   );
 };
 
+export const TopGenresSkeleton = () => {
+  return (
+    <div className="py-8">
+      <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top Genres</h4>
+
+      <div className="animate-pulse space-y-4 py-6">
+        {colors.map((c) => (
+          <div key={c} className="h-10 rounded-full bg-gray-500 py-2.5"></div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export default TopGenres;

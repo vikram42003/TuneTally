@@ -7,7 +7,7 @@ import { calculateTopGenres, getErrorText } from "../../utils/utils";
 import StatsPageErrorComponent from "./StatsPageErrorComponent";
 import TimeRangePicker from "./TimeRangePicker";
 import Artist from "./Artist";
-import TopGenres from "./TopGenres";
+import TopGenres, { TopGenresSkeleton } from "./TopGenres";
 
 const TopArtists = () => {
   const [timeRange, setTimeRange] = useState<SpotifyTimeRange>("medium_term");
@@ -23,7 +23,14 @@ const TopArtists = () => {
   }, [data]);
 
   if (isLoading) {
-    return <TopArtistsSkeleton />;
+    return (
+      <>
+        <TopArtistsSkeleton />
+        <div className="pt-10">
+          <TopGenresSkeleton />
+        </div>
+      </>
+    );
   }
 
   if (error) {
@@ -52,7 +59,6 @@ const TopArtists = () => {
           ))}
         </div>
       </div>
-
       {/* Although TopArtists and TopGenres are their own components. I'm rendering them together because 
         1. theyre closely related and their timeRange and data should match 
         2. Lifting timeRange and useQuery up would make my separating of concerins between Layout components and Logic components inconsistent
