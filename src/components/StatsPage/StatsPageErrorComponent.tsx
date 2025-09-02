@@ -5,10 +5,12 @@ interface StatsPageErrorComponentProps {
 
 const StatsPageErrorComponent = ({ componentName = "this component", errorText = "Something went wrong, please try logging in again" }: StatsPageErrorComponentProps) => {
   return (
-    <div>
-      <div>
+    <div className="bg-gray-800 rounded text-center p-10 my-5">
+      <span className="text-spotify-green font-semibold">
         Could not load {componentName + " :("}
-      </div>
+      </span>
+
+      <br />
       {errorText}
     </div>
   )
