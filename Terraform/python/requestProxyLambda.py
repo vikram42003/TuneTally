@@ -97,7 +97,8 @@ def convertDecimals(obj):
             return float(obj)
     return obj
 
-# IMPORTANT NOTE - THE TYPES FOR SPOTIFY TOP SONGS, TOP ARTISTS, IMAGES ETC ARE <TIGHTLY COUPLED> WITH 
+
+# IMPORTANT NOTE - THE TYPES FOR SPOTIFY TOP SONGS, TOP ARTISTS, IMAGES ETC ARE <TIGHTLY COUPLED> WITH
 # THE FRONTEND TYPESCRIPT TYPES, ANY CHANGES MADE HERE SHOULD BE MATCHED WITH FRONTEND AND THIS FILE SHOULD
 # BE TAKEN AS THE SOURCE OF TRUTH
 def formatResponseData(path, response):
@@ -186,12 +187,12 @@ def makeProxyRequests(sessionID, path, params):
         table = dynamodb.Table("sessionID_token_pair")
         db_response = table.get_item(Key={"sessionID": sessionID})
 
-        if "Item" not in db_response or "expiresAt" not in db_response["Item"]:
+        if "Item" not in db_response or "authTokenExpiresAt" not in db_response["Item"]:
             raise UnauthorizedError("SessionID is not valid")
 
         item = db_response["Item"]
 
-        if int(item["expiresAt"]) < int(time.time()):
+        if int(item["authTokenExpiresAt"]) < int(time.time()):
             raise UnauthorizedError("Your session has expired")
 
         response = item.get(cache_path, {})

@@ -8,3 +8,9 @@ export const loginWithSpotify = () => {
   axios.get(apiSpotifyBaseUrl + "/spotify/warm");
   window.location.href = apiSpotifyBaseUrl + "/spotifyLogin";
 };
+
+export const loginWithSpotifyDEMO = () => {
+  // Warm up the requestProxy lambda func
+  axios.get(apiSpotifyBaseUrl + "/spotify/warm");
+  window.location.href = apiSpotifyBaseUrl + "/spotifyLogin?demo_mode=true";
+};

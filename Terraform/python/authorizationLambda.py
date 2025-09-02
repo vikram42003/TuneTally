@@ -35,9 +35,13 @@ def lambda_handler(event, context):
     # Strip away the v1 part since path will be something like /v1/spotifyLogin
     path = path.split("/")[2]
 
+    # If demo_mode flag is on then do the auth with demo_user as state/sessionID value
+    params = event.get("queryStringParameters") or {}
+    demo_mode = params.get("demo_mode", "false") == "true"
+
     if path == "spotifyLogin":
         # Prepare the request and redirect to spotify auth page
-        return handleSpotifyLoginRequest()
+        return handleSpotifyLoginRequest(demo_mode)
     elif path == "spotifyLoginCallback":
         # Exchange code for token (or send back error) and redirect to app page
         return handleSpotifyLoginCallbackRequest(event)
@@ -69,7 +73,7 @@ def errorHandlerRedirect(errorTitle, errorMessage):
     }
 
 
-def handleSpotifyLoginRequest():
+def handleSpotifyLoginRequest(demo_mode):
     client_id = os.environ.get("SPOTIFY_CLIENT_ID")
     if not client_id:
         return errorHandler(
@@ -86,7 +90,13 @@ def handleSpotifyLoginRequest():
             "Spotify redirect URI not found. Check if enviornment variables are set properly",
         )
 
-    state = str(uuid.uuid4())
+    if demo_mode:
+        state = "demo_user"
+        # Expires in 10 years
+        expiresAt = int(time.time()) + 315576000
+    else:
+        state = str(uuid.uuid4())
+        expiresAt = int(time.time()) + 300
 
     try:
         dynamodb = boto3.resource("dynamodb")
@@ -95,7 +105,7 @@ def handleSpotifyLoginRequest():
             Item={
                 "sessionID": state,
                 "token": "TEMP",
-                "expiresAt": int(time.time()) + 300,
+                "expiresAt": expiresAt,
             }
         )
     except Exception as e:
@@ -167,9 +177,17 @@ def exchangeCodeForTokenAndRedirect(code, state):
 
         auth_token = body["access_token"]
         expires_in = body["expires_in"]
+        refresh_token = body["refresh_token"]
 
         item["token"] = auth_token
-        item["expiresAt"] = int(time.time()) + expires_in
+        if state == "demo_user":
+            # The item should expire in 10 years for the demo user
+            item["expiresAt"] = int(time.time()) + 315576000
+            item["authTokenExpiresAt"] = int(time.time()) + expires_in
+            item["refreshToken"] = refresh_token
+        else:
+            item["expiresAt"] = int(time.time()) + expires_in
+            item["authTokenExpiresAt"] = int(time.time()) + expires_in
 
         table.put_item(Item=item)
 
@@ -193,7 +211,8 @@ def handleSpotifyLoginCallbackRequest(event):
 
     if not params:
         return errorHandlerRedirect(
-            "Server side error", "No query params were found. This indicates an issue from Spotify's side"
+            "Server side error",
+            "No query params were found. This indicates an issue from Spotify's side",
         )
     elif "code" in params and "state" in params:
         return exchangeCodeForTokenAndRedirect(params["code"], params["state"])
