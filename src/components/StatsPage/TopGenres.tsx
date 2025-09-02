@@ -53,7 +53,7 @@ export const TopGenresSkeleton = () => {
 
       <div className="animate-pulse space-y-4 py-7">
         {colors.map((c) => (
-          <div key={c} className="h-10 rounded-full bg-gray-500 py-2.5"></div>
+          <div key={c} className="h-10 rounded-full bg-gray-700 py-2.5"></div>
         ))}
       </div>
     </div>

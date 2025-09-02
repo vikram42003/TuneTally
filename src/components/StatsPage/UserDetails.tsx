@@ -12,8 +12,8 @@ const UserDetails = () => {
     queryFn: getSpotifyUserDetails,
   });
 
-  if (isLoading) {
-    return <div>SKELETON</div>;
+  if (true) {
+    return <UserDetailsSkeleton />;
   }
 
   if (error) {
@@ -68,6 +68,26 @@ const UserDetails = () => {
             className="h-[80px] w-[80px] rounded-full object-cover"
           />
         )}
+      </div>
+    </div>
+  );
+};
+
+const UserDetailsSkeleton = () => {
+  const url = "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <h3 className="text-4xl font-bold">
+          Hey there,
+          <span className="text-spotify-green"> User Whose Details We're Loading</span>
+        </h3>
+
+        <img
+          src={url}
+          alt={"Placeholder Image of the user's profile picture"}
+          className="h-[80px] w-[80px] rounded-full object-cover"
+        />
       </div>
     </div>
   );
