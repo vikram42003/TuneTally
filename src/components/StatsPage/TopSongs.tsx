@@ -23,11 +23,11 @@ const TopSongs = () => {
   if (error) {
     console.log(error);
     const errorText = getErrorText(error);
-    return <StatsPageErrorComponent errorText={errorText} />;
+    return <StatsPageErrorComponent componentName="Top Songs" errorText={errorText} />;
   }
 
   if (!data) {
-    return <StatsPageErrorComponent errorText="No user data available" />;
+    return <StatsPageErrorComponent componentName="Top Songs" errorText="No user data available" />;
   }
 
   return (

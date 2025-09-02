@@ -18,11 +18,11 @@ const RecentlyPlayedSongs = () => {
   if (error) {
     console.log(error);
     const errorText = getErrorText(error);
-    return <StatsPageErrorComponent errorText={errorText} />;
+    return <StatsPageErrorComponent componentName="Recently Played Songs" errorText={errorText} />;
   }
 
   if (!data) {
-    return <StatsPageErrorComponent errorText="No user data available" />;
+    return <StatsPageErrorComponent componentName="Recently Played Songs" errorText="No user data available" />;
   }
 
   return (

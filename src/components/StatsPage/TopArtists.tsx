@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { SpotifyTimeRange } from "../../types/spotifyTypes";
 import { getSpotifyTopArtists } from "../../api/spotify/spotify";
@@ -17,6 +17,11 @@ const TopArtists = () => {
     queryFn: () => getSpotifyTopArtists(timeRange),
   });
 
+  const genresMap = useMemo(() => {
+    if (!data) return new Map();
+    return calculateTopGenres(data);
+  }, [data]);
+
   if (isLoading) {
     return <div>SKELETON</div>;
   }
@@ -24,14 +29,12 @@ const TopArtists = () => {
   if (error) {
     console.log(error);
     const errorText = getErrorText(error);
-    return <StatsPageErrorComponent errorText={errorText} />;
+    return <StatsPageErrorComponent componentName="Top Artists" errorText={errorText} />;
   }
 
   if (!data) {
-    return <StatsPageErrorComponent errorText="No user data available" />;
+    return <StatsPageErrorComponent componentName="Top Artists" errorText="No user data available" />;
   }
-
-  const genresMap: Map<string, number> = calculateTopGenres(data);
 
   return (
     <>

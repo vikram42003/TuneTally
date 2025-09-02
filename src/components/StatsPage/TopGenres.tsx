@@ -1,3 +1,5 @@
+import StatsPageErrorComponent from "./StatsPageErrorComponent";
+
 interface TopGenresProps {
   genresMap: Map<string, number>;
 }
@@ -17,7 +19,7 @@ const colors = [
 
 const TopGenres = ({ genresMap }: TopGenresProps) => {
   if (!genresMap) {
-    <div>No data found</div>;
+    <StatsPageErrorComponent componentName="Top Genres" errorText="No data available" />;
   }
 
   const fullbar = genresMap.values().next().value!;
