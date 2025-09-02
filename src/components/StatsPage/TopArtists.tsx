@@ -36,7 +36,12 @@ const TopArtists = () => {
   if (error) {
     console.log(error);
     const errorText = getErrorText(error);
-    return <StatsPageErrorComponent componentName="Top Artists" errorText={errorText} />;
+    return (
+      <>
+        <StatsPageErrorComponent componentName="Top Artists" errorText={errorText} />
+        <StatsPageErrorComponent componentName="Top Genres" errorText={errorText} />
+      </>
+    );
   }
 
   if (!data) {
