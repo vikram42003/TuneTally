@@ -22,7 +22,7 @@ const TopArtists = () => {
     return calculateTopGenres(data);
   }, [data]);
 
-  if (true) {
+  if (isLoading) {
     return (
       <>
         <TopArtistsSkeleton />

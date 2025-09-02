@@ -11,7 +11,7 @@ const RecentlyPlayedSongs = () => {
     queryFn: () => getSpotifyRecentlyPlayedSongs(),
   });
 
-  if (true) {
+  if (isLoading) {
     return <RecentlyPlayedSongsSkeleton />;
   }
 
@@ -55,7 +55,7 @@ const RecentlyPlayedSongsSkeleton = () => {
       <div className="animate-pulse">
         <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark h-[100vh] space-y-4 space-x-2 overflow-auto overflow-y-scroll pt-4">
           {Array.from({ length: 15 }).map((_, i) => (
-            <div className="h-12 rounded bg-gray-700"></div>
+            <div key={i} className="h-12 rounded bg-gray-700"></div>
           ))}
         </div>
       </div>

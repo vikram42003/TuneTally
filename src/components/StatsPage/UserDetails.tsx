@@ -12,7 +12,7 @@ const UserDetails = () => {
     queryFn: getSpotifyUserDetails,
   });
 
-  if (true) {
+  if (isLoading) {
     return <UserDetailsSkeleton />;
   }
 
