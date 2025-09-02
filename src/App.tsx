@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes, useSearchParams } from "react-router";
 
 import Homepage from "./pages/Homepage";
@@ -14,13 +14,20 @@ const App = () => {
   const [errorText, setErrorText] = useState<string | null>(null);
   const [params] = useSearchParams();
 
-  if ("error" in params && "error_message" in params && typeof params.error === 'string' && typeof params.error_message === 'string') {
-    if (isJson(params.error_message)) {
-      params.error_message = "please try refreshing or logging in again"
+  useEffect(() => {
+    const error = params.get("error");
+    let error_message = params.get("error_message");
+
+    if (error) {
+      if (error_message && isJson(error_message)) {
+        console.log(error_message);
+        error_message = "please try refreshing or logging in again";
+      }
+  
+      setErrorText(`${error}: ${error_message}`);
+      setTimeout(() => setErrorText(null), 5000);
     }
-    setErrorText(`Error: ${params.error}\n${params.error_message}`);
-    setTimeout(() => setErrorText(null), 5000);
-  }
+  }, [params])
 
   const mode = import.meta.env.VITE_ENVIRONMENT;
 

@@ -23,7 +23,7 @@ const TopArtists = () => {
   }, [data]);
 
   if (isLoading) {
-    return <div>SKELETON</div>;
+    return <TopArtistsSkeleton />;
   }
 
   if (error) {
@@ -38,7 +38,7 @@ const TopArtists = () => {
 
   return (
     <>
-      <div className="w-[40vw] overflow-auto py-8">
+      <div className="w-[40vw] py-8">
         {/* We offset the content 16px with pr-4 to account for the scrollbar */}
         <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top {data.items.length} Artists</h4>
 
@@ -62,6 +62,28 @@ const TopArtists = () => {
         <TopGenres genresMap={genresMap} />
       </div>
     </>
+  );
+};
+
+const TopArtistsSkeleton = () => {
+  return (
+    <div className="flex w-[40vw] flex-col space-y-4 py-8">
+      <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top Artists</h4>
+
+      <div className="animate-pulse">
+        <div className="mx-16 mb-4 h-3 rounded bg-gray-700 py-4 pr-3.5"></div>
+
+        <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark grid h-[100vh] grid-cols-3 gap-6 overflow-auto overflow-y-scroll pt-4">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={i} className="flex flex-col items-center space-y-2">
+              {/* Square artist image placeholder */}
+              <div className="h-40 w-40 rounded-md bg-gray-700 opacity-70" />
+              <div className="h-4 w-24 rounded bg-gray-700 opacity-70" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 
