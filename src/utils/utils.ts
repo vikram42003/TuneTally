@@ -32,3 +32,13 @@ export const calculateTopGenres = (data: SpotifyTopArtists): Map<string, number>
   // genresMap.entries() will return an Iterator, so we gotta enclose it in square brackets
   return new Map([...genresMap.entries()].sort(([, a], [, b]) => b - a).slice(0, 10));
 };
+
+export const isJson = (str: string): boolean => {
+  try {
+    JSON.parse(str);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_e) {
+    return false;
+  }
+  return true;
+};

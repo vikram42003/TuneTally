@@ -8,21 +8,25 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import HiatusNotification from "./components/HiatusNotification";
 import ErrorNotification from "./components/ErrorNotification";
+import { isJson } from "./utils/utils";
 
 const App = () => {
-  const [errorText, setErrorText] = useState<string | null>("WE HAVE AN ERROR");
-  const [params] = useSearchParams()
+  const [errorText, setErrorText] = useState<string | null>(null);
+  const [params] = useSearchParams();
 
-  if ("error" in params && "error_message" in params) {
+  if ("error" in params && "error_message" in params && typeof params.error === 'string' && typeof params.error_message === 'string') {
+    if (isJson(params.error_message)) {
+      params.error_message = "please try refreshing or logging in again"
+    }
     setErrorText(`Error: ${params.error}\n${params.error_message}`);
-    setTimeout(() => setErrorText(null), 5000)
+    setTimeout(() => setErrorText(null), 5000);
   }
-  
+
   const mode = import.meta.env.VITE_ENVIRONMENT;
 
   return (
     <>
-      <ErrorNotification text={errorText}/>
+      <ErrorNotification text={errorText} />
       <Navbar />
       {/* {mode === "dev" && <HiatusNotification />} */}
       <Routes>
