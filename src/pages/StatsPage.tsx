@@ -1,6 +1,5 @@
 import RecentlyPlayedSongs from "../components/StatsPage/RecentlyPlayedSongs"
 import TopArtists from "../components/StatsPage/TopArtists"
-import TopGenres from "../components/StatsPage/TopGenres"
 import TopSongs from "../components/StatsPage/TopSongs"
 import UserDetails from "../components/StatsPage/UserDetails"
 

@@ -25,8 +25,6 @@ const RecentlyPlayedSongs = () => {
     return <StatsPageErrorComponent errorText="No user data available" />;
   }
 
-  console.log("/me/player/recently-played", data);
-
   return (
     <div className="w-[40vw] overflow-auto py-8">
       {/* We offset the content 16px with pr-4 to account for the scrollbar */}
@@ -42,7 +40,8 @@ const RecentlyPlayedSongs = () => {
 
         <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark h-[100vh] overflow-y-scroll">
           {data.items.map((i, idx) => (
-            <Song key={i.id} song={i} idx={idx} />
+            // Same song may be present mutiple times in the list but song.id + time would be unique
+            <Song key={i.id + i.played_at} song={i} idx={idx} />
           ))}
         </div>
       </div>
