@@ -193,7 +193,7 @@ def handleSpotifyLoginCallbackRequest(event):
 
     if not params:
         return errorHandlerRedirect(
-            "Unknown request", "The request is not supported by the server"
+            "Server side error", "No query params were found. This indicates an issue from Spotify's side"
         )
     elif "code" in params and "state" in params:
         return exchangeCodeForTokenAndRedirect(params["code"], params["state"])
