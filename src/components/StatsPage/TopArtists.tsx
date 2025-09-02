@@ -22,11 +22,11 @@ const TopArtists = () => {
     return calculateTopGenres(data);
   }, [data]);
 
-  if (isLoading) {
+  if (true) {
     return (
       <>
         <TopArtistsSkeleton />
-        <div className="pt-10">
+        <div className="pt-1">
           <TopGenresSkeleton />
         </div>
       </>
@@ -45,11 +45,6 @@ const TopArtists = () => {
 
   return (
     <>
-      <TopArtistsSkeleton />
-      <div className="pt-10">
-        <TopGenresSkeleton />
-      </div>
-
       <div className="w-[40vw] py-8">
         {/* We offset the content 16px with pr-4 to account for the scrollbar */}
         <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top {data.items.length} Artists</h4>
