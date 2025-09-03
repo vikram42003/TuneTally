@@ -37,11 +37,19 @@ def lambda_handler(event, context):
 
     # If demo_mode flag is on then do the auth with demo_user as state/sessionID value
     params = event.get("queryStringParameters") or {}
-    demo_mode = params.get("demo_mode", "false") == "true"
+    demo_mode = params.get("demo_mode", "")
 
     if path == "spotifyLogin":
-        # Prepare the request and redirect to spotify auth page
-        return handleSpotifyLoginRequest(demo_mode)
+        if demo_mode == "login":
+            # If demo_mode flag is on then do the auth with demo_user as state/sessionID value
+            return handleSpotifyLoginRequest(demo_mode)
+        elif demo_mode == "refreshSession":
+            # Refresh the token for demo user (if needed) and send sessionID back to the app
+            return handleSpotifyDemoUserRefreshTokenRequest(event)
+        else:
+            # Otherwise function normally
+            # Prepare the request and redirect to spotify auth page
+            return handleSpotifyLoginRequest()
     elif path == "spotifyLoginCallback":
         # Exchange code for token (or send back error) and redirect to app page
         return handleSpotifyLoginCallbackRequest(event)
@@ -90,7 +98,7 @@ def handleSpotifyLoginRequest(demo_mode):
             "Spotify redirect URI not found. Check if enviornment variables are set properly",
         )
 
-    if demo_mode:
+    if demo_mode == "login":
         state = "demo_user"
         # Expires in 10 years
         expiresAt = int(time.time()) + 315576000
@@ -211,8 +219,7 @@ def handleSpotifyLoginCallbackRequest(event):
 
     if not params:
         return errorHandlerRedirect(
-            "Server side error",
-            "No query params were found. This indicates an issue from Spotify's side",
+            "Server side error", "No query params were found. This indicates an issue from Spotify's side"
         )
     elif "code" in params and "state" in params:
         return exchangeCodeForTokenAndRedirect(params["code"], params["state"])
@@ -224,3 +231,80 @@ def handleSpotifyLoginCallbackRequest(event):
         return errorHandlerRedirect(
             "Server side error", "Something unexpected happened"
         )
+
+
+def handleSpotifyDemoUserRefreshTokenRequest(event):
+    try:
+        state = "demo_user"
+
+        dynamodb = boto3.resource("dynamodb")
+        table = dynamodb.Table("sessionID_token_pair")
+        response = table.get_item(Key={"sessionID": state})
+
+        if "Item" not in response:
+            raise Exception("No demo user was found. Make sure the demo user has been initialized properly")
+        
+        item = response["Item"]
+
+        # If the auth token is about to expire in 5 mins or has already expired then get a new one using refresh token
+        if int(time.time() - 300) > item["authTokenExpiresAt"]:
+            refresh_token = item["refreshToken"]
+            if not refresh_token:
+                raise Exception(
+                    "No refresh token was found. Make sure the demo user has been initialized properly"
+                )
+
+            client_id = os.environ.get("SPOTIFY_CLIENT_ID")
+            if not client_id:
+                raise Exception(
+                    "Spotify client ID not found. Check if enviornment variables are set properly"
+                )
+
+            client_secret = os.environ.get("SPOTIFY_CLIENT_SECRET")
+            if not client_secret:
+                raise Exception(
+                    "Spotify client secret not found. Check if enviornment variables are set properly"
+                )
+
+            data = {
+                "grant_type": "refresh_token",
+                "refresh_token": refresh_token,
+            }
+
+            token_request_url = "https://accounts.spotify.com/api/token"
+            auth = (client_id, client_secret)
+            headers = {"Content-Type": "application/x-www-form-urlencoded"}
+
+            response = requests.post(
+                token_request_url, data=data, auth=auth, headers=headers
+            )
+
+            body = response.json()
+
+            auth_token = body["access_token"]
+            expires_in = body["expires_in"]
+
+            item["token"] = auth_token
+            item["authTokenExpiresAt"] = int(time.time()) + expires_in
+
+            # Clear the out of date cached data from the item
+            # NOTE: I know this code is race condition prone but it's ok since this is a demo user and we only need
+            # the auth token and authTokenExpiresAt to update, it doesn't matter which users request made that happen
+            keys_to_keep = ["sessionID", "token", "refreshToken", "expiresAt", "authTokenExpiresAt", "me"]
+            cleaned_item = {k: item[k] for k in keys_to_keep if k in item}
+
+            table.put_item(Item=cleaned_item)
+        
+        httpOnly_cookie = f"sessionID={state}; Max-Age={expires_in}; HttpOnly; SameSite=None; Secure; Path=/"
+        app_base_url = os.environ.get("TUNETALLY_BASE_URL")
+        return {
+            "statusCode": 302,
+            "headers": {
+                **CORS_HEADERS,
+                "Set-Cookie": httpOnly_cookie,
+                "Location": app_base_url + "/stats?spotifyAuthStatus=success",
+            },
+        }
+        
+    except Exception as e:
+        return errorHandler(500, "Server side error", e)
