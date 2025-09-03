@@ -1,9 +1,17 @@
-resource "aws_lambda_permission" "Allow_TuneTally_Authorizarion_Lambda" {
-  statement_id  = "Allow_TuneTally_API_Gateway_Invoke"
+resource "aws_lambda_permission" "Allow_TuneTally_Authorizarion_Lambda_Login" {
+  statement_id  = "Allow_TuneTally_API_Gateway_Invoke_Login"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.TuneTally_Authorization_Lambda.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.TuneTally_API_Gateway.execution_arn}/*/GET/spotifyLogin"
+}
+
+resource "aws_lambda_permission" "Allow_TuneTally_Authorizarion_Lambda_Logout" {
+  statement_id  = "Allow_TuneTally_API_Gateway_Invoke_Logout"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.TuneTally_Authorization_Lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.TuneTally_API_Gateway.execution_arn}/*/GET/spotifyLogout"
 }
 
 resource "aws_lambda_permission" "Allow_TuneTally_Callback_Lambda" {
@@ -111,6 +119,77 @@ resource "aws_api_gateway_rest_api" "TuneTally_API_Gateway" {
                   }
                 }
                 "Location" = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+              }
+            }
+          }
+          x-amazon-apigateway-integration = {
+            httpMethod           = "POST"
+            payloadFormatVersion = "1.0"
+            type                 = "AWS_PROXY"
+            uri                  = aws_lambda_function.TuneTally_Authorization_Lambda.invoke_arn
+          }
+        }
+        options = {
+          responses = {
+            "200" = {
+              description = "Default response for CORS method"
+              headers = {
+                Access-Control-Allow-Headers = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+                Access-Control-Allow-Origin = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+                Access-Control-Allow-Methods = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+                Access-Control-Allow-Credentials = {
+                  schema = {
+                    type = "string"
+                  }
+                }
+              }
+            }
+          }
+          x-amazon-apigateway-integration = {
+            type             = "mock"
+            requestTemplates = {
+              "application/json" = "{\"statusCode\": 200}"
+            }
+            responses = {
+              default = {
+                statusCode = "200"
+                responseParameters = {
+                  "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,Authorization'"
+                  "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS'"
+                  "method.response.header.Access-Control-Allow-Origin"  = "'${var.TUNETALLY_BASE_URL}'"
+                  "method.response.header.Access-Control-Allow-Credentials"  = "'true'"
+                }
+                responseTemplates = {
+                  "application/json" = ""
+                }
+              }
+            }
+          }
+        }
+      }
+      "/spotifyLogout" = {
+        get = {
+          responses = {
+            "200" = {
+              description = "Callback response that clears the cookie"
+              headers = {
+                "Set-Cookie" = {
                   schema = {
                     type = "string"
                   }
