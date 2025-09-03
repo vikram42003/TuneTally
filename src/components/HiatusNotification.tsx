@@ -46,7 +46,7 @@ const HiatusNotification = () => {
       <div className="layout-container py-4">
         {showDetails ? fullText : collapsedText}
         <br />
-        <button className="font-extrabold hover:underline" onClick={() => setShowDetails((s) => !s)}>
+        <button className="font-extrabold hover:underline cursor-pointer" onClick={() => setShowDetails((s) => !s)}>
           show {showDetails ? "less" : "more"}
         </button>
       </div>
