@@ -1,4 +1,4 @@
-import { loginWithSpotifyDEMO } from "../../api/auth/spotifyAuth/spotifyAuth";
+import { loginWithSpotifyRefreshTokenDEMO } from "../../api/auth/spotifyAuth/spotifyAuth";
 import SpotifyButton from "../SpotifyButton";
 
 interface StatsPageErrorComponentProps {
@@ -18,7 +18,7 @@ const StatsPageErrorComponent = ({
           <br />
           {errorText}
         </div>
-        <SpotifyButton handler={loginWithSpotifyDEMO} text="Login with Spotify" />
+        <SpotifyButton handler={loginWithSpotifyRefreshTokenDEMO} text="Login with Spotify" />
       </div>
     </>
   );

@@ -12,5 +12,11 @@ export const loginWithSpotify = () => {
 export const loginWithSpotifyDEMO = () => {
   // Warm up the requestProxy lambda func
   axios.get(apiSpotifyBaseUrl + "/spotify/warm");
-  window.location.href = apiSpotifyBaseUrl + "/spotifyLogin?demo_mode=true";
+  window.location.href = apiSpotifyBaseUrl + "/spotifyLogin?demo_mode=login";
+};
+
+export const loginWithSpotifyRefreshTokenDEMO = () => {
+  // Warm up the requestProxy lambda func
+  axios.get(apiSpotifyBaseUrl + "/spotify/warm");
+  window.location.href = apiSpotifyBaseUrl + "/spotifyLogin?demo_mode=refreshSession";
 };
