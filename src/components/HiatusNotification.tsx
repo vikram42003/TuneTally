@@ -1,4 +1,6 @@
 import { useState } from "react";
+import SpotifyButton from "./SpotifyButton";
+import { loginWithSpotify } from "../api/auth/spotifyAuth/spotifyAuth";
 
 const HiatusNotification = () => {
   const [showDetails, setShowDetails] = useState(false);
@@ -38,6 +40,13 @@ const HiatusNotification = () => {
       so that you can use this app for real. Email me at vikramjit360@gmail.com with the keywords "TUNENTALLY - SUPER
       DUPER IMPORTANT" in the title and your spotify registered email somewhere in the body and I'll add your email and
       send you back a confirmation email!
+      Use this special login button to log in with your own account if you've been whitelisted
+        <br />
+        <SpotifyButton
+          text="Login with Spotify"
+          handler={loginWithSpotify}
+          className="bg-amber-400! px-4! py-1! text-sm! my-2"
+        />
     </>
   );
 
@@ -46,7 +55,8 @@ const HiatusNotification = () => {
       <div className="layout-container py-4">
         {showDetails ? fullText : collapsedText}
         <br />
-        <button className="font-extrabold hover:underline cursor-pointer" onClick={() => setShowDetails((s) => !s)}>
+
+        <button className="cursor-pointer font-extrabold hover:underline" onClick={() => setShowDetails((s) => !s)}>
           show {showDetails ? "less" : "more"}
         </button>
       </div>
