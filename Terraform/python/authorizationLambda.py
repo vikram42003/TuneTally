@@ -28,18 +28,15 @@ def lambda_handler(event, context):
         )
 
     # Warm up the lambda func to optimized the cold boot
-    if event["requestContext"]["path"].endswith("/warm"):
+    path = event.get("path", "")
+    if path == "/warm":
         return {"statusCode": 200, "headers": CORS_HEADERS, "body": "Warmed up"}
-
-    path = event["requestContext"]["path"]
-    # Strip away the v1 part since path will be something like /v1/spotifyLogin
-    path = path.split("/")[2]
 
     # If demo_mode flag is on then do the auth with demo_user as state/sessionID value
     params = event.get("queryStringParameters") or {}
     demo_mode = params.get("demo_mode", "")
 
-    if path == "spotifyLogin":
+    if path == "/spotifyLogin":
         if demo_mode == "login":
             # If demo_mode flag is on then do the auth with demo_user as state/sessionID value
             return handleSpotifyLoginRequest(demo_mode)
@@ -50,9 +47,12 @@ def lambda_handler(event, context):
             # Otherwise function normally
             # Prepare the request and redirect to spotify auth page
             return handleSpotifyLoginRequest()
-    elif path == "spotifyLoginCallback":
+    elif path == "/spotifyLoginCallback":
         # Exchange code for token (or send back error) and redirect to app page
         return handleSpotifyLoginCallbackRequest(event)
+    elif path == "/spotifyLogout":
+        # Delete the sessionID_token_pair from the database
+        return handleSpotifyLogoutRequest(event)
     else:
         return errorHandler(
             404, "Unknown request", "The request is not supported by the server"
@@ -219,7 +219,8 @@ def handleSpotifyLoginCallbackRequest(event):
 
     if not params:
         return errorHandlerRedirect(
-            "Server side error", "No query params were found. This indicates an issue from Spotify's side"
+            "Server side error",
+            "No query params were found. This indicates an issue from Spotify's side",
         )
     elif "code" in params and "state" in params:
         return exchangeCodeForTokenAndRedirect(params["code"], params["state"])
@@ -242,8 +243,10 @@ def handleSpotifyDemoUserRefreshTokenRequest(event):
         response = table.get_item(Key={"sessionID": state})
 
         if "Item" not in response:
-            raise Exception("No demo user was found. Make sure the demo user has been initialized properly")
-        
+            raise Exception(
+                "No demo user was found. Make sure the demo user has been initialized properly"
+            )
+
         item = response["Item"]
 
         # If the auth token is about to expire in 5 mins or has already expired then get a new one using refresh token
@@ -290,11 +293,18 @@ def handleSpotifyDemoUserRefreshTokenRequest(event):
             # Clear the out of date cached data from the item
             # NOTE: I know this code is race condition prone but it's ok since this is a demo user and we only need
             # the auth token and authTokenExpiresAt to update, it doesn't matter which users request made that happen
-            keys_to_keep = ["sessionID", "token", "refreshToken", "expiresAt", "authTokenExpiresAt", "me"]
+            keys_to_keep = [
+                "sessionID",
+                "token",
+                "refreshToken",
+                "expiresAt",
+                "authTokenExpiresAt",
+                "me",
+            ]
             cleaned_item = {k: item[k] for k in keys_to_keep if k in item}
 
             table.put_item(Item=cleaned_item)
-        
+
         httpOnly_cookie = f"sessionID={state}; Max-Age={expires_in}; HttpOnly; SameSite=None; Secure; Path=/"
         app_base_url = os.environ.get("TUNETALLY_BASE_URL")
         return {
@@ -305,6 +315,15 @@ def handleSpotifyDemoUserRefreshTokenRequest(event):
                 "Location": app_base_url + "/stats?spotifyAuthStatus=success",
             },
         }
-        
+
     except Exception as e:
         return errorHandler(500, "Server side error", e)
+
+
+def handleSpotifyLogoutRequest(event):
+    # test if this endpoint is working
+    return {
+        "statusCode": 200,
+        "headers": CORS_HEADERS,
+        "body": json.dumps({"message": "Logout endpoint is working!"}),
+    }
