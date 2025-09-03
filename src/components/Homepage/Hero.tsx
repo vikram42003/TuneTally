@@ -1,4 +1,4 @@
-import { loginWithSpotifyRefreshTokenDEMO } from "../../api/auth/spotifyAuth/spotifyAuth";
+import { loginWithSpotify, loginWithSpotifyRefreshTokenDEMO } from "../../api/auth/spotifyAuth/spotifyAuth";
 import SpotifyButton from "../SpotifyButton";
 
 const Hero = () => {
@@ -14,7 +14,7 @@ const Hero = () => {
       </p>
 
       <div>
-        <SpotifyButton handler={loginWithSpotifyRefreshTokenDEMO} text="Login with Spotify" />
+        <SpotifyButton handler={loginWithSpotify} text="Login with Spotify" />
 
         {/* Arrow icon link - Put this in credits in about page */}
         {/* <a target="_blank" href="https://icons8.com/icon/Ek7khsXSeZ71/arrow">Arrow</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> */}

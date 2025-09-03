@@ -1,4 +1,6 @@
 import { Link } from "react-router";
+import SpotifyButton from "./SpotifyButton";
+import { logoutSpotify } from "../api/auth/spotifyAuth/spotifyAuth";
 
 const Navbar = () => {
   return (
@@ -10,7 +12,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <div className="flex gap-12 font-semibold">
+        <div className="flex gap-12 font-semibold items-center">
           <div>
             <Link
               to="/stats"
@@ -36,6 +38,10 @@ const Navbar = () => {
             >
               About
             </Link>
+          </div>
+
+          <div>
+            <SpotifyButton handler={logoutSpotify} text="Logout" className="px-5! py-1!"/>
           </div>
         </div>
       </nav>

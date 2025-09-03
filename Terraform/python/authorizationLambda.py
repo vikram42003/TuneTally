@@ -81,7 +81,7 @@ def errorHandlerRedirect(errorTitle, errorMessage):
     }
 
 
-def handleSpotifyLoginRequest(demo_mode):
+def handleSpotifyLoginRequest(demo_mode=""):
     client_id = os.environ.get("SPOTIFY_CLIENT_ID")
     if not client_id:
         return errorHandler(
@@ -320,10 +320,50 @@ def handleSpotifyDemoUserRefreshTokenRequest(event):
         return errorHandler(500, "Server side error", e)
 
 
+def getSessionIdFromEvent(event):
+    # The location of cookie may be different depending on the version of aws api gatway so check both places
+    # I know it will hit the v1 case but it doesnt hurt to be cautious
+    # REST API (v1) stores it in ["headers"]["cookie"] and the value will be a string of cookeis separated by "; "
+    header_cookie = event.get("headers", {}).get("cookie", "")
+    if header_cookie:
+        for part in header_cookie.split(";"):
+            if part.strip().startswith("sessionID="):
+                return part.split("=", 1)[1]
+    # HTTP API (v2) stores it directly in the event and the value will be a list/array of cookies
+    cookies = event.get("cookies", [])
+    if cookies:
+        for c in cookies:
+            if c.startswith("sessionID="):
+                return c.split("=", 1)[1]
+    return None
+
+
 def handleSpotifyLogoutRequest(event):
-    # test if this endpoint is working
+    sessionID = getSessionIdFromEvent(event)
+    if sessionID:
+        try:
+            dynamodb = boto3.resource("dynamodb")
+            table = dynamodb.Table("sessionID_token_pair")
+            table.delete_item(Key={"sessionID": sessionID})
+        except Exception as e:
+            return errorHandler(500, "Server side error", e)
+
+    httpOnly_cookie = f"sessionID=; Max-Age=0; HttpOnly; SameSite=None; Secure; Path=/"
     return {
-        "statusCode": 200,
-        "headers": CORS_HEADERS,
-        "body": json.dumps({"message": "Logout endpoint is working!"}),
+        "statusCode": 204,
+        "headers": {
+            **CORS_HEADERS,
+            "Set-Cookie": httpOnly_cookie,
+        },
+    }
+
+
+def handleSpotifyLogoutRequestDEMO(event):
+    httpOnly_cookie = f"sessionID=; Max-Age=0; HttpOnly; SameSite=None; Secure; Path=/"
+    return {
+        "statusCode": 204,
+        "headers": {
+            **CORS_HEADERS,
+            "Set-Cookie": httpOnly_cookie,
+        },
     }

@@ -20,3 +20,8 @@ export const loginWithSpotifyRefreshTokenDEMO = () => {
   axios.get(apiSpotifyBaseUrl + "/spotify/warm");
   window.location.href = apiSpotifyBaseUrl + "/spotifyLogin?demo_mode=refreshSession";
 };
+
+export const logoutSpotify = () => {
+  axios.get(apiSpotifyBaseUrl + "/spotifyLogout", { withCredentials: true });
+  window.location.href = "/"
+};
