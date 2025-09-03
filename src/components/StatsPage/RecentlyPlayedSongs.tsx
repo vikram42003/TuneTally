@@ -11,6 +11,11 @@ const RecentlyPlayedSongs = () => {
     queryFn: () => getSpotifyRecentlyPlayedSongs(),
   });
 
+  const exp = sessionStorage.getItem("sessionExpiry");
+  if (!exp) {
+    return <StatsPageErrorComponent componentName="Recently Played Songs" errorText="You aren't logged in!" />;
+  }
+
   if (isLoading) {
     return <RecentlyPlayedSongsSkeleton />;
   }

@@ -16,6 +16,11 @@ const TopSongs = () => {
     queryFn: () => getSpotifyTopSongs(timeRange),
   });
 
+  const exp = sessionStorage.getItem("sessionExpiry");
+  if (!exp) {
+    return <StatsPageErrorComponent componentName="Top Songs" errorText="You aren't logged in!" />;
+  }
+
   if (isLoading) {
     return <TopSongsSkeleton />;
   }

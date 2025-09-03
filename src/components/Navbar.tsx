@@ -3,6 +3,9 @@ import SpotifyButton from "./SpotifyButton";
 import { logoutSpotify } from "../api/auth/spotifyAuth/spotifyAuth";
 
 const Navbar = () => {
+  const exp = sessionStorage.getItem("sessionExpiry")
+  const areWeLoggedInWithAValidSession = !exp ? false : +exp < Date.now();
+
   return (
     <section className="bg-spotify-dark py-4 text-lg">
       <nav className="layout-container flex items-center justify-between">
@@ -12,7 +15,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <div className="flex gap-12 font-semibold items-center">
+        <div className="flex items-center gap-12 font-semibold">
           <div>
             <Link
               to="/stats"
@@ -40,9 +43,11 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <div>
-            <SpotifyButton handler={logoutSpotify} text="Logout" className="px-5! py-1!"/>
-          </div>
+          {areWeLoggedInWithAValidSession && (
+            <div>
+              <SpotifyButton handler={logoutSpotify} text="Logout" className="px-5! py-1!" />
+            </div>
+          )}
         </div>
       </nav>
     </section>

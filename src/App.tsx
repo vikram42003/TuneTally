@@ -9,6 +9,7 @@ import Footer from "./components/Footer";
 import HiatusNotification from "./components/HiatusNotification";
 import ErrorNotification from "./components/ErrorNotification";
 import { isJson } from "./utils/utils";
+import { logoutSpotify } from "./api/auth/spotifyAuth/spotifyAuth";
 
 const App = () => {
   const [errorText, setErrorText] = useState<string | null>(null);
@@ -23,11 +24,13 @@ const App = () => {
         console.log(error_message);
         error_message = "please try refreshing or logging in again";
       }
-  
+
+      sessionStorage.removeItem("sessionExpiry");
+      logoutSpotify();
       setErrorText(`${error}: ${error_message}`);
       setTimeout(() => setErrorText(null), 5000);
     }
-  }, [params])
+  }, [params]);
 
   const mode = import.meta.env.VITE_ENVIRONMENT;
 

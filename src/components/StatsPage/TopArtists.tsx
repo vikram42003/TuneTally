@@ -22,6 +22,16 @@ const TopArtists = () => {
     return calculateTopGenres(data);
   }, [data]);
 
+  const exp = sessionStorage.getItem("sessionExpiry");
+  if (!exp) {
+    return (
+      <>
+        <StatsPageErrorComponent componentName="Top Artists" errorText="You aren't logged in!" />
+        <StatsPageErrorComponent componentName="Top Genres" errorText="You aren't logged in!" />
+      </>
+    );
+  }
+
   if (isLoading) {
     return (
       <>

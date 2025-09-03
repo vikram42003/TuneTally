@@ -12,6 +12,16 @@ const UserDetails = () => {
     queryFn: getSpotifyUserDetails,
   });
 
+  const exp = sessionStorage.getItem("sessionExpiry");
+  if (!exp) {
+    return (
+      <StatsPageErrorComponent
+        componentName="User Details"
+        errorText="You aren't logged in!"
+      />
+    );
+  }
+
   if (isLoading) {
     return <UserDetailsSkeleton />;
   }
