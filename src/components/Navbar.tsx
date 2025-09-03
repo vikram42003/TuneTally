@@ -3,7 +3,7 @@ import SpotifyButton from "./SpotifyButton";
 import { logoutSpotify } from "../api/auth/spotifyAuth/spotifyAuth";
 
 const Navbar = () => {
-  const exp = sessionStorage.getItem("sessionExpiry")
+  const exp = sessionStorage.getItem("sessionExpiry");
   const areWeLoggedInWithAValidSession = !exp ? false : +exp < Date.now();
 
   return (
@@ -19,7 +19,7 @@ const Navbar = () => {
           <div>
             <Link
               to="/stats"
-              className="hover:text-spotify-green navbar-text-shadow transition-all duration-500 hover:underline"
+              className={`${areWeLoggedInWithAValidSession ? "text-spotify-green" : "hover:text-spotify-green"} navbar-text-shadow transition-all duration-500 hover:underline`}
             >
               Stats
             </Link>

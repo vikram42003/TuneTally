@@ -39,7 +39,22 @@ def lambda_handler(event, context):
     if path == "/spotifyLogin":
         if demo_mode == "login":
             # If demo_mode flag is on then do the auth with demo_user as state/sessionID value
-            return handleSpotifyLoginRequest(demo_mode)
+            # return handleSpotifyLoginRequest(demo_mode)
+
+            # demo mode login endpoint has been disabled to prevent any unauthorized rewrites
+            # Just enable it on lambda when you update the demo user or need to reauth for any reason
+            return {
+                "statusCode": 401,
+                "headers": {
+                    **CORS_HEADERS,
+                    "Location": app_base_url,
+                },
+                "body": json.dumps(
+                    {
+                        "message": "The demo login endpoint has been disabled to prevent any unauthorized overwrites to the demo user"
+                    }
+                ),
+            }
         elif demo_mode == "refreshSession":
             # Refresh the token for demo user (if needed) and send sessionID back to the app
             return handleSpotifyDemoUserRefreshTokenRequest(event)
@@ -304,6 +319,8 @@ def handleSpotifyDemoUserRefreshTokenRequest(event):
             cleaned_item = {k: item[k] for k in keys_to_keep if k in item}
 
             table.put_item(Item=cleaned_item)
+        else:
+            expires_in = item["authTokenExpiresAt"] - int(time.time())
 
         httpOnly_cookie = f"sessionID={state}; Max-Age={expires_in}; HttpOnly; SameSite=None; Secure; Path=/"
         app_base_url = os.environ.get("TUNETALLY_BASE_URL")
@@ -340,7 +357,8 @@ def getSessionIdFromEvent(event):
 
 def handleSpotifyLogoutRequest(event):
     sessionID = getSessionIdFromEvent(event)
-    if sessionID:
+    # Do not delete the details for demo user since the app is in demo mode for now
+    if sessionID and sessionID != "demo_user":
         try:
             dynamodb = boto3.resource("dynamodb")
             table = dynamodb.Table("sessionID_token_pair")
@@ -348,17 +366,6 @@ def handleSpotifyLogoutRequest(event):
         except Exception as e:
             return errorHandler(500, "Server side error", e)
 
-    httpOnly_cookie = f"sessionID=; Max-Age=0; HttpOnly; SameSite=None; Secure; Path=/"
-    return {
-        "statusCode": 204,
-        "headers": {
-            **CORS_HEADERS,
-            "Set-Cookie": httpOnly_cookie,
-        },
-    }
-
-
-def handleSpotifyLogoutRequestDEMO(event):
     httpOnly_cookie = f"sessionID=; Max-Age=0; HttpOnly; SameSite=None; Secure; Path=/"
     return {
         "statusCode": 204,
