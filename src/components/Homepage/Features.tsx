@@ -1,7 +1,7 @@
 const Features = () => {
   return (
     <div>
-      <div className="text-center text-4xl text-spotify-green font-bold pb-16">
+      <div id="features" className="text-center text-4xl text-spotify-green font-bold pb-16">
         Here's what you'll get  
       </div>
 

@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { HashLink } from "react-router-hash-link";
 import SpotifyButton from "./SpotifyButton";
 import { logoutSpotify } from "../api/auth/spotifyAuth/spotifyAuth";
 
@@ -16,6 +17,16 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-12 font-semibold">
+          <div>
+            <HashLink
+              smooth
+              to="/#features"
+              className="hover:text-spotify-green navbar-text-shadow transition-all duration-500 hover:underline"
+            >
+              Features
+            </HashLink>
+          </div>
+
           <div>
             <Link
               to="/stats"
