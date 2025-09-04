@@ -265,7 +265,7 @@ def handleSpotifyDemoUserRefreshTokenRequest(event):
         item = response["Item"]
 
         # If the auth token is about to expire in 5 mins or has already expired then get a new one using refresh token
-        if int(time.time() - 300) > item["authTokenExpiresAt"]:
+        if time.time() >= item["authTokenExpiresAt"] - 300:
             refresh_token = item["refreshToken"]
             if not refresh_token:
                 raise Exception(
