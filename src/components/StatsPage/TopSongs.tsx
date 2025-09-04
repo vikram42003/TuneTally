@@ -36,7 +36,7 @@ const TopSongs = () => {
   }
 
   return (
-    <div className="w-[40vw] overflow-auto py-8">
+    <div className="overflow-auto py-8">
       {/* We offset the content 16px with pr-4 to account for the scrollbar */}
       <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top {data.items.length} Songs</h4>
 
@@ -64,7 +64,7 @@ const TopSongs = () => {
 
 const TopSongsSkeleton = () => {
   return (
-    <div className="w-[40vw] space-y-4 overflow-auto py-8">
+    <div className="space-y-4 overflow-auto py-8">
       {/* We offset the content 16px with pr-4 to account for the scrollbar */}
       <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top Songs</h4>
 

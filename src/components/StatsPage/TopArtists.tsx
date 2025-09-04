@@ -60,7 +60,7 @@ const TopArtists = () => {
 
   return (
     <>
-      <div className="w-[40vw] py-8">
+      <div className="py-8">
         {/* We offset the content 16px with pr-4 to account for the scrollbar */}
         <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top {data.items.length} Artists</h4>
 
@@ -88,7 +88,7 @@ const TopArtists = () => {
 
 const TopArtistsSkeleton = () => {
   return (
-    <div className="flex w-[40vw] flex-col space-y-4 py-8">
+    <div className="flex-col space-y-4 py-8">
       <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top Artists</h4>
 
       <div className="animate-pulse">
