@@ -11,8 +11,15 @@ const Navbar = () => {
     <section className="bg-spotify-dark py-4 text-lg">
       <nav className="layout-container flex items-center justify-between">
         <div>
-          <Link to="/" className="hover:text-spotify-green navbar-text-shadow transition-all duration-500">
-            TuneTally
+          <Link to="/" className="logo-font navbar-text-shadow flex items-center text-3xl transition-all duration-500">
+            {/* svg credits - https://www.svgrepo.com/svg/486541/barchart */}
+            <img
+              src="/images/logo_barchart.svg"
+              className="w-10 -translate-y-1"
+              alt="app logo thats a green barchart"
+            />
+            <span className="text-spotify-green">Tune</span>
+            Tally
           </Link>
         </div>
 

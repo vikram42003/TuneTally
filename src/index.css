@@ -21,6 +21,11 @@ body {
   font-family: 'Inter Variable', sans-serif;
 }
 
+.logo-font {
+  /* Font fallback stack i found, it should work for all os, and we need a stack here cause the logo should look different from the rest of the page */
+  font-family: "Josefin Sans", "Futura", "Century Gothic", "Avenir", "Gill Sans", sans-serif;
+}
+
 .debug {
   text-shadow:1px 1px 10px #fff, 1px 1px 10px #ccc;
 }
