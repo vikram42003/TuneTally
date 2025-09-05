@@ -4,7 +4,7 @@ const PrivacyPage = () => {
   return (
     <section className="bg-spotify-gray">
       <div className="layout-container space-y-8 pt-16 pb-32 text-base">
-        <h2 className="text-3xl font-bold underline">Privacy Policy</h2>
+        <h2 className="text-3xl font-bold underline text-spotify-green">Privacy Policy</h2>
 
         <p>
           TuneTally uses your Spotify account only to fetch your music listening data (like your top artists, songs,
