@@ -8,8 +8,8 @@ from decimal import Decimal
 
 CORS_HEADERS = {
     "Access-Control-Allow-Origin": os.environ.get("TUNETALLY_BASE_URL"),
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "OPTIONS,GET",
+    "Access-Control-Allow-Headers": "Content-Type,Authorization",
+    "Access-Control-Allow-Methods": "OPTIONS,GET,POST",
     "Access-Control-Allow-Credentials": "true",
 }
 

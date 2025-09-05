@@ -11,8 +11,8 @@ from urllib.parse import urlencode
 SCOPE = "user-read-private user-read-email user-top-read user-read-recently-played"
 CORS_HEADERS = {
     "Access-Control-Allow-Origin": os.environ.get("TUNETALLY_BASE_URL"),
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "OPTIONS,GET",
+    "Access-Control-Allow-Headers": "Content-Type,Authorization",
+    "Access-C ontrol-Allow-Methods": "OPTIONS,GET,POST",
     "Access-Control-Allow-Credentials": "true",
 }
 
