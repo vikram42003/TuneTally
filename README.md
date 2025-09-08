@@ -1,157 +1,120 @@
-# TuneTally
-
-**TuneTally** is a music listening statistics app
-
-**Whats it is** -
-It will fetch data from a music listening website/api and show your music listening statistics like
-
-- your top artists
-- most listened songs
-- how much more (or less) listening hours you have compared to other users
-- will fetch the data securely and wont store any user credentials and will just redirect you to the actual spotify (or other) authentication pages
-
-**Whats the MVP** -
-just fetch your own data from spotify and print it to console or screen
-then build all the other stuff on top of that
-
-**Will I use a backend** -
-probably not, since i dont want to save any user data for security reasons
-But i might tho to just store the app related statistics like
-
-- how many users have used this app until now
-- how many total hours of music have been fetched and displayed by this app
-- whats the average number of listening hours of this apps users
-
-## Tech stack -
-- **Programming Language** - Typescript all the way
-
-- **Frontend** - React (with Vite)
-
-- **Backend** - (gonna skip on backend for now since theres no need)
-
-## Tech stack details -
-
-- **Fetching data** - gonna use Tanstack Query (Formerly React Query) because im gonna be making a lot of http requests so its auto caching and query status features are gonna come in handy
-
-- **Caching** - We cache data in DynamoDB and it expires at the same time as the token (1 hour). Im implementing Spotify OAuth Authorization Code flow with access tokens. For my use case (short-lived stats app), refresh tokens were intentionally not used and sessions expire after 1 hour. I took this decision cause a user woudnt want some random app to have access (albeit limited) to their Spotify forever right. But we still use cache to avoid redundant API calls.
-
-- **Data Store** - Tanstack Store, If I use Redux here its gonna make my app wayy larger than it should be and would overcomplicate things so Tanstack Store will do for now
-
-- **Routing** - React router for routing, I can use Tanstack Start or Tanstack Router and fully commit to The TanStack but its in Beta and React Router is more trustable and widely used
-
-- **Authentication** - Not needed since the music apps like Spotify do the authentication, TuneTally just takes the auth token and does the fetching and displaying data part
-
-<br />
-<br />
+# TuneTally  
+_Your personalized music listening stats, powered by serverless AWS and React._
 <br />
 
-## How PKCE works -
+[**TuneTally**](https://tune-tally.vercel.app) is a music listening statistics app
 
-user (you)                           -    first entity  
-TuneTally (or app or client)         -    second entity  
-spotify (or some other music app)    -    third entity  
+Check out your **top artists, top songs, favorite genres, and recently played tracks** - all in one clean, minimal interface.
 
-Imagine youre the user, you listen to music on spotify and you want to see your music listening stats
-BUT you dont know how to do that, we'll in that case you can use an app like TuneTally to let it fetch your data
+Although currently connected only to Spotify, the app is designed with a platform-agnostic architecture and scalability in mind.
 
-So normally, the interaction goes like this -
-- the user goes to TuneTally and tells it to fetch their music listening data
-- TuneTally does not know how to identify the user so it asks the user for their username/email and password
-- the user provides the credentials and then TuneTally goes to Spotify, fetches the user data and presents it to them
+## ✨ Features
+- 🎤 View your **Top Artists** and **Top Songs**
+- 📊 Discover your **Top Genres**
+- 🎧 See your **Recently Played Tracks**
+- 🔒 Secure server-side sessions with HttpOnly cookies
+- 🕒 Sessions auto-expire after 1 hour for privacy
 
-The problem with this interaction -
-- you're telling some unknown website your email and password, you dont really know if you can trust it or not
-- once you give it your credentials they basically have your credentials forever, you can ask them to delete your data after use but they can just not do that and you have no way of knowing if they've deleted your data or not
-- even if the app is trustable and does not misuse your data, if the app ever gets hacked then there goes your data
+## 📸 Screenshots
+### Homepage
+<img src="./screenshots_for_github/github_screenshot_homepage.png" width="600" />
 
-Now, there are many apps that do keep your data secure and have legally binding clauses that prevent them from misusing your data, despite that fact, as a user i'd prefer to be safe than sorry
-And thats where PKCE comes in
+### Top Artists & Songs
+<img src="./screenshots_for_github/github_screenshot_topSongs_topArtists.png" width="600" />
 
-The solution -
-- Proof Key for Code Exchance or PKCE (pronounced pixy) is an extension of the Oauth2 authorization protocol which was designed to work with small scale apps like an SPA where we'd rather not store any sensitive information on our side
-- with PKCE, we, as a user, dont store store any credentials with the client (TuneTally), instead we directly authenticate with the authorization server (Spotify) who gives us a special one time limited user credentials (like an OTP) which allows the client (TuneTally) to acces the resource that it needs to access
+### Top Genres & Recently Played
+<img src="./screenshots_for_github/github_screenshot_topGenres_recentlyPlayed.png" width="600" />
 
-The interaction goes like this -
-- the user goes to TuneTally and tells it to fetch their music listening data
-- TuneTally tells the user that it does not know whose data to access and it does not have the permission to access the users data and then sends the user to the Spotify authentication page to confirm their identity
-- before it sends the user to directly authenticate with spotify, it also gives them a unique string to pass onto spotify so that spotify knows what app is sending the request
-- once the user authenticates, spotify gives them an authorization token with limited validity (like 1 hour) and permissions (like allowed to read liked songs only), which the user then gives to the client (TuneTally)
-- now that the app has the authorization token, the app sends the authorization token AND the unique string it generated in step 3 when it needs to fetch the data
-- when spotify receives the requests it
-  - checks if the authorization token is the same one it gave out
-  - checks if the unique string is the same as the one it received during authentication
-- if everyting checks out then the client (TuneTally) is good to communicate with spotify untill validity expires or is revoken
+## 🚀 Tech Stack
+- **Frontend**: React (TypeScript + React Query + React Router) + Vite + Tailwind CSS 
+- **Backend**: Serverless AWS Lambda (Python)
+- **Database**: AWS DynamoDB 
+- **Infrastructure**: Terraform + API Gateway  
+- **Authentication**: OAuth 2.0 (Authorization Code flow) with Server Side Sessions using secure HttpOnly cookies 
+- **Hosting**: Vercel (frontend), AWS (backend) 
 
-With PKCE -
-- the app does not receive any user credentials at all, all it receives is a token that allows it to access the data it needs to access for a limited time and with limited permissions
-- since the app does not reveice any user credentials we dont need to trust the app with our credentials
-- we are protected from cyber attacks since protecting your credentials is spotify's responsibility and with PKCE, attacks like man-in-the-middle cannot happen since we're confirming authorization tokens and unique strings in separate turns
-
-## Why I'm using a Lambda function
-Now technically, I could’ve just called the Spotify API directly from the frontend, and that would’ve worked fine too AND THIS PROJECT WOULD'VE TAKEN 70% LESS TIME
-
-But I added a Lambda function in between for a few reasons:
-
-- **Security** - Even though we don’t store any passwords or credentials (thanks PKCE), it still feels cleaner to keep the actual Spotify API calls on the backend. That way, access tokens aren’t floating around in the browser any longer than they need to be.
-
-- **Flexibility** -: This way I can format the data however I want before it reaches the frontend. So if Spotify gives back a bunch of stuff I don’t need, or I want to combine data from different endpoints later — I can just do that in the Lambda without touching the client.
-
-- **Future-proofing** - If Spotify ever changes their API or I decide to switch to a different music platform, the frontend won’t have to care. It just talks to my API, and I can swap out the backend logic whenever I want.
-
-- **Scaling and cost** - Since it’s a Lambda function, it only runs when someone actually uses it. No server to keep running 24/7. It’s free (or nearly free), and scales automatically.
-
-So yeah, the Lambda isn’t just there to be fancy, it actually makes things a bit cleaner, safer, and more scalable, while also showing off some cloud skills for the people who care about that.
-
-DISCLAIMER - I know that this explanation might not be the most accurate but this is supposed to be a gist of how it works and why you can trust TuneTally, intended to be understood by the average person. If you're reading this and feel like this could use some improvement then I implore you to open an issue in issues tab or dm me to improve it or contribute to this project!
+We use Backend-for-Frontend (BFF) pattern through lambda functions to make the app music platform agnostic.  
+Built with inherent scalability through AWS Lambdas
 
 
-<!-- # React + TypeScript + Vite
+## ⚙️ How It Works
+1. User logs in with Spotify (Authorization Code flow).  
+2. AWS Authorization Lambda securely exchanges tokens and generates a **UUID session**.  
+3. Session ID is set as an **HttpOnly, Secure cookie**.  
+4. Frontend requests data from the Request Proxy Lambda using the session. This serves as a secure intermediary for auth token handling, data requesting and caching
+5. Data is cached in memory for 1 hour (no permanent storage) or until the user presses the logout button. 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📝 Note (Spotify API Policy Change, May 2025)
+On **May 15, 2025**, Spotify restricted access to its API. Only registered business organizations with over 250,000 monthly active users can use the API to access data for all accounts. Other users can still use the API in development mode for manually whitelisted accounts.
 
-Currently, two official plugins are available:
+As a result:  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- The app is currently in **demo mode**.  
+- Visitors can explore stats using a **permanently logged-in demo user** account.  
+- The app remains fully presentable, but **personal Spotify logins are restricted**.  
 
-## Expanding the ESLint configuration
+On click of the login button, the app fetches demo user's data and uses demo user's refresh tokens to get a new auth token if the old one is expired.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+**P.S:** - If you’d like to use your own Spotify account with TuneTally, email me your **full name** and **email address** for your Spotify account with the title "TUNENTALLY - SUPER DUPER IMPORTANT". I can then add you as a whitelisted user in the Spotify Developer Dashboard, enabling a special login option.  
 
-- Configure the top-level `parserOptions` property like this:
+## 🛠️ Development Setup 
+### For Production version
+1. Clone the repo
+   ```bash
+   git clone https://github.com/vikram42003/TuneTally.git
+   ```
+2. Install dependencies  
+   ```bash
+   npm install
+   ```
+3. The app requires the following environment variables to function  
+   `./.env`
+   ```
+   VITE_LAMBDA_SPOTIFY_BASE_URL=<the base url for requestProxyLambda>
+   ```
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
-```
+   `./Terraform/.env`
+   ```
+   export TF_VAR_SPOTIFY_CLIENT_ID=<your spotify api client id>
+   export TF_VAR_SPOTIFY_CLIENT_SECRET=<your spotify api client secret>
+   export TF_VAR_SPOTIFY_REDIRECT_URI=<the base url for authorizationLambda + /spotifyLoginCallback>
+   export TF_VAR_TUNETALLY_BASE_URL=<the app url>
+   ```
+5. Install requests package as a lambda layer for AWS Lambdas to use
+   ```
+   pip install requests -t ./Terraform/python/lambda_layer_source/python/
+   ```
+4. Provision Infrastructure with terraform  
+   Note - Make sure Terraform is installed and configured correctly. Checkout [this](https://developer.hashicorp.com/terraform/tutorials/configuration-language/configure-providers?utm_source=chatgpt.com) or [this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs) for help with setup
+   ```bash
+   cd Terraform
+   terraform apply
+   ```
+5. Start the local dev server. The app uses vite-plugin-mkcert (we need https for httpOnly cookie with Same-Site=None) and it will be hosted over https://localhost:5173 by default
+   ```bash
+   npm run dev
+   ```
+6. Build app for production
+   ```bash
+   npm run build
+   ```
+7. After build, you can preview locally
+   ```bash
+   npm run preview
+   ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### For Demo version
+For the demo version, you need to do the following in addition to the aforementioned steps.
+1. Add the following variable to `./.env`
+   ```
+   VITE_ENVIRONMENT="dev"
+   ```
+2. Uncomment the `if demo_mode == "login":` part in `./Terraform/python/authorizationLambda.py` and use the `loginWithSpotifyDEMO` function in `./src/api/auth/spotifyAuth/SpotifyAuth.ts` to manually add a spotify account to be used as a demo user
+3. Change all login buttons to use `loginWithSpotifyRefreshTokenDEMO` function in `./src/api/auth/spotifyAuth/SpotifyAuth.ts` to login
 
-```js
-// eslint.config.js
-import react from "eslint-plugin-react";
+The setup for the demo version is more involved, but it’s a one time process.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: "18.3" } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs["jsx-runtime"].rules,
-  },
-});
-``` -->
+## 🔒 Privacy
+- No permanent accounts or databases.  
+- Session data auto-deletes after 1 hour.  
+- Cookies use `HttpOnly` and `Secure`.
