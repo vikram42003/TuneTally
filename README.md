@@ -29,7 +29,7 @@ Although currently connected only to Spotify, the app is designed with a platfor
 - **Frontend**: React (TypeScript + React Query + React Router) + Vite + Tailwind CSS 
 - **Backend**: Serverless AWS Lambda (Python)
 - **Database**: AWS DynamoDB 
-- **Infrastructure**: Terraform + API Gateway  
+- **Infrastructure**: Terraform + API Gateway (OpenAPI Spec)
 - **Authentication**: OAuth 2.0 (Authorization Code flow) with Server Side Sessions using secure HttpOnly cookies 
 - **Hosting**: Vercel (frontend), AWS (backend) 
 
@@ -55,7 +55,7 @@ As a result:
 
 On click of the login button, the app fetches demo user's data and uses demo user's refresh tokens to get a new auth token if the old one is expired.
 
-**P.S:** - If you’d like to use your own Spotify account with TuneTally, email me your **full name** and **email address** for your Spotify account with the title "TUNENTALLY - SUPER DUPER IMPORTANT". I can then add you as a whitelisted user in the Spotify Developer Dashboard, enabling a special login option.  
+**P.S:** - If you’d like to use your own Spotify account with TuneTally, email me your **full name** and **email address** for your Spotify account with the title "TUNENTALLY - SUPER DUPER IMPORTANT" at [vikramjit360@gmail.com](mailto:vikramjit360@gmail.com). I can then add you as a whitelisted user in the Spotify Developer Dashboard, enabling a special login option.  
 
 ## 🛠️ Development Setup 
 ### For Production version
