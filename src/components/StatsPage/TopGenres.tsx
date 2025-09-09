@@ -30,13 +30,13 @@ const TopGenres = ({ genresMap }: TopGenresProps) => {
 
       <div className="lg:py-4 py-2">
         {[...genresMap].map(([genre, count], idx) => (
-          <div key={genre} className="flex lg:py-2.5 py-2">
+          <div key={genre} className="flex lg:py-2.5 py-1.5">
             <div className="flex-1 rounded-full bg-gray-500">
               <div
                 className={`${colors[idx]} h-full rounded-full p-1`}
                 style={{ width: `${(count / fullbar) * 100}%` }}
               >
-                <span className="truncate pl-2 text-lg font-semibold">{genre}</span>
+                <span className="truncate pl-2 lg:text-lg font-semibold">{genre}</span>
               </div>
             </div>
           </div>
