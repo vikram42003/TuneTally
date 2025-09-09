@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Route, Routes, useSearchParams } from "react-router";
 
-import Homepage from "./pages/Homepage";
+import HomePage from "./pages/HomePage";
 import StatsPage from "./pages/StatsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import AboutPage from "./pages/AboutPage";
@@ -43,7 +43,7 @@ const App = () => {
       <Navbar />
       {mode === "dev" && <HiatusNotification />}
       <Routes>
-        <Route path="/" element={<Homepage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/stats" element={<StatsPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/about" element={<AboutPage />} />
