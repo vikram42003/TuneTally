@@ -14,12 +14,7 @@ const UserDetails = () => {
 
   const exp = sessionStorage.getItem("sessionExpiry");
   if (!exp) {
-    return (
-      <StatsPageErrorComponent
-        componentName="User Details"
-        errorText="You aren't logged in!"
-      />
-    );
+    return <StatsPageErrorComponent componentName="User Details" errorText="You aren't logged in!" />;
   }
 
   if (isLoading) {
@@ -65,7 +60,7 @@ const UserDetails = () => {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h3 className="lg:text-4xl md:text-3xl text-2xl font-bold">
+        <h3 className="text-2xl font-bold md:text-3xl lg:text-4xl">
           {greeting}{" "}
           <Link to={data.external_urls} className="text-spotify-green hover:underline">
             {data.display_name}
@@ -75,7 +70,7 @@ const UserDetails = () => {
           <img
             src={data.images[0]?.url}
             alt={`${!data.images[0].height ? "Placeholder " : ""}Image of ${data.display_name}'s profile picture`}
-            className="lg:h-24 h-16 lg:w-24 w-16 rounded-full object-cover"
+            className="h-16 w-16 rounded-full object-cover lg:h-24 lg:w-24"
           />
         )}
       </div>
@@ -88,7 +83,7 @@ const UserDetailsSkeleton = () => {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h3 className="lg:text-4xl md:text-3xl text-2xl font-bold">
+        <h3 className="text-2xl font-bold md:text-3xl lg:text-4xl">
           Hey there,
           <span className="text-spotify-green"> User Whose Details We're Loading</span>
         </h3>
@@ -96,7 +91,7 @@ const UserDetailsSkeleton = () => {
         <img
           src={url}
           alt={"Placeholder Image of the user's profile picture"}
-          className="lg:h-24 h-16 lg:w-24 w-16 rounded-full object-cover"
+          className="h-16 w-16 rounded-full object-cover lg:h-24 lg:w-24"
         />
       </div>
     </div>

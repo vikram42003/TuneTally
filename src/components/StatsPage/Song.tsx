@@ -10,7 +10,7 @@ const Song = ({ song, idx }: SongProps) => {
   const durationMinutes = ~~(song.duration_ms / 1000 / 60);
   const durationSeconds = ~~((song.duration_ms / 1000) % 60);
   return (
-    <div className="flex items-center lg:gap-2 gap-1 lg:pt-4 pt-2 lg:text-base text-sm">
+    <div className="flex items-center gap-1 pt-2 text-sm lg:gap-2 lg:pt-4 lg:text-base">
       <div className="flex-1/24">{idx + 1}</div>
 
       <div className="flex flex-13/24 items-center gap-2">

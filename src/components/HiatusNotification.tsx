@@ -39,20 +39,20 @@ const HiatusNotification = () => {
       If you, the visitor, really want, I can manually add your spotify email to my apps developer dashboard whitelist
       so that you can use this app for real. Email me at vikramjit360@gmail.com with the keywords "TUNENTALLY - SUPER
       DUPER IMPORTANT" in the title and your spotify registered email somewhere in the body and I'll add your email and
-      send you back a confirmation email!
-      Use this special login button to log in with your own account if you've been whitelisted
-        <br />
-        <SpotifyButton
-          text="Login with Spotify"
-          handler={loginWithSpotify}
-          className="bg-amber-400! px-4! py-1! text-sm! my-2"
-        />
+      send you back a confirmation email! Use this special login button to log in with your own account if you've been
+      whitelisted
+      <br />
+      <SpotifyButton
+        text="Login with Spotify"
+        handler={loginWithSpotify}
+        className="my-2 bg-amber-400! px-4! py-1! text-sm!"
+      />
     </>
   );
 
   return (
-    <section className="bg-dartmouth-green lg:text-sm text-xs">
-      <div className="layout-container lg:py-4 py-2">
+    <section className="bg-dartmouth-green text-xs lg:text-sm">
+      <div className="layout-container py-2 lg:py-4">
         {showDetails ? fullText : collapsedText}
         <br />
 

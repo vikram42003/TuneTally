@@ -1,10 +1,9 @@
 const Footer = () => {
   return (
     <section className="bg-spotify-dark">
-      <div className="layout-container lg:py-6 py-4 text-center  text-sm">
+      <div className="layout-container py-4 text-center text-sm lg:py-6">
         Data is provided by Spotify AB. TuneTally is not related to Spotify AB or any of it's partners in any way
         <br />
-
         Made with ❤️ by{" "}
         <a href="https://github.com/vikram42003" target="_blank" className="text-blue-400 visited:text-purple-400">
           me!

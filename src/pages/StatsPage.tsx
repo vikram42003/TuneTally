@@ -6,7 +6,7 @@ import UserDetails from "../components/StatsPage/UserDetails";
 const StatsPage = () => {
   return (
     <>
-      <section className="bg-spotify-gray py-6 lg:py-8 px-8 md:px-0">
+      <section className="bg-spotify-gray px-8 py-6 md:px-0 lg:py-8">
         <div className="layout-container">
           <UserDetails />
         </div>

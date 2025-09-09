@@ -5,8 +5,8 @@ import Hero from "../components/Homepage/Hero";
 // Photo by <a href="https://unsplash.com/@framesbyfin?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Heidi Fin</a> on <a href="https://unsplash.com/photos/white-and-black-ipad-H4fYXZ1hyco?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
 
 const Homepage = () => {
-  // Css is being super weird here, if I add anything with bg-cover, the background position gets hard locked to 
-  // something and cannot be changed to anything even with imporant flag, I dont know if its because of tailwind 
+  // Css is being super weird here, if I add anything with bg-cover, the background position gets hard locked to
+  // something and cannot be changed to anything even with imporant flag, I dont know if its because of tailwind
   // or css or the picture size
   let bgCss = "bg-right";
   // Default is mobile, then check for desktop

@@ -1,11 +1,11 @@
 const Features = () => {
   return (
     <div>
-      <div id="features" className="text-center lg:text-4xl text-3xl text-spotify-green font-bold pb-16">
-        Here's what you'll get  
+      <div id="features" className="text-spotify-green pb-16 text-center text-3xl font-bold lg:text-4xl">
+        Here's what you'll get
       </div>
 
-      <div className="lg:space-y-16 space-y-12 [&>*:nth-child(even)]:md:flex-row-reverse lg:px-0 px-4">
+      <div className="space-y-12 px-4 lg:space-y-16 lg:px-0 [&>*:nth-child(even)]:md:flex-row-reverse">
         <Feature
           src="/images/features_topArtists_topSongs_image.png"
           alt="placeholder image of spotify written on top of green background"
@@ -43,12 +43,12 @@ interface FeatureProps {
 
 const Feature = ({ src, alt, title, text }: FeatureProps) => {
   return (
-    <div className="mx-auto flex lg:flex-row flex-col items-center justify-between lg:gap-16 gap-6 md:flex-row">
+    <div className="mx-auto flex flex-col items-center justify-between gap-6 md:flex-row lg:flex-row lg:gap-16">
       <div className="flex-1/2">
-        <img src={src} alt={alt} className="lg:h-84 h-60 w-full rounded-2xl object-cover object-top" />
+        <img src={src} alt={alt} className="h-60 w-full rounded-2xl object-cover object-top lg:h-84" />
       </div>
-      <div className="flex-1/2 lg:text-xl text-base leading-relaxed">
-        <h4 className="text-spotify-green lg:text-3xl text-xl font-semibold my-2">{title}</h4>
+      <div className="flex-1/2 text-base leading-relaxed lg:text-xl">
+        <h4 className="text-spotify-green my-2 text-xl font-semibold lg:text-3xl">{title}</h4>
         {text}
       </div>
     </div>
