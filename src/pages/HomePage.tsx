@@ -22,7 +22,7 @@ const Homepage = () => {
         </div>
       </section>
 
-      <section className="bg-spotify-gray">
+      <section className="bg-spotify-gray flex-grow">
         <div className="layout-container py-24 md:px-24">
           <Features />
         </div>

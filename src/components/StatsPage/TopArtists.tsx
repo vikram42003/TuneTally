@@ -60,15 +60,17 @@ const TopArtists = () => {
 
   return (
     <>
-      <div className="lg:py-8 py-6">
+      <div className="py-6 lg:py-8">
         {/* We offset the content 16px with pr-4 to account for the scrollbar */}
-        <h4 className="text-spotify-green md:pr-4 text-center md:text-3xl text-2xl font-bold">Top {data.items.length} Artists</h4>
+        <h4 className="text-spotify-green text-center text-2xl font-bold md:pr-4 md:text-3xl">
+          Top {data.items.length} Artists
+        </h4>
 
-        <div className="lg:py-4 p-2 pr-3.5">
+        <div className="p-2 pr-3.5 lg:py-4">
           <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
         </div>
 
-        <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark grid lg:h-[100vh] h-[60vh] grid-cols-3 lg:gap-6 gap-2 overflow-auto overflow-y-scroll lg:pt-4 pt-2">
+        <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark grid h-[60vh] grid-cols-3 gap-2 overflow-auto overflow-y-scroll pt-2 lg:h-[100vh] lg:gap-6 lg:pt-4">
           {data.items.map((i, idx) => (
             <Artist key={i.id} artist={i} idx={idx} />
           ))}
@@ -79,7 +81,7 @@ const TopArtists = () => {
         2. Lifting timeRange and useQuery up would make my separating of concerins between Layout components and Logic components inconsistent
         3. May turn useQuery (and maybe timeRange too into a custom hook, but thats not needed for now since the logic here is simple enough
       */}
-      <div className="lg:pt-10 md:pt-6 pt-2">
+      <div className="pt-2 md:pt-6 lg:pt-10">
         <TopGenres genresMap={genresMap} />
       </div>
     </>
@@ -88,17 +90,17 @@ const TopArtists = () => {
 
 const TopArtistsSkeleton = () => {
   return (
-    <div className="flex-col space-y-4 lg:py-8 py-6">
-      <h4 className="text-spotify-green md:pr-4 text-center md:text-3xl text-2xl font-bold">Top Artists</h4>
+    <div className="flex-col space-y-4 py-6 lg:py-8">
+      <h4 className="text-spotify-green text-center text-2xl font-bold md:pr-4 md:text-3xl">Top Artists</h4>
 
       <div className="animate-pulse">
-        <div className="mx-16 lg:mb-4 lg:h-3 h-2 rounded bg-gray-700 py-4 pr-3.5"></div>
+        <div className="mx-16 h-2 rounded bg-gray-700 py-4 pr-3.5 lg:mb-4 lg:h-3"></div>
 
-        <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark grid lg:h-[100vh] h-[60vh] grid-cols-3 lg:gap-6 gap-4 overflow-auto overflow-y-scroll lg:pt-4 pt-2">
+        <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark grid h-[60vh] grid-cols-3 gap-4 overflow-auto overflow-y-scroll pt-2 lg:h-[100vh] lg:gap-6 lg:pt-4">
           {Array.from({ length: 12 }).map((_, i) => (
             <div key={i} className="flex flex-col items-center space-y-2">
               {/* Square artist image placeholder */}
-              <div className="lg:h-40 lg:w-40 h-24 w-24 rounded-md bg-gray-700 opacity-70" />
+              <div className="h-24 w-24 rounded-md bg-gray-700 opacity-70 lg:h-40 lg:w-40" />
               <div className="h-4 w-24 rounded bg-gray-700 opacity-70" />
             </div>
           ))}

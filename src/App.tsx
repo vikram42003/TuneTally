@@ -9,8 +9,7 @@ import AboutPage from "./pages/AboutPage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import HiatusNotification from "./components/HiatusNotification";
-import ErrorNotification from "./components/ErrorNotification"
-;
+import ErrorNotification from "./components/ErrorNotification";
 import { isJson } from "./utils/utils";
 import { logoutSpotify } from "./api/auth/spotifyAuth/spotifyAuth";
 
@@ -38,18 +37,20 @@ const App = () => {
   const mode = import.meta.env.VITE_ENVIRONMENT;
 
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       <ErrorNotification text={errorText} />
       <Navbar />
       {mode === "dev" && <HiatusNotification />}
+
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/stats" element={<StatsPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/about" element={<AboutPage />} />
       </Routes>
+
       <Footer />
-    </>
+    </div>
   );
 };
 

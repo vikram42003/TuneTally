@@ -5,25 +5,25 @@ import UserDetails from "../components/StatsPage/UserDetails";
 
 const StatsPage = () => {
   return (
-    <div>
-      <section className="bg-spotify-gray lg:py-8 py-4">
+    <>
+      <section className="bg-spotify-gray py-6 lg:py-8 px-8 md:px-0">
         <div className="layout-container">
           <UserDetails />
         </div>
       </section>
 
-      <section className="bg-spotify-dark lg:py-8 md:px-0 px-8">
-        <div className="layout-container flex flex-col md:gap-8 md:flex-row lg:gap-16">
-          <div className="shrink grow basis-1/2 order-2 md:order-1">
+      <section className="bg-spotify-dark flex-grow px-8 md:px-0 lg:py-8">
+        <div className="layout-container flex flex-col md:flex-row md:gap-8 lg:gap-16">
+          <div className="order-2 shrink grow basis-1/2 md:order-1">
             <TopArtists />
           </div>
-          <div className="shrink grow basis-1/2 order-1 md:order-2">
+          <div className="order-1 shrink grow basis-1/2 md:order-2">
             <TopSongs />
             <RecentlyPlayedSongs />
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 };
 

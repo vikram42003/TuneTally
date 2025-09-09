@@ -19,7 +19,7 @@ const AboutPage = () => {
 
         <p>
           This project is not affiliated with Spotify. It’s just a hobby project built with React, Tailwind, AWS Lambda,
-          and the Spotify API.
+          Terraform, and the Spotify API.
         </p>
 
         <p>
