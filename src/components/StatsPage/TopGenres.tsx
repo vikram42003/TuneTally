@@ -25,12 +25,12 @@ const TopGenres = ({ genresMap }: TopGenresProps) => {
   const fullbar = genresMap.values().next().value!;
 
   return (
-    <div className="py-8">
-      <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top Genres</h4>
+    <div className="lg:py-8 py-6">
+      <h4 className="text-spotify-green md:pr-4 text-center md:text-3xl text-2xl font-bold">Top Genres</h4>
 
-      <div className="py-4">
+      <div className="lg:py-4 py-2">
         {[...genresMap].map(([genre, count], idx) => (
-          <div key={genre} className="flex py-2.5">
+          <div key={genre} className="flex lg:py-2.5 py-2">
             <div className="flex-1 rounded-full bg-gray-500">
               <div
                 className={`${colors[idx]} h-full rounded-full p-1`}
@@ -48,12 +48,12 @@ const TopGenres = ({ genresMap }: TopGenresProps) => {
 
 export const TopGenresSkeleton = () => {
   return (
-    <div className="py-8">
-      <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top Genres</h4>
+    <div className="lg:py-8 py-6">
+      <h4 className="text-spotify-green md:pr-4 text-center md:text-3xl text-2xl font-bold">Top Genres</h4>
 
-      <div className="animate-pulse space-y-4 py-7">
+      <div className="animate-pulse space-y-4 lg:py-7 py-6">
         {colors.map((c) => (
-          <div key={c} className="h-10 rounded-full bg-gray-700 py-2.5"></div>
+          <div key={c} className="lg:h-10 h-8 rounded-full bg-gray-700"></div>
         ))}
       </div>
     </div>
