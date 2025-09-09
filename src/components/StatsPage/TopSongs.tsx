@@ -36,23 +36,23 @@ const TopSongs = () => {
   }
 
   return (
-    <div className="overflow-auto py-8">
+    <div className="overflow-auto lg:py-8 py-6">
       {/* We offset the content 16px with pr-4 to account for the scrollbar */}
-      <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top {data.items.length} Songs</h4>
+      <h4 className="text-spotify-green md:pr-4 text-center md:text-3xl text-2xl font-bold">Top {data.items.length} Songs</h4>
 
-      <div className="p-4">
+      <div className="lg:p-4 p-2">
         <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
       </div>
 
       <div>
-        <div className="flex gap-2 pt-4 pr-4 text-xl">
+        <div className="flex lg:gap-2 gap-1 lg:pt-4 pt-2 lg:text-xl text-base">
           <div className="flex-1/24">#</div>
           <div className="flex-13/24">Title</div>
           <div className="flex-8/24">Album</div>
           <div className="flex-2/24">⏱</div>
         </div>
 
-        <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark h-[100vh] overflow-y-scroll">
+        <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark lg:h-[100vh] h-[60vh] overflow-y-scroll">
           {data.items.map((i, idx) => (
             <Song key={i.id} song={i} idx={idx} />
           ))}
@@ -64,16 +64,16 @@ const TopSongs = () => {
 
 const TopSongsSkeleton = () => {
   return (
-    <div className="space-y-4 overflow-auto py-8">
+    <div className="space-y-4 overflow-auto lg:py-8 py-6">
       {/* We offset the content 16px with pr-4 to account for the scrollbar */}
-      <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top Songs</h4>
+      <h4 className="text-spotify-green md:pr-4 text-center md:text-3xl text-2xl font-bold">Top Songs</h4>
 
       <div className="animate-pulse">
-        <div className="mx-16 mb-4 h-3 rounded bg-gray-700 py-4 pr-3.5"></div>
+        <div className="mx-16 lg:mb-4 lg:h-3 h-2 rounded bg-gray-700 py-4 pr-3.5"></div>
 
-        <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark h-[100vh] space-y-4 space-x-2 overflow-auto overflow-y-scroll pt-4">
+        <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark lg:h-[100vh] h-[60vh] lg:space-y-4 space-y-3 lg:space-x-2 space-x-1 overflow-auto overflow-y-scroll pt-4">
           {Array.from({ length: 15 }).map((_, i) => (
-            <div key={i} className="h-12 rounded bg-gray-700"></div>
+            <div key={i} className="lg:h-12 h-10 rounded bg-gray-700"></div>
           ))}
         </div>
       </div>

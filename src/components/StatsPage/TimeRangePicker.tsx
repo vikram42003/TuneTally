@@ -10,7 +10,7 @@ const TimeRangePicker = ({ timeRange, setTimeRange }: TimeRangePickerProps) => {
   const selectedCss = "bg-spotify-green text-black hover:no-underline!";
 
   return (
-    <div className="flex">
+    <div className="flex lg:text-base text-sm">
       <button
         onClick={() => setTimeRange("short_term")}
         className={css + (timeRange === "short_term" ? selectedCss : "")}
