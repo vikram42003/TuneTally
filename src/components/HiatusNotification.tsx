@@ -51,8 +51,8 @@ const HiatusNotification = () => {
   );
 
   return (
-    <section className="bg-dartmouth-green text-sm">
-      <div className="layout-container py-4">
+    <section className="bg-dartmouth-green lg:text-sm text-xs">
+      <div className="layout-container lg:py-4 py-2">
         {showDetails ? fullText : collapsedText}
         <br />
 
