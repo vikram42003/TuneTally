@@ -11,7 +11,7 @@ const Navbar = () => {
     <section className="bg-spotify-dark py-4 md:text-lg text-xs">
       <nav className="layout-container flex items-center justify-between">
         <div>
-          <Link to="/" className="logo-font navbar-text-shadow flex items-center md:text-3xl text-xl transition-all duration-500">
+          <Link to="/" className="logo-font navbar-text-shadow flex items-center md:text-3xl text-lg transition-all duration-500">
             {/* svg credits - https://www.svgrepo.com/svg/486541/barchart */}
             <img
               src="/images/logo_barchart.svg"
@@ -63,7 +63,7 @@ const Navbar = () => {
 
           {areWeLoggedInWithAValidSession && (
             <div>
-              <SpotifyButton handler={logoutSpotify} text="Logout" className="md:px-5! px-4! py-1!" />
+              <SpotifyButton handler={logoutSpotify} text="Logout" className="md:px-5! px-2! py-1!" />
             </div>
           )}
         </div>
