@@ -11,7 +11,7 @@ const Homepage = () => {
   let bgCss = "bg-right";
   // Default is mobile, then check for desktop
   if (window.innerWidth > 1024) {
-    bgCss = "bg-cover bg-center";
+    bgCss = "bg-cover";
   }
 
   return (
