@@ -84,10 +84,11 @@ On click of the login button, the app fetches demo user's data and uses demo use
    ```
    pip install requests -t ./Terraform/python/lambda_layer_source/python/
    ```
-4. Provision Infrastructure with terraform  
+4. Source the .env file and provision Infrastructure with terraform  
    Note - Make sure Terraform is installed and configured correctly. Checkout [this](https://developer.hashicorp.com/terraform/tutorials/configuration-language/configure-providers?utm_source=chatgpt.com) or [this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs) for help with setup
    ```bash
    cd Terraform
+   source .env
    terraform apply
    ```
 5. Start the local dev server. The app uses vite-plugin-mkcert (we need https for httpOnly cookie with Same-Site=None) and it will be hosted over https://localhost:5173 by default
