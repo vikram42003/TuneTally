@@ -40,12 +40,12 @@ const TopSongs = () => {
       {/* We offset the content 16px with pr-4 to account for the scrollbar */}
       <h4 className="text-spotify-green md:pr-4 text-center md:text-3xl text-2xl font-bold">Top {data.items.length} Songs</h4>
 
-      <div className="lg:p-4 p-2">
+      <div className="lg:py-4 p-2 pr-4">
         <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
       </div>
 
       <div>
-        <div className="flex lg:gap-2 gap-1 lg:pt-4 pt-2 lg:text-xl text-base">
+        <div className="flex lg:gap-2 gap-1 lg:pt-4 lg:text-xl text-base">
           <div className="flex-1/24">#</div>
           <div className="flex-13/24">Title</div>
           <div className="flex-8/24">Album</div>

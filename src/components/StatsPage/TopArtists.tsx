@@ -32,7 +32,7 @@ const TopArtists = () => {
     );
   }
 
-  if (isLoading) {
+  if (true) {
     return (
       <>
         <TopArtistsSkeleton />
@@ -60,15 +60,15 @@ const TopArtists = () => {
 
   return (
     <>
-      <div className="py-8">
+      <div className="lg:py-8 py-6">
         {/* We offset the content 16px with pr-4 to account for the scrollbar */}
-        <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top {data.items.length} Artists</h4>
+        <h4 className="text-spotify-green md:pr-4 text-center md:text-3xl text-2xl font-bold">Top {data.items.length} Artists</h4>
 
-        <div className="py-4 pr-3.5">
+        <div className="lg:py-4 p-2 pr-3.5">
           <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
         </div>
 
-        <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark grid h-[100vh] grid-cols-3 gap-6 overflow-auto overflow-y-scroll pt-4">
+        <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark grid lg:h-[100vh] h-[60vh] grid-cols-3 lg:gap-6 gap-2 overflow-auto overflow-y-scroll lg:pt-4 pt-2">
           {data.items.map((i, idx) => (
             <Artist key={i.id} artist={i} idx={idx} />
           ))}
@@ -88,17 +88,17 @@ const TopArtists = () => {
 
 const TopArtistsSkeleton = () => {
   return (
-    <div className="flex-col space-y-4 py-8">
-      <h4 className="text-spotify-green pr-4 text-center text-3xl font-bold">Top Artists</h4>
+    <div className="flex-col space-y-4 lg:py-8 py-6">
+      <h4 className="text-spotify-green md:pr-4 text-center md:text-3xl text-2xl font-bold">Top Artists</h4>
 
       <div className="animate-pulse">
-        <div className="mx-16 mb-4 h-3 rounded bg-gray-700 py-4 pr-3.5"></div>
+        <div className="mx-16 lg:mb-4 lg:h-3 h-2 rounded bg-gray-700 py-4 pr-3.5"></div>
 
-        <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark grid h-[100vh] grid-cols-3 gap-6 overflow-auto overflow-y-scroll pt-4">
+        <div className="scrollbar scrollbar-thumb-gray-400 scrollbar-track-spotify-dark grid lg:h-[100vh] h-[60vh] grid-cols-3 lg:gap-6 gap-4 overflow-auto overflow-y-scroll lg:pt-4 pt-2">
           {Array.from({ length: 12 }).map((_, i) => (
             <div key={i} className="flex flex-col items-center space-y-2">
               {/* Square artist image placeholder */}
-              <div className="h-40 w-40 rounded-md bg-gray-700 opacity-70" />
+              <div className="lg:h-40 lg:w-40 h-24 w-24 rounded-md bg-gray-700 opacity-70" />
               <div className="h-4 w-24 rounded bg-gray-700 opacity-70" />
             </div>
           ))}
