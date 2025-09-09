@@ -2,9 +2,9 @@ import { Link } from "react-router";
 
 const PrivacyPage = () => {
   return (
-    <section className="bg-spotify-gray">
-      <div className="layout-container space-y-8 pt-16 pb-32 text-base">
-        <h2 className="text-3xl font-bold underline text-spotify-green">Privacy Policy</h2>
+    <section className="bg-spotify-gray flex-grow">
+      <div className="layout-container space-y-4 px-6 pt-12 pb-28 text-sm lg:space-y-8 lg:pt-16 lg:pb-32 lg:text-base">
+        <h2 className="text-spotify-green text-2xl font-bold underline lg:text-3xl">Privacy Policy</h2>
 
         <p>
           TuneTally uses your Spotify account only to fetch your music listening data (like your top artists, songs,
