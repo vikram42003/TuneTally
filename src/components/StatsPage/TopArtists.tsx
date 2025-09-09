@@ -79,7 +79,7 @@ const TopArtists = () => {
         2. Lifting timeRange and useQuery up would make my separating of concerins between Layout components and Logic components inconsistent
         3. May turn useQuery (and maybe timeRange too into a custom hook, but thats not needed for now since the logic here is simple enough
       */}
-      <div className="lg:pt-10 pt-6">
+      <div className="lg:pt-10 md:pt-6 pt-2">
         <TopGenres genresMap={genresMap} />
       </div>
     </>
