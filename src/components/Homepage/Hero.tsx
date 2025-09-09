@@ -4,7 +4,7 @@ import SpotifyButton from "../SpotifyButton";
 const Hero = () => {
   return (
     <div>
-      <h2 className="text-6xl font-bold">
+      <h2 className="lg:text-6xl text-4xl font-bold">
         Get your <span className="text-spotify-green">stats</span>
       </h2>
 
