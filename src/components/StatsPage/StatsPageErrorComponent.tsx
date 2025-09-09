@@ -12,13 +12,13 @@ const StatsPageErrorComponent = ({
 }: StatsPageErrorComponentProps) => {
   return (
     <>
-      <div className="my-5 rounded bg-gray-800 p-10 text-center">
+      <div className="lg:my-5 my-3 rounded bg-gray-800 lg:p-10 p-6 text-center lg:text-base text-sm">
         <div className="py-2">
           <span className="text-spotify-green font-semibold">Could not load {componentName + " :("}</span>
           <br />
           {errorText}
         </div>
-        <SpotifyButton handler={loginWithSpotifyRefreshTokenDEMO} text="Login with Spotify" />
+        <SpotifyButton handler={loginWithSpotifyRefreshTokenDEMO} text="Login with Spotify" className="lg:px-6! px-4! lg:py-2! py-1!" />
       </div>
     </>
   );
