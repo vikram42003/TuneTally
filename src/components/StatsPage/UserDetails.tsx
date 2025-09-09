@@ -65,7 +65,7 @@ const UserDetails = () => {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h3 className="text-4xl font-bold">
+        <h3 className="lg:text-4xl md:text-3xl text-2xl font-bold">
           {greeting}{" "}
           <Link to={data.external_urls} className="text-spotify-green hover:underline">
             {data.display_name}
@@ -75,7 +75,7 @@ const UserDetails = () => {
           <img
             src={data.images[0]?.url}
             alt={`${!data.images[0].height ? "Placeholder " : ""}Image of ${data.display_name}'s profile picture`}
-            className="h-[80px] w-[80px] rounded-full object-cover"
+            className="lg:h-24 h-16 lg:w-24 w-16 rounded-full object-cover"
           />
         )}
       </div>
@@ -88,7 +88,7 @@ const UserDetailsSkeleton = () => {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h3 className="text-4xl font-bold">
+        <h3 className="lg:text-4xl md:text-3xl text-2xl font-bold">
           Hey there,
           <span className="text-spotify-green"> User Whose Details We're Loading</span>
         </h3>
@@ -96,7 +96,7 @@ const UserDetailsSkeleton = () => {
         <img
           src={url}
           alt={"Placeholder Image of the user's profile picture"}
-          className="h-[80px] w-[80px] rounded-full object-cover"
+          className="lg:h-24 h-16 lg:w-24 w-16 rounded-full object-cover"
         />
       </div>
     </div>
